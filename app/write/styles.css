@@ -1,0 +1,150 @@
+/* Basic editor styles */
+.tiptap {
+    :first-child {
+        margin-top: 10;
+    }
+
+    /* List styles */
+    ul,
+    ol {
+        padding: 0 1rem;
+        margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+        li p {
+            margin-top: 0.25em;
+            margin-bottom: 0.25em;
+        }
+    }
+
+    /* Heading styles */
+    h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 5px;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 8px;
+    }
+
+    h4,
+    h5,
+    h6 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    /* Paragraphs */
+    p {
+        font-size: 1.1rem;
+    }
+
+    /* Code and preformatted text styles */
+    /* Inline Code */
+    code {
+        background-color: #2d2d2d;
+        /* Dark background */
+        border-radius: 6px;
+        color: #ffcc66;
+        /* Soft yellow for better contrast */
+        font-size: 0.85rem;
+        padding: 2px 6px;
+        font-family: 'Fira Code', monospace;
+        white-space: nowrap;
+    }
+
+    /* Code Block */
+    pre {
+        background: #1e1e1e;
+        /* Darker background for better contrast */
+        border-radius: 8px;
+        color: #ffffff;
+        font-family: 'JetBrainsMono', monospace;
+        margin: 1.5rem 0;
+        padding: 1rem 1.5rem;
+        overflow-x: auto;
+        /* Prevents long lines from breaking */
+
+        /* Adds a slight shadow effect */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        border: 1px solid #3a3a3a;
+    }
+
+    /* Inside Code Block */
+    pre code {
+        background: none;
+        color: inherit;
+        font-size: 0.9rem;
+        padding: 0;
+        display: block;
+        white-space: pre-wrap;
+        /* Allows wrapping for smaller screens */
+    }
+
+
+    blockquote {
+        border-left: 3px solid gray;
+        margin: 1.5rem 0;
+        padding-left: 1rem;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid gray;
+        margin: 2rem 0;
+    }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    display: block;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Remove blue border when the editor is focused */
+.ProseMirror:focus {
+    outline: none !important;
+}
+
+.tiptap-link {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.tiptap-link:hover {
+    color: #9333ea;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .button-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .button-group button {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
