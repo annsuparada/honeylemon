@@ -39,7 +39,7 @@ const Footer = () => {
       </nav>
       <aside>
         <p>
-          Copyright © {new Date().getFullYear()} - All right reserved by ---your name---
+          Copyright © {new Date().getFullYear()} - All right reserved by Travomad
         </p>
       </aside>
     </footer>

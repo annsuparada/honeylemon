@@ -19,14 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="fantasy">
       <head>
         {/* Google Analytics */}
-        <Script
+        {/* <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=G-VV2RLH8MSE`}
-        />
-        <Script
+        /> */}
+        {/* <Script
           id="google-analytics"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -39,7 +39,7 @@ export default function RootLayout({
               });
             `,
           }}
-        />
+        /> */}
 
       </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>

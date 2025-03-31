@@ -1,65 +1,113 @@
-'use client';
-import sanitizeHtml from "sanitize-html";
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { BlogPost } from "../types";
+'use client'
+import sanitizeHtml from 'sanitize-html'
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { BlogPost } from '../types'
+import SectionHeader from './SectionHeader'
+import FormattedDate from './FormattedDate'
 
 interface BlogSectionProps {
-  posts: BlogPost[];
+  posts: BlogPost[]
+  title: string
+  subTitle: string
 }
 
-const BlogSection: React.FC<BlogSectionProps> = ({ posts }) => {
+const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle }) => {
   return (
-    <div className="py-16">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Find out more content in our Blog
-        </h2>
-        <Link href="/blog" className="text-accent mb-10 block text-center hover:text-secondary">
-          View all posts »
-        </Link>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-screen-lg mx-auto">
-          {posts.map((post) => {
-            const sanitizedDescription = sanitizeHtml(post.description ?? "", {
-              allowedTags: ["b", "i", "em", "strong", "p"],
-              allowedAttributes: {},
-            });
+    <div className="bg-white py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl lg:max-w-4xl">
+          <SectionHeader title={title} subtitle={subTitle} />
+          <div className="mt-16 space-y-20 lg:mt-20 lg:space-y-20">
+            {posts.map((post) => {
+              const sanitizedDescription = sanitizeHtml(post.description ?? '', {
+                allowedTags: ['b', 'i', 'em', 'strong', 'p'],
+                allowedAttributes: {},
+              })
 
-            return (
-              <div key={post.slug} className="card shadow-2xl rounded-sm glass-bg">
-                <figure>
-                  <Image
-                    src={post.image || "https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp"}
-                    alt={post.title}
-                    className="w-full h-48 object-cover"
-                    width={400}
-                    height={200}
-                    unoptimized={post.image === null}
-                    priority
-                  />
-                </figure>
-                <div className="card-body">
-                  <h3 className="text-xl font-semibold">{post.title}</h3>
-                  <p
-                    className="mt-2 text-sm"
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizedDescription.length > 200
-                        ? sanitizedDescription.slice(0, 200) + "..."
-                        : sanitizedDescription,
-                    }}
-                  />
-                  <Link href={`/blog/${post.slug}`} className="btn btn-outline mt-4">
-                    Read More
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+              return (
+                <article key={post.slug} className="relative isolate flex flex-col gap-8 lg:flex-row">
+                  <div className="relative h-64 w-full sm:aspect-2/1 lg:aspect-square lg:w-64 lg:h-auto lg:shrink-0">
+                    <Image
+                      alt={post.title}
+                      src={post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
+                      fill
+                      className="rounded-sm object-cover"
+                      unoptimized={post.image === null}
+                      priority
+                    />
+                    <div className="absolute inset-0 rounded-2xl ring-1 ring-gray-900/10 ring-inset" />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-x-4 text-xs">
+                      <time dateTime={post.createdAt} className="text-gray-500">
+                        <FormattedDate dateString={post.createdAt} />
+                      </time>
+                      {post.category?.name && post.category?.name && (
+                        <Link
+                          href={post.category.name}
+                          className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+                        >
+                          {post.category.name}
+                        </Link>
+                      )}
+                    </div>
+                    <div className="group relative max-w-xl">
+                      <h3 className="mt-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
+                        <Link href={`/blog/${post.slug}`}>
+                          <span className="absolute inset-0" />
+                          {post.title}
+                        </Link>
+                      </h3>
+                      <p
+                        className="mt-5 text-sm/6 text-gray-600"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            sanitizedDescription.length > 200
+                              ? sanitizedDescription.slice(0, 200) + '...'
+                              : sanitizedDescription,
+                        }}
+                      />
+                    </div>
+                    <div className="mt-6 flex border-t border-gray-900/5 pt-6">
+                      <div className="relative flex items-center gap-x-4">
+                        {post.author?.profilePicture && (
+                          <Image
+                            alt={post.author.name}
+                            src={post.author.profilePicture}
+                            width={40}
+                            height={40}
+                            className="rounded-full bg-gray-50"
+                          />
+                        )}
+                        <div className="text-sm/6">
+                          <p className="font-semibold text-gray-900">
+                            <Link href={post.author.name || '#'}>
+                              <span className="absolute inset-0" />
+                              {post.author.name}
+                            </Link>
+                          </p>
+                          {post.author.role && <p className="text-gray-600">{post.author.role}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+          <Link
+            href="/blog"
+            className="mt-16 block text-center text-accent hover:text-secondary transition-colors"
+          >
+            View all posts »
+          </Link>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BlogSection;
+export default BlogSection

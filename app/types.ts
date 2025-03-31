@@ -30,6 +30,7 @@ export type BlogPost = {
     createdAt: string;
     category: { id: string; name: string; slug: string };
     author: {
+        role?: string;
         id: string;
         name: string;
         lastName?: string;

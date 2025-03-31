@@ -7,6 +7,7 @@ import { BlogPost } from '../types';
 import { useEffect, useState } from 'react';
 import AlertMessage from '../components/AlertMessage';
 import Pagination from '../components/Pagination';
+import HeroSection from '../components/HeroSection';
 
 
 export default function BlogPage() {
@@ -35,11 +36,12 @@ export default function BlogPage() {
 
   return (
     <>
-      <div className='bg-gradient-to-r from-neutral-950 from-30% to-neutral-800 py-16'>
-        <h1 className="text-4xl font-bold mb-3 text-center text-white">
-          BLOG
-        </h1>
-      </div>
+      <HeroSection
+        isHomepage={false}
+        title="Create Memories in Every Destination"
+        description="Your ultimate guide to breathtaking destinations, travel tips, and exclusive deals. Let us help you plan your next dream vacation with the best offers from top travel agencies."
+        imageUrl="https://images.unsplash.com/photo-1541666282672-5f4aad922c63?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      />
 
       <div className="">
         {/* Hero Section */}

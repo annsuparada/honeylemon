@@ -55,11 +55,11 @@ const Navigation = () => {
 
 
   return (
-    <nav className="bg-gradient-to-r from-neutral-950 from-30% to-neutral-800 p-4">
+    <nav className="absolute top-0 left-0 w-full z-10 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
         <div className="text-xl text-accent font-bold">
-          <Link href="/">BLOG</Link>
+          <Link href="/">Travomad</Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -84,10 +84,10 @@ const Navigation = () => {
                   {nav.label}
                 </Link>
               ))}
-              <button className='btn btn-primary btn-sm' onClick={handleLogout}>Logout</button>
+              <button className='btn btn-accent btn-sm rounded-sm' onClick={handleLogout}>Logout</button>
             </>
           ) : (
-            <Link href={'/login'} className='btn btn-primary btn-sm'>
+            <Link href={'/login'} className='btn btn-accent btn-sm rounded-sm'>
               Login
             </Link>
           )}
@@ -130,10 +130,10 @@ const Navigation = () => {
                     {nav.label}
                   </Link>
                 ))}
-                <button className='btn btn-primary btn-sm' onClick={handleLogout}>Logout</button>
+                <button className='btn btn-accent btn-sm rounded-sm' onClick={handleLogout}>Logout</button>
               </>
             ) : (
-              <Link href={'/login'} className='btn btn-primary btn-sm'>
+              <Link href={'/login'} className='btn btn-accent btn-sm rounded-sm'>
                 Login
               </Link>
             )}
