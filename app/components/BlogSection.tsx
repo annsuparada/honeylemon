@@ -11,15 +11,27 @@ interface BlogSectionProps {
   posts: BlogPost[]
   title: string
   subTitle: string
+  threeColumns?: boolean
 }
 
-const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle }) => {
+const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, threeColumns = false }) => {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="bg-white pt-24 sm:pt-32 pb-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:max-w-4xl">
+        <div className={`mx-auto ${threeColumns ? "" : "max-w-2xl lg:max-w-4xl"} `}>
           <SectionHeader title={title} subtitle={subTitle} />
-          <div className="mt-16 space-y-20 lg:mt-20 lg:space-y-20">
+          <Link
+            href="/blog"
+            className="mt-16 block text-center text-accent hover:text-secondary transition-colors"
+          >
+            View all posts »
+          </Link>
+          <div
+            className={`mt-16 ${threeColumns
+              ? 'grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3'
+              : 'space-y-20 lg:mt-20 lg:space-y-20'
+              }`}
+          >
             {posts.map((post) => {
               const sanitizedDescription = sanitizeHtml(post.description ?? '', {
                 allowedTags: ['b', 'i', 'em', 'strong', 'p'],
@@ -27,14 +39,18 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle }) => 
               })
 
               return (
-                <article key={post.slug} className="relative isolate flex flex-col gap-8 lg:flex-row">
-                  <div className="relative h-64 w-full sm:aspect-2/1 lg:aspect-square lg:w-64 lg:h-auto lg:shrink-0">
+                <article
+                  key={post.slug}
+                  className={`relative isolate ${threeColumns ? 'flex flex-col gap-6' : 'flex flex-col gap-8 lg:flex-row'
+                    }`}
+                >
+                  <div className={`relative ${threeColumns ? 'h-52' : 'h-64'} w-full ${threeColumns ? '' : 'lg:w-64 lg:h-auto lg:shrink-0'}`}>
                     <Image
                       alt={post.title}
                       src={post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
                       fill
                       className="rounded-sm object-cover"
-                      unoptimized={post.image === null}
+                      unoptimized={!post.image}
                       priority
                     />
                     <div className="absolute inset-0 rounded-2xl ring-1 ring-gray-900/10 ring-inset" />
@@ -45,7 +61,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle }) => 
                       <time dateTime={post.createdAt} className="text-gray-500">
                         <FormattedDate dateString={post.createdAt} />
                       </time>
-                      {post.category?.name && post.category?.name && (
+                      {post.category?.name && (
                         <Link
                           href={post.category.name}
                           className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
@@ -98,16 +114,13 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle }) => 
               )
             })}
           </div>
-          <Link
-            href="/blog"
-            className="mt-16 block text-center text-accent hover:text-secondary transition-colors"
-          >
-            View all posts »
-          </Link>
+
+
         </div>
       </div>
     </div>
   )
 }
+
 
 export default BlogSection

@@ -23,13 +23,14 @@ const HeroSection = ({
             className={`hero ${isHomepage ? 'min-h-screen' : 'min-h-[50vh]'}`}
             style={{ backgroundImage: `url(${imageUrl})` }}
         >
-            <div className="hero-overlay"></div>
+            {/* <div className="hero-overlay backdrop-brightness-100"></div> */}
+            {/* <div className="hero-overlay"></div> */}
             <div className="hero-content text-neutral-content w-full justify-start px-8">
                 <div className="flex flex-col gap-10 lg:flex-row lg:items-center w-full">
                     {/* Left Block */}
                     <div className="w-full lg:max-w-xl">
-                        <h1 className={`mb-5 text-3xl lg:text-5xl font-bold ${!isHomepage && 'mt-12'}`}>{title}</h1>
-                        <p className="mb-5">{description}</p>
+                        <h1 className={`mb-5 text-3xl lg:text-5xl font-bold text-white ${!isHomepage && 'mt-12'}`}>{title}</h1>
+                        <p className="mb-5 text-white">{description}</p>
                         {onCtaClick && (
                             <button className="btn btn-primary rounded-sm" onClick={onCtaClick}>
                                 {ctaText}

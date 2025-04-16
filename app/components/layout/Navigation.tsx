@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 const navLinks = [
   { href: '/about', label: 'About' },
+  { href: '/destinations', label: 'Destinations' },
   { href: '/blog', label: 'Blog' },
 ]
 const authenticatedNavLinks = [
