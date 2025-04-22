@@ -12,9 +12,11 @@ interface BlogSectionProps {
   title: string
   subTitle: string
   threeColumns?: boolean
+  showDescription?: boolean
+  showAuthor?: boolean
 }
 
-const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, threeColumns = false }) => {
+const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, threeColumns = false, showDescription = true, showAuthor = true }) => {
   return (
     <div className="bg-white pt-24 sm:pt-32 pb-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -77,38 +79,43 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
                           {post.title}
                         </Link>
                       </h3>
-                      <p
-                        className="mt-5 text-sm/6 text-gray-600"
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            sanitizedDescription.length > 200
-                              ? sanitizedDescription.slice(0, 200) + '...'
-                              : sanitizedDescription,
-                        }}
-                      />
+                      {showDescription &&
+                        <p
+                          className="mt-5 text-sm/6 text-gray-600"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              sanitizedDescription.length > 200
+                                ? sanitizedDescription.slice(0, 200) + '...'
+                                : sanitizedDescription,
+                          }}
+                        />
+                      }
                     </div>
-                    <div className="mt-6 flex border-t border-gray-900/5 pt-6">
-                      <div className="relative flex items-center gap-x-4">
-                        {post.author?.profilePicture && (
-                          <Image
-                            alt={post.author.name}
-                            src={post.author.profilePicture}
-                            width={40}
-                            height={40}
-                            className="rounded-full bg-gray-50"
-                          />
-                        )}
-                        <div className="text-sm/6">
-                          <p className="font-semibold text-gray-900">
-                            <Link href={post.author.name || '#'}>
-                              <span className="absolute inset-0" />
-                              {post.author.name}
-                            </Link>
-                          </p>
-                          {post.author.role && <p className="text-gray-600">{post.author.role}</p>}
+                    {showAuthor &&
+                      <div className="mt-6 flex border-t border-gray-900/5 pt-6">
+                        <div className="relative flex items-center gap-x-4">
+                          {post.author?.profilePicture && (
+                            <Image
+                              alt={post.author.name}
+                              src={post.author.profilePicture}
+                              width={40}
+                              height={40}
+                              className="rounded-full bg-gray-50"
+                            />
+                          )}
+
+                          <div className="text-sm/6">
+                            <p className="font-semibold text-gray-900">
+                              <Link href={post.author.name || '#'}>
+                                <span className="absolute inset-0" />
+                                {post.author.name}
+                              </Link>
+                            </p>
+                            {post.author.role && <p className="text-gray-600">{post.author.role}</p>}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    }
                   </div>
                 </article>
               )

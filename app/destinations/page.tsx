@@ -25,7 +25,7 @@ export default async function DestinationPage() {
                 buttonUrl="https://trip.tp.st/yQI9sIWC"
             />
 
-            <BlogSection posts={allPosts} title="Travel Experiences" subTitle="Travel Experiences" threeColumns={true} />
+            <BlogSection posts={allPosts} title="Travel Experiences" subTitle="Travel Experiences" threeColumns={true} showAuthor={false} />
         </div>
     )
 }
