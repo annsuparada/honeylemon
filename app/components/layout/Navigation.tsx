@@ -5,7 +5,7 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import { usePathname, useRouter } from 'next/navigation'
 
 const navLinks = [
-  { href: '/about', label: 'About' },
+  { href: '/deals', label: 'Deals' },
   { href: '/destinations', label: 'Destinations' },
   { href: '/blog', label: 'Blog' },
 ]

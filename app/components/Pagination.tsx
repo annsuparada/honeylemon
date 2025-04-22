@@ -1,43 +1,33 @@
-'use client'
-import React, { useState, useEffect } from 'react'
+import Link from "next/link"
 
-interface PaginationProps<T> {
-    items: T[]
-    itemsPerPage: number
-    onPageChange: (currentItems: T[]) => void
+interface PaginationProps {
+    currentPage: number
+    totalPages: number
+    basePath: string
 }
 
-const Pagination = <T,>({ items, itemsPerPage, onPageChange }: PaginationProps<T>) => {
-    const [currentPage, setCurrentPage] = useState(1)
-
-    const totalPages = Math.ceil(items.length / itemsPerPage)
-
-    useEffect(() => {
-        const indexOfLastItem = currentPage * itemsPerPage
-        const indexOfFirstItem = indexOfLastItem - itemsPerPage
-        const currentItems = items.slice(indexOfFirstItem, indexOfLastItem)
-        onPageChange(currentItems)
-    }, [currentPage, items, itemsPerPage, onPageChange])
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, basePath }) => {
+    const createPageLink = (page: number) => `${basePath}?page=${page}`
 
     return (
-        <div className="flex justify-center items-center space-x-2 mt-4">
-            <button
-                className="btn btn-outline btn-sm btn-secondary rounded-sm"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
+        <div className="flex justify-center items-center space-x-4 mt-8">
+            <Link
+                href={createPageLink(Math.max(currentPage - 1, 1))}
+                className={`btn btn-outline btn-sm btn-secondary rounded-sm ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
             >
                 Previous
-            </button>
-            <span>
+            </Link>
+
+            <span className="text-sm">
                 Page {currentPage} of {totalPages}
             </span>
-            <button
-                className="btn btn-outline btn-sm btn-secondary rounded-sm"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
+
+            <Link
+                href={createPageLink(Math.min(currentPage + 1, totalPages))}
+                className={`btn btn-outline btn-sm btn-secondary rounded-sm ${currentPage === totalPages ? "pointer-events-none opacity-50" : ""}`}
             >
                 Next
-            </button>
+            </Link>
         </div>
     )
 }
