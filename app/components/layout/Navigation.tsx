@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -19,6 +19,7 @@ const Navigation = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const checkAuth = () => {
@@ -107,7 +108,10 @@ const Navigation = () => {
 
       {/* Mobile Dropdown Menu */}
       {isDropdownOpen && (
-        <div className="md:hidden mt-2 bg-neutral-800 p-4 rounded-lg shadow-lg">
+        <div
+          className="md:hidden mt-2 bg-neutral-800 p-4 rounded-lg shadow-lg"
+          ref={dropdownRef}
+        >
           <ul className="space-y-4">
             {navLinks.map((nav, index) => (
               <li key={index}>
