@@ -4,7 +4,6 @@ import BlogSection from '@/app/components/BlogSection'
 import sanitizeHtml from 'sanitize-html';
 import FormattedDate from '@/app/components/FormattedDate';
 import './article.css'
-import { PostStatus } from '@prisma/client';
 import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';
 import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
