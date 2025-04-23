@@ -1,19 +1,31 @@
-'use client'
-
+import BlogSection from "../components/BlogSection"
+import CTA from "../components/CTA"
 import HeroSection from "../components/HeroSection"
+import PromotionSection from "../components/PromotionSection"
+import { budgetPosts, luxuryPosts, midRangePosts, promotions } from "../data/copy"
 
 const Deals = () => {
-
-
-
     return (
         <div>
             <HeroSection
-                title={"Find Your Next Destination  "}
-                description={"Explore cities, coasts, and hidden gems around the world — no hype, just real travel insights. Whether you're planning your first trip or your next big adventure, Travomad helps you discover where to go and how to get there smart."}
-                imageUrl="https://images.unsplash.com/photo-1476610182048-b716b8518aae?q=80&w=2159&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                title={"Travel Deals for Every Budget"}
+                description={"From backpacker steals to luxury escapes — your next trip starts here."}
+                imageUrl="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             />
-
+            <BlogSection posts={budgetPosts} title="Budget Travel Deals" subTitle="Big adventures. Tiny prices." threeColumns={true} showAuthor={false} showDescription={false} />
+            <BlogSection posts={midRangePosts} title="Mid-Range Deals" subTitle="Great stays. Better prices. No sacrifices." threeColumns={true} showAuthor={false} showDescription={false} />
+            <CTA
+                title="Ready to Book?"
+                subtitle="Find flights, hotels, and tours on Trip.com"
+                buttonText="Get started"
+                buttonUrl="https://trip.tp.st/yQI9sIWC"
+            />
+            <BlogSection posts={luxuryPosts} title="Luxury for Less" subTitle="Champagne lifestyle, economy budget." threeColumns={true} showAuthor={false} showDescription={false} />
+            <PromotionSection
+                items={promotions}
+                heading="🔥 Travel Deals You Shouldn't Miss"
+                subheading="Updated weekly. Limited availability."
+            />
         </div>
     )
 }

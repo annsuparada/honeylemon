@@ -24,7 +24,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
           <SectionHeader title={title} subtitle={subTitle} />
           <Link
             href="/blog"
-            className="mt-16 block text-center text-accent hover:text-secondary transition-colors"
+            className="block text-center text-accent hover:text-secondary transition-colors"
           >
             View all posts »
           </Link>
