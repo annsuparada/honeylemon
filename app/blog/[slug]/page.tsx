@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${post.title} | Andrew Kantos`,
+    title: `${post.title}`,
     description: post.description || "Read this amazing blog post",
     openGraph: {
       title: post.title,
@@ -37,14 +37,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
           height: 630,
           alt: post.title,
         },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description || "Read this amazing blog post",
-      images: [
-        post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'
       ],
     },
   };
@@ -125,7 +117,7 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
 
       <div className="max-w-screen-lg mx-auto py-10 px-4">
         {/* Blog Section */}
-        <BlogSection posts={blogPosts} />
+        <BlogSection posts={blogPosts} title={''} subTitle={''} />
       </div>
     </>
   );

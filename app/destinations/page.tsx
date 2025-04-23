@@ -4,6 +4,29 @@ import HeroSection from "@/app/components/HeroSection"
 import CardSection from "@/app/components/CardSection"
 import CTA from "@/app/components/CTA"
 import { destinations, regions } from "@/app/data/copy"
+import { Metadata } from "next"
+
+export const generateMetadata = async (): Promise<Metadata> => {
+    return {
+        title: "Find Your Next Destination",
+        description:
+            "Explore cities, coasts, and hidden gems...",
+        openGraph: {
+            title: "Find Your Next Destination",
+            description:
+                "Explore cities, coasts, and hidden gems...",
+            url: "https://travomad.com/destinations",
+            images: [
+                {
+                    url: "https://images.pexels.com/photos/6965514/pexels-photo-6965514.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                    width: 1200,
+                    height: 630,
+                    alt: "Travomad Travel Destinations Cover",
+                },
+            ],
+        },
+    }
+}
 
 export default async function DestinationPage() {
     const allPosts = await fetchPosts("PUBLISHED", 6)
