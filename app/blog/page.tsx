@@ -1,4 +1,3 @@
-import { fetchPosts } from "@/utils/postActions"
 import HeroSection from "@/app/components/HeroSection"
 import FormattedDate from "@/app/components/FormattedDate"
 import Image from "next/image"
@@ -6,6 +5,7 @@ import Link from "next/link"
 import Pagination from "@/app/components/PaginationSSR"
 import { BlogPost } from "@/app/types"
 import { Metadata } from "next"
+import { getPublishedPosts } from "../lip/postService"
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
@@ -34,7 +34,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
   const itemsPerPage = 5
   const page = parseInt(searchParams?.page || "1", 10)
 
-  const allPosts: BlogPost[] = await fetchPosts("PUBLISHED")
+  const allPosts: BlogPost[] = await getPublishedPosts()
   const totalPages = Math.ceil(allPosts.length / itemsPerPage)
   const start = (page - 1) * itemsPerPage
   const currentItems = allPosts.slice(start, start + itemsPerPage)

@@ -1,4 +1,3 @@
-import { fetchPostBySlug, fetchPosts } from '@/utils/postActions'
 import { Metadata } from 'next';
 import Image from 'next/image'
 import BlogSection from '@/app/components/BlogSection'
@@ -8,16 +7,17 @@ import './article.css'
 import { PostStatus } from '@prisma/client';
 import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';
+import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
-  const posts = await fetchPosts(PostStatus.PUBLISHED);
+  const posts = await getPublishedPosts();
   return posts.map((post: { slug: string; }) => ({ slug: post.slug }));
 }
 const ShareButton = dynamic(() => import("../../components/ShareButton"), { ssr: false });
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await fetchPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
     return { title: "Post Not Found", description: "This post does not exist." };
@@ -45,8 +45,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function SingleBlogPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const post = await fetchPostBySlug(slug);
-  const blogPosts = await fetchPosts(PostStatus.PUBLISHED);
+  const post = await getPostBySlug(slug);
+  const blogPosts = await getPublishedPosts();
 
   if (!post) {
     return <div className="text-center py-10 text-red-500">Post not found</div>;

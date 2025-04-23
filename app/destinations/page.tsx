@@ -1,10 +1,10 @@
-import { fetchPosts } from "@/utils/postActions"
 import BlogSection from "@/app/components/BlogSection"
 import HeroSection from "@/app/components/HeroSection"
 import CardSection from "@/app/components/CardSection"
 import CTA from "@/app/components/CTA"
 import { destinations, regions } from "@/app/data/copy"
 import { Metadata } from "next"
+import { getPublishedPosts } from "../lip/postService"
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -29,7 +29,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 export default async function DestinationPage() {
-    const allPosts = await fetchPosts("PUBLISHED", 6)
+    const allPosts = await getPublishedPosts(6)
 
     return (
         <div>
