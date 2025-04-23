@@ -42,6 +42,26 @@ const config: Config = {
       'dim',
       'nord',
       'sunset',
+      {
+        travomad: {
+          "primary": "#1D4ED8",
+          "secondary": "#1F2937",
+          "accent": "#f97316",
+          "neutral": "#F9FAFB",
+          "base-100": "#ffffff",
+          "info": "#00AEEF",
+          "success": "#10B981",
+          "warning": "#F59E0B",
+          "error": "#EF4444",
+          "--rounded-box": "1rem",
+          "--rounded-btn": "0.5rem",
+          "--rounded-badge": "1.9rem",
+          "--animation-btn": "0.25s",
+          "--btn-text-case": "uppercase",
+          "--navbar-padding": "1rem",
+        }
+      }
+
     ],
   },
 }

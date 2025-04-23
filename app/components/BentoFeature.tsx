@@ -18,7 +18,7 @@ export type BentoFeatureCardProps = {
 const BentoFeatureCard = ({ item, className = "", roundedClass = "" }: BentoFeatureCardProps) => {
     return (
         <div className={`relative ${className}`}>
-            <div className={`absolute inset-px rounded-lg bg-white ${roundedClass}`} />
+            <div className={`absolute inset-px rounded-lg bg-base-100 shadow ${roundedClass}`} />
             <div className={`relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] ${roundedClass}`}>
                 <img
                     alt={item.title}
@@ -26,11 +26,11 @@ const BentoFeatureCard = ({ item, className = "", roundedClass = "" }: BentoFeat
                     className="h-80 object-cover object-center"
                 />
                 <div className="p-10 pt-4">
-                    <h3 className="text-sm/4 font-semibold text-accent">
+                    <h3 className="text-sm/4 font-semibold text-primary">
                         {item.title}
                     </h3>
-                    <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">{item.subtitle}</p>
-                    <p className="mt-2 max-w-lg text-sm/6 text-gray-600">{item.description}</p>
+                    <p className="mt-2 text-lg font-medium tracking-tight text-secondary">{item.subtitle}</p>
+                    <p className="mt-2 max-w-lg text-sm/6 text-neutral-content">{item.description}</p>
                 </div>
             </div>
             <div className={`pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5 ${roundedClass}`} />
