@@ -4,7 +4,7 @@ import React from 'react'
 type HeroSectionProps = {
     isHomepage?: boolean
     title: string
-    description: string
+    description?: string
     imageUrl: string
     ctaText?: string
     onCtaClick?: () => void
@@ -23,14 +23,12 @@ const HeroSection = ({
             className={`hero ${isHomepage ? 'min-h-screen' : 'min-h-[50vh]'}`}
             style={{ backgroundImage: `url(${imageUrl})` }}
         >
-            {/* <div className="hero-overlay backdrop-brightness-100"></div> */}
-            {/* <div className="hero-overlay"></div> */}
             <div className="hero-content text-neutral-content w-full justify-start px-8">
                 <div className="flex flex-col gap-10 lg:flex-row lg:items-center w-full">
                     {/* Left Block */}
                     <div className="w-full lg:max-w-xl">
-                        <h1 className={`mb-5 text-3xl lg:text-5xl font-bold text-white ${!isHomepage && 'mt-12'}`}>{title}</h1>
-                        <p className="mb-5 text-white">{description}</p>
+                        <h1 className={`mb-5 text-3xl lg:text-5xl font-bold text-white text-shadow-lg/30 ${!isHomepage && 'mt-12'}`}>{title}</h1>
+                        <p className="mb-5 text-white text-shadow-lg/30">{description}</p>
                         {onCtaClick && (
                             <button className="btn btn-primary rounded-sm" onClick={onCtaClick}>
                                 {ctaText}

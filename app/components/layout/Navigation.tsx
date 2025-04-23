@@ -49,8 +49,8 @@ const Navigation = () => {
   const isActive = (href: string) => pathname === href
   const getNavLinkClass = (href: string, isActive: boolean) => {
     return `${isActive
-      ? "text-white underline decoration-accent"
-      : "text-accent hover:text-white"
+      ? "text-accent underline decoration-accent font-bold"
+      : "text-white hover:text-white font-bold"
       } block transition-colors duration-300`;
   };
 
@@ -59,7 +59,7 @@ const Navigation = () => {
     <nav className="absolute top-0 left-0 w-full z-10 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
-        <div className="text-xl text-accent font-bold">
+        <div className="text-xl text-white font-bold" style={{ textShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}>
           <Link href="/">Travomad</Link>
         </div>
 
@@ -70,6 +70,7 @@ const Navigation = () => {
               key={index}
               href={nav.href}
               className={getNavLinkClass(nav.href, isActive(nav.href))}
+              style={{ textShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}
             >
               {nav.label}
             </Link>
@@ -81,6 +82,7 @@ const Navigation = () => {
                   key={index}
                   href={nav.href}
                   className={getNavLinkClass(nav.href, isActive(nav.href))}
+                  style={{ textShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}
                 >
                   {nav.label}
                 </Link>
@@ -88,9 +90,7 @@ const Navigation = () => {
               <button className='btn btn-accent btn-sm rounded-sm' onClick={handleLogout}>Logout</button>
             </>
           ) : (
-            <Link href={'/login'} className='btn btn-accent btn-sm rounded-sm'>
-              Login
-            </Link>
+            ""
           )}
         </div>
 
@@ -98,7 +98,7 @@ const Navigation = () => {
         <div className="md:hidden">
           <button
             onClick={toggleDropdown}
-            className="text-gray-300 text-2xl focus:outline-none"
+            className="text-white text-2xl focus:outline-none"
           >
             <GiHamburgerMenu />
           </button>
@@ -134,9 +134,7 @@ const Navigation = () => {
                 <button className='btn btn-accent btn-sm rounded-sm' onClick={handleLogout}>Logout</button>
               </>
             ) : (
-              <Link href={'/login'} className='btn btn-accent btn-sm rounded-sm'>
-                Login
-              </Link>
+              ""
             )}
           </ul>
         </div>

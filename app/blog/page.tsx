@@ -40,7 +40,7 @@ export default function BlogPage() {
         isHomepage={false}
         title="Create Memories in Every Destination"
         description="Your ultimate guide to breathtaking destinations, travel tips, and exclusive deals. Let us help you plan your next dream vacation with the best offers from top travel agencies."
-        imageUrl="https://images.unsplash.com/photo-1541666282672-5f4aad922c63?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        imageUrl="https://images.pexels.com/photos/27855084/pexels-photo-27855084/free-photo-of-acropolis.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
 
       <div className="">

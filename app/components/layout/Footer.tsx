@@ -7,6 +7,7 @@ const navLinks = [
   { href: '/deals', label: 'Deals' },
   { href: '/destinations', label: 'Destinations' },
   { href: '/blog', label: 'Blog' },
+  { href: '/login', label: 'Login' },
 ]
 
 const Footer = () => {
