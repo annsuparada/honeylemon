@@ -46,17 +46,24 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
                   className={`relative isolate rounded-md shadow-lg ${threeColumns ? 'flex flex-col gap-6' : 'flex flex-col gap-8 lg:flex-row'
                     }`}
                 >
-                  <div className={`relative  ${threeColumns ? 'h-52' : 'h-64'} w-full ${threeColumns ? '' : 'lg:w-64 lg:h-auto lg:shrink-0'}`}>
+                  <div
+                    className={`relative overflow-hidden ${threeColumns ? 'h-52 w-full' : 'h-48 w-full lg:h-auto lg:w-64 lg:shrink-0'
+                      }`}
+                  >
                     <Image
                       alt={post.title}
-                      src={post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
+                      src={
+                        post.image ||
+                        'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'
+                      }
                       fill
-                      className="rounded-sm object-cover"
+                      className={`object-cover ${threeColumns ? 'rounded-t-md' : 'lg:rounded-l-md'
+                        }`}
                       unoptimized={!post.image}
                       priority
                     />
-                    <div className="absolute inset-0 rounded-2xl ring-1 ring-gray-900/10 ring-inset" />
                   </div>
+
 
                   <div className='p-2'>
                     <div className="flex items-center gap-x-4 text-xs">

@@ -10,7 +10,7 @@ import { FaEdit, FaRegEye } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { SlOptionsVertical } from "react-icons/sl";
 import AlertMessage from "../components/AlertMessage";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/PaginationClient";
 
 export default function Dashboard() {
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -73,7 +73,7 @@ export default function Dashboard() {
 
     return (
         <ProtectedPage>
-            <div className='bg-gradient-to-r from-neutral-950 from-30% to-neutral-800 py-16'>
+            <div className='bg-primary py-16'>
                 <h1 className="text-4xl font-bold mb-3 text-center text-white">DASHBOARD</h1>
             </div>
 

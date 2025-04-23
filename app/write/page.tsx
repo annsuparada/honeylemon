@@ -228,6 +228,9 @@ const WritePage = () => {
 
     return (
         <ProtectedPage>
+            <div className='bg-primary py-16'>
+                <h1 className="text-4xl font-bold mb-3 text-center text-white">Write Your Blog</h1>
+            </div>
             <div className="min-h-screen py-16 px-2 max-w-screen-lg mx-auto">
                 <div className="flex justify-end">
                     <button className="btn btn-soft mb-6 mr-3" onClick={() => handleSave(false)}>

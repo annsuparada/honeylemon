@@ -3,7 +3,7 @@ import HeroSection from "@/app/components/HeroSection"
 import FormattedDate from "@/app/components/FormattedDate"
 import Image from "next/image"
 import Link from "next/link"
-import Pagination from "@/app/components/Pagination"
+import Pagination from "@/app/components/PaginationSSR"
 import { BlogPost } from "@/app/types"
 import { Metadata } from "next"
 
