@@ -8,6 +8,7 @@ type HeroSectionProps = {
     imageUrl: string
     ctaText?: string
     onCtaClick?: () => void
+    isSingleBlogPage?: boolean
 }
 
 const HeroSection = ({
@@ -17,29 +18,45 @@ const HeroSection = ({
     imageUrl,
     ctaText = 'Get Started',
     onCtaClick,
+    isSingleBlogPage = false
 }: HeroSectionProps) => {
     return (
         <div
             className={`hero ${isHomepage ? 'min-h-screen' : 'min-h-[50vh]'}`}
             style={{ backgroundImage: `url(${imageUrl})` }}
         >
-            <div className="hero-content text-neutral-content w-full justify-start px-8">
-                <div className="flex flex-col gap-10 lg:flex-row lg:items-center w-full">
-                    {/* Left Block */}
-                    <div className="w-full lg:max-w-xl">
-                        <h1 className={`mb-5 text-3xl lg:text-5xl font-bold text-white text-shadow-lg/30 ${!isHomepage && 'mt-12'}`}>{title}</h1>
-                        <p className="mb-5 text-white text-shadow-lg/30">{description}</p>
-                        {onCtaClick && (
-                            <button className="btn btn-primary rounded-sm" onClick={onCtaClick}>
-                                {ctaText}
-                            </button>
+            {isSingleBlogPage ? (
+                <div className="w-full h-full flex flex-col items-center justify-center text-center px-4 pt-24 pb-12 sm:pt-32 sm:pb-20">
+                    <div className="max-w-screen-md">
+                        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white text-shadow-lg/30 leading-tight">
+                            {title}
+                        </h1>
+                        {description && (
+                            <p className="mt-4 text-sm sm:text-base lg:text-lg text-white text-shadow-lg/30">
+                                {description}
+                            </p>
                         )}
                     </div>
-
-                    {/* Right Block (optional content can go here) */}
-                    <div className="w-full lg:max-w-xl"></div>
                 </div>
-            </div>
+
+            ) : (
+                <div className="hero-content text-neutral-content w-full justify-start px-8">
+                    <div className="flex flex-col gap-10 lg:flex-row lg:items-center w-full">
+                        <div className="w-full lg:max-w-xl">
+                            <h1 className={`mb-5 text-3xl lg:text-5xl font-bold text-white text-shadow-lg/30 ${!isHomepage && 'mt-12'}`}>
+                                {title}
+                            </h1>
+                            <p className="mb-5 text-white text-shadow-lg/30">{description}</p>
+                            {onCtaClick && (
+                                <button className="btn btn-primary rounded-sm" onClick={onCtaClick}>
+                                    {ctaText}
+                                </button>
+                            )}
+                        </div>
+                        <div className="w-full lg:max-w-xl"></div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

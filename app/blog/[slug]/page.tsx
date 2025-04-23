@@ -7,6 +7,7 @@ import FormattedDate from '@/app/components/FormattedDate';
 import './article.css'
 import { PostStatus } from '@prisma/client';
 import dynamic from "next/dynamic";
+import HeroSection from '@/app/components/HeroSection';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
@@ -60,10 +61,16 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
 
   return (
     <>
+      <HeroSection
+        isHomepage={false}
+        isSingleBlogPage={true}
+        title={post.title}
+        description={post.description}
+        imageUrl="https://images.unsplash.com/photo-1546437744-529610df132e?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      />
       <div className="max-w-screen-md mx-auto py-10 px-4">
         {/* Blog Header */}
         <header className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 leading-tight mb-4">{post.title}</h1>
           <div className="flex">
             <div className="badge badge-soft badge-neutral rounded-sm mr-4 p-3">
               {post.category?.name}
