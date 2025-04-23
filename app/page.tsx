@@ -25,6 +25,8 @@ const Home = () => {
     <main>
       <HeroSection
         isHomepage={true}
+        onCtaClick={() => window.open("https://trip.tp.st/mJKqNM8r", "_blank")}
+        ctaText="Find Your Next Trip"
         title="Create Memories in Every Destination"
         description="Your ultimate guide to breathtaking destinations, travel tips, and exclusive deals. Let us help you plan your next dream vacation with the best offers from top travel agencies."
         imageUrl="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"

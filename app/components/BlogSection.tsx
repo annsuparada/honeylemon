@@ -43,10 +43,10 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
               return (
                 <article
                   key={post.slug}
-                  className={`relative isolate ${threeColumns ? 'flex flex-col gap-6' : 'flex flex-col gap-8 lg:flex-row'
+                  className={`relative isolate rounded-md shadow-lg ${threeColumns ? 'flex flex-col gap-6' : 'flex flex-col gap-8 lg:flex-row'
                     }`}
                 >
-                  <div className={`relative ${threeColumns ? 'h-52' : 'h-64'} w-full ${threeColumns ? '' : 'lg:w-64 lg:h-auto lg:shrink-0'}`}>
+                  <div className={`relative  ${threeColumns ? 'h-52' : 'h-64'} w-full ${threeColumns ? '' : 'lg:w-64 lg:h-auto lg:shrink-0'}`}>
                     <Image
                       alt={post.title}
                       src={post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
@@ -58,7 +58,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
                     <div className="absolute inset-0 rounded-2xl ring-1 ring-gray-900/10 ring-inset" />
                   </div>
 
-                  <div>
+                  <div className='p-2'>
                     <div className="flex items-center gap-x-4 text-xs">
                       <time dateTime={post.createdAt} className="text-gray-500">
                         <FormattedDate dateString={post.createdAt} />
@@ -92,7 +92,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
                       }
                     </div>
                     {showAuthor &&
-                      <div className="mt-6 flex border-t border-gray-900/5 pt-6">
+                      <div className="flex border-t border-gray-900/5 py-3">
                         <div className="relative flex items-center gap-x-4">
                           {post.author?.profilePicture && (
                             <Image
@@ -106,10 +106,8 @@ const BlogSection: React.FC<BlogSectionProps> = ({ posts, title, subTitle, three
 
                           <div className="text-sm/6">
                             <p className="font-semibold text-gray-900">
-                              <Link href={post.author.name || '#'}>
-                                <span className="absolute inset-0" />
-                                {post.author.name}
-                              </Link>
+                              <span className="absolute inset-0" />
+                              {post.author.name} {post.author.lastName}
                             </p>
                             {post.author.role && <p className="text-gray-600">{post.author.role}</p>}
                           </div>
