@@ -50,14 +50,14 @@ const Navigation = () => {
   const isActive = (href: string) => pathname === href
   const getNavLinkClass = (href: string, isActive: boolean) => {
     return `${isActive
-      ? "text-accent underline decoration-accent font-bold"
-      : "text-white hover:text-white font-bold"
+      ? "text-accent underline decoration-accent"
+      : "text-white hover:text-white"
       } block transition-colors duration-300`;
   };
 
 
   return (
-    <nav className="absolute top-0 left-0 w-full z-10 p-4 text-white">
+    <nav className="absolute top-0 left-0 w-full z-50 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
         <div className="text-xl text-white font-bold" style={{ textShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}>
