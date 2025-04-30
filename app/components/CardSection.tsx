@@ -9,28 +9,27 @@ export type CardProps = {
 
 const Card = ({ card }: { card: CardProps }) => {
     return (
-        <article
-            key={card.id}
-            className="relative isolate flex flex-col justify-end overflow-hidden rounded-md bg-gray-900 px-6 pt-40 pb-6 sm:pt-56 lg:pt-64"
-        >
-            <img
-                alt={card.title}
-                src={card.imageUrl}
-                className="absolute inset-0 -z-10 size-full object-cover"
-            />
-            {/* Make the overlay lighter and smoother */}
-            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-            <div className="absolute inset-0 -z-10 rounded-md ring-1 ring-white/10 ring-inset" />
+        <a href={card.href} className="group">
+            <article
+                className="relative isolate flex flex-col justify-end overflow-hidden rounded-md bg-gray-900 px-6 pt-40 pb-6 sm:pt-56 lg:pt-64 transition hover:scale-[1.01]"
+            >
+                <img
+                    alt={card.title}
+                    src={card.imageUrl}
+                    className="absolute inset-0 -z-10 size-full object-cover"
+                />
+                {/* Overlay */}
+                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+                <div className="absolute inset-0 -z-10 rounded-md ring-1 ring-white/10 ring-inset" />
 
-            <h3 className="mt-3 text-xl font-semibold text-white drop-shadow-md">
-                <a href={card.href} className="relative z-10">
-                    <span className="absolute inset-0" />
+                <h3 className="mt-3 text-xl font-semibold text-white drop-shadow-md">
                     {card.title}
-                </a>
-            </h3>
-        </article>
+                </h3>
+            </article>
+        </a>
     )
 }
+
 
 
 type CardSectionProps = {
