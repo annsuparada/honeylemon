@@ -1,3 +1,4 @@
+import { PageType, PostStatus } from '@prisma/client';
 import { z } from 'zod';
 
 const postSchema = z.object({
@@ -8,7 +9,8 @@ const postSchema = z.object({
   image: z.string().url("Invalid image URL").optional(),
   categoryId: z.string().min(1, "Category ID is required"),
   authorId: z.string().min(1, "Author ID is required"),
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
+  status: z.nativeEnum(PostStatus).optional(),
+  type: z.nativeEnum(PageType)
 });
 
 export { postSchema };

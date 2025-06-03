@@ -51,7 +51,7 @@ const HeroSection = ({
                             </h1>
                             <p className="mb-5 text-white text-shadow-lg/30">{description}</p>
                             {onCtaClick && (
-                                <button className="btn btn-primary rounded-sm" onClick={onCtaClick}>
+                                <button className="btn btn-accent rounded-sm" onClick={onCtaClick}>
                                     {ctaText}
                                 </button>
                             )}

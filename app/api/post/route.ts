@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PostStatus } from "@prisma/client";
+import { PageType, PostStatus } from "@prisma/client";
 import prisma from "@/prisma/client";
 import { z } from "zod";
 import { postSchema } from "@/schemas/postSchema";
@@ -15,16 +15,22 @@ export async function GET(req: Request) {
         const statusParam = searchParams.get("status");
         const categoryParam = searchParams.get("category");
         const limitParam = searchParams.get("limit")
+        const typeParam = searchParams.get("type")
 
         const validStatuses = Object.values(PostStatus);
         const status = validStatuses.includes(statusParam as PostStatus)
             ? (statusParam as PostStatus)
             : undefined;
 
-        const filter: any = {};
+        const validPageTypes = Object.values(PageType);
+        const type = validPageTypes.includes(typeParam as PageType)
+            ? (typeParam as PageType)
+            : undefined;
 
+        const filter: any = {};
         if (slug) filter.slug = slug;
         if (status) filter.status = status;
+        if (type) filter.type = type;
 
         if (categoryParam) {
             const category = await prisma.category.findFirst({
@@ -98,6 +104,7 @@ export async function POST(req: Request) {
                 categoryId: validatedData.categoryId,
                 authorId: decoded.id, // ✅ Use ID from token
                 status: validatedData.status || "DRAFT",
+                type: validatedData.type,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
