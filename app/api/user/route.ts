@@ -7,14 +7,15 @@ import { verifyToken } from "@/utils/auth";
 
 // get all users (Protected)
 export async function GET(req: Request) {
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
+    }
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
-
-        if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
-
         const users = await prisma.user.findMany();
 
         if (!users || users.length === 0) {
@@ -30,14 +31,15 @@ export async function GET(req: Request) {
 
 // create user (Protected)
 export async function POST(req: Request) {
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
+    }
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
-
-        if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
-
         const body = await req.json();
 
         // Validate input with Zod
@@ -87,11 +89,13 @@ export async function POST(req: Request) {
 
 // Handle PATCH requests (Update user)(Protected)
 export async function PATCH(req: Request) {
-    const token = req.headers.get("authorization")?.split(" ")[1]
-    const decoded = verifyToken(token!)
-
-    if (!decoded) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
+    }
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     try {
         const body = await req.json();
@@ -137,13 +141,15 @@ export async function PATCH(req: Request) {
 
 // delete user (Protected)
 export async function DELETE(req: Request) {
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
+    }
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
-
-        if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
         const body = await req.json();
 
         // Validate input with Zod

@@ -1,11 +1,11 @@
 # travomad
 
 Todo
-- [] Write tests for all api
+- [x] Write tests for all api
     - [x] `api/categoty`
     - [x] `api/login`
     - [x] `api/post`
-    - [] `api/user`
+    - [x] `api/user`
 - [] update UI on sigle blog page 
 - [] update share buttons, display all the buttons, remove dropdown
 - [] add dropdow to seclect pageType on write page
