@@ -2,9 +2,9 @@
 
 Todo
 - [] Write tests for all api
-    - [] `api/categoty`
+    - [x] `api/categoty`
     - [] `api/login`
-    - [] `api/post`
+    - [x] `api/post`
     - [] `api/user`
 - [] update UI on sigle blog page 
 - [] update share buttons, display all the buttons, remove dropdown
