@@ -130,6 +130,7 @@ export const budgetPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/2797526/pexels-photo-2797526.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-01T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-budget",
       name: "Budget Travel",
@@ -150,6 +151,7 @@ export const budgetPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/3763903/pexels-photo-3763903.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-02T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-budget",
       name: "Budget Travel",
@@ -170,6 +172,7 @@ export const budgetPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/763429/pexels-photo-763429.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-03T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-budget",
       name: "Budget Travel",
@@ -190,6 +193,7 @@ export const budgetPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-04T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-budget",
       name: "Budget Travel",
@@ -210,6 +214,7 @@ export const budgetPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/2602490/pexels-photo-2602490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-05T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-budget",
       name: "Budget Travel",
@@ -230,6 +235,7 @@ export const budgetPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/2495575/pexels-photo-2495575.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-06T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-budget",
       name: "Budget Travel",
@@ -253,6 +259,7 @@ export const midRangePosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/164336/pexels-photo-164336.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-01T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-mid",
       name: "Mid-Range Travel",
@@ -273,6 +280,7 @@ export const midRangePosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-02T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-mid",
       name: "Mid-Range Travel",
@@ -293,6 +301,7 @@ export const midRangePosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/31653067/pexels-photo-31653067/free-photo-of-camel-trekking-adventure-in-moroccan-desert.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-03T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-mid",
       name: "Mid-Range Travel",
@@ -313,6 +322,7 @@ export const midRangePosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/19046659/pexels-photo-19046659/free-photo-of-people-riding-horseback-around-a-vineyard.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-04T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-mid",
       name: "Mid-Range Travel",
@@ -333,6 +343,7 @@ export const midRangePosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/5567082/pexels-photo-5567082.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-05T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-mid",
       name: "Mid-Range Travel",
@@ -353,6 +364,7 @@ export const midRangePosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/2024534/pexels-photo-2024534.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-06T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-mid",
       name: "Mid-Range Travel",
@@ -376,6 +388,7 @@ export const luxuryPosts: BlogPost[] = [
     image: "https://images.unsplash.com/photo-1668957065532-5770d193d501?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     status: "PUBLISHED",
     createdAt: "2025-04-01T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-luxury",
       name: "Luxury Travel",
@@ -396,6 +409,7 @@ export const luxuryPosts: BlogPost[] = [
     image: "https://images.unsplash.com/photo-1556104577-09754a15dff2?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     status: "PUBLISHED",
     createdAt: "2025-04-02T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-luxury",
       name: "Luxury Travel",
@@ -416,6 +430,7 @@ export const luxuryPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/1467300/pexels-photo-1467300.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-03T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-luxury",
       name: "Luxury Travel",
@@ -436,6 +451,7 @@ export const luxuryPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-04T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-luxury",
       name: "Luxury Travel",
@@ -456,6 +472,7 @@ export const luxuryPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/1287441/pexels-photo-1287441.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-05T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-luxury",
       name: "Luxury Travel",
@@ -476,6 +493,7 @@ export const luxuryPosts: BlogPost[] = [
     image: "https://images.pexels.com/photos/5213955/pexels-photo-5213955.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     status: "PUBLISHED",
     createdAt: "2025-04-06T08:00:00Z",
+    updatedAt: "2025-04-01T08:00:00Z",
     category: {
       id: "cat-luxury",
       name: "Luxury Travel",
