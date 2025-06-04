@@ -28,6 +28,7 @@ export type BlogPost = {
     image?: string;
     status: PostStatus;
     createdAt: string;
+    updatedAt: string;
     category: { id: string; name: string; slug: string };
     author: {
         role?: string;

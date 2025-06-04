@@ -56,8 +56,6 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
     allowedAttributes: { 'a': ['href', 'target'], 'img': ['src', 'alt'] } // Keep links & images safe
   });
 
-  const avatar = 'https://res.cloudinary.com/dejr86qx8/image/upload/v1739062228/HIMidLow/avatar_c1axsr.png';
-
   return (
     <>
       <HeroSection
@@ -65,37 +63,22 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
         isSingleBlogPage={true}
         title={post.title}
         description={post.description}
+        category={post.category.name}
+        author={
+          post.author?.name && post.author?.lastName
+            ? `${post.author.name} ${post.author.lastName}`
+            : post.author?.username || "Unknown"
+        }
+
+        date={post.updatedAt}
         imageUrl="https://images.unsplash.com/photo-1546437744-529610df132e?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       />
       <div className="max-w-screen-md mx-auto py-10 px-4">
         {/* Blog Header */}
         <header className="mb-8">
-          <div className="flex">
+          <div className="mt-8 w-full flex justify-between">
             <div className="badge badge-soft badge-neutral rounded-sm mr-4 p-3">
               {post.category?.name}
-            </div>
-          </div>
-          <div className="mt-8 w-full flex justify-between">
-            <div className="flex">
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                <Image
-                  className="h-12 w-12 rounded-full object-cover"
-                  src={post.author?.profilePicture ? post.author.profilePicture : avatar}
-                  alt={'Author'}
-                  width={70}
-                  height={70}
-                />
-              </div>
-              {/* Name and Title */}
-              <div className="ml-4 ">
-                <div className="text-lg font-semibold text-gray-900">
-                  {post.author?.name
-                    ? `${post.author.name} ${post.author.lastName}`
-                    : post.author?.username}
-                </div>
-                <span className='text-gray-500'><FormattedDate dateString={post.createdAt} /></span>
-              </div>
             </div>
             <ShareButton title={post.title} />
           </div>

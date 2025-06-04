@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import FormattedDate from './FormattedDate'
 
 type HeroSectionProps = {
     isHomepage?: boolean
@@ -9,6 +10,9 @@ type HeroSectionProps = {
     ctaText?: string
     onCtaClick?: () => void
     isSingleBlogPage?: boolean
+    category?: string
+    author?: string
+    date?: string | number | Date;
 }
 
 const HeroSection = ({
@@ -18,7 +22,10 @@ const HeroSection = ({
     imageUrl,
     ctaText = 'Get Started',
     onCtaClick,
-    isSingleBlogPage = false
+    isSingleBlogPage = false,
+    category,
+    author,
+    date
 }: HeroSectionProps) => {
     return (
         <div
@@ -35,11 +42,13 @@ const HeroSection = ({
                         <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white text-shadow-lg/30 leading-tight">
                             {title}
                         </h1>
-                        {description && (
-                            <p className="mt-4 text-sm sm:text-base lg:text-lg text-white text-shadow-lg/30">
-                                {description}
-                            </p>
-                        )}
+
+                        <p className="mt-4 text-sm sm:text-base lg:text-lg text-white text-shadow-lg/30">
+                            {description}
+                        </p>
+                        <p className="mt-4 text-sm sm:text-base lg:text-lg text-white text-shadow-lg/30">
+                            {author} | {date && <FormattedDate dateString={date} />}
+                        </p>
                     </div>
                 </div>
             ) : (

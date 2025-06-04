@@ -2,7 +2,7 @@ import prisma from "@/prisma/client";
 import { PostStatus } from "@prisma/client";
 import { BlogPost } from "../types";
 
-export async function getPublishedPosts(limit = 6) {
+export async function getPublishedPosts(limit?: number | undefined) {
     const rawPosts = await prisma.post.findMany({
         where: { status: PostStatus.PUBLISHED },
         orderBy: { createdAt: 'desc' },
@@ -37,6 +37,7 @@ export async function getPublishedPosts(limit = 6) {
         image: post.image ?? undefined,
         status: post.status as PostStatus,
         createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
         category: {
             id: post.category.id,
             name: post.category.name,
@@ -89,6 +90,7 @@ export async function getPostBySlug(slug: string) {
         image: post.image ?? undefined,
         status: post.status as PostStatus,
         createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
         category: {
             id: post.category.id,
             name: post.category.name,
