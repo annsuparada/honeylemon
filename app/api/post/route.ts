@@ -104,8 +104,6 @@ export async function POST(req: Request) {
                 authorId: decoded.id, // ✅ Use ID from token
                 status: validatedData.status || "DRAFT",
                 type: validatedData.type,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             },
         });
 
