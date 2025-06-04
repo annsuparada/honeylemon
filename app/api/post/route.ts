@@ -65,19 +65,18 @@ export async function GET(req: Request) {
 
 // POST: Create a new post (Protected)
 export async function POST(req: Request) {
+    const token = req.headers.get("authorization")?.split(" ")[1];
+
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
+    }
+
+    const decoded = verifyToken(token);
+
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1];
-
-        if (!token) {
-            return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
-        }
-
-        const decoded = verifyToken(token);
-
-        if (!decoded || !decoded.id) {
-            return NextResponse.json({ error: "Unauthorized - Invalid Token" }, { status: 401 });
-        }
-
         const body = await req.json();
 
         // Validate request body using Zod
@@ -124,13 +123,19 @@ export async function POST(req: Request) {
 
 // PATCH: Update a post (by ID) (Protected)
 export async function PATCH(req: Request) {
-    try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
+    const token = req.headers.get("authorization")?.split(" ")[1];
 
-        if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
+    }
+
+    const decoded = verifyToken(token);
+
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    try {
+
         const body = await req.json();
 
         // Validate input
@@ -181,12 +186,18 @@ export async function PATCH(req: Request) {
 
 // DELETE: Remove a post by ID (Protected)
 export async function DELETE(req: Request) {
-    const token = req.headers.get("authorization")?.split(" ")[1]
-    const decoded = verifyToken(token!)
+    const token = req.headers.get("authorization")?.split(" ")[1];
 
-    if (!decoded) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!token) {
+        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
     }
+
+    const decoded = verifyToken(token);
+
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const body = await req.json();
 
