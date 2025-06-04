@@ -5,7 +5,7 @@ Todo
     - [x] `api/categoty`
     - [x] `api/login`
     - [x] `api/post`
-    - [x] `api/user`
+    - [x] `api/user` 
 - [] update UI on sigle blog page 
 - [] update share buttons, display all the buttons, remove dropdown
 - [] add dropdow to seclect pageType on write page
