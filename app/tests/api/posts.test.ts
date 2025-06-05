@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { POST, GET, PATCH, DELETE } from '../../api/post/route';
 import prisma from "@/prisma/client";
 

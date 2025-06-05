@@ -9,8 +9,13 @@ import {
 } from "react-icons/fa6";
 import { useState } from "react";
 
-const ShareButton = ({ title }: { title: string }) => {
-    const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+type ShareButtonProps = {
+    title: string;
+    url?: string;
+};
+
+const ShareButton = ({ title, url }: ShareButtonProps) => {
+    const currentUrl = typeof window !== "undefined" ? url ?? window.location.href : "";
     const [copied, setCopied] = useState(false);
 
     const handleCopyLink = () => {

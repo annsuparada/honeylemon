@@ -25,8 +25,8 @@ const PaginationClient = <T,>({
     return (
         <div className="flex justify-center items-center space-x-4 mt-8">
             <button
-                className={`btn btn-outline btn-sm btn-secondary rounded-sm ${currentPage === 1 ? 'pointer-events-none opacity-50' : ''
-                    }`}
+                disabled={currentPage === 1}
+                className="btn btn-outline btn-sm btn-secondary rounded-sm"
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             >
                 Previous
@@ -37,8 +37,8 @@ const PaginationClient = <T,>({
             </span>
 
             <button
-                className={`btn btn-outline btn-sm btn-secondary rounded-sm ${currentPage === totalPages ? 'pointer-events-none opacity-50' : ''
-                    }`}
+                disabled={currentPage === totalPages}
+                className="btn btn-outline btn-sm btn-secondary rounded-sm"
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             >
                 Next

@@ -1,5 +1,9 @@
+/**
+ * @jest-environment node
+ */
+
 process.env.SECRET_KEY = 'mocked_secret_key';
-import { POST } from '../../api/login/route';
+
 import prisma from '@/prisma/client';
 import bcrypt from 'bcrypt';
 
@@ -18,6 +22,12 @@ jest.mock('jsonwebtoken', () => ({
 }));
 
 describe('Login API', () => {
+    let POST: (req: Request) => Promise<Response>;
+
+    beforeAll(async () => {
+        // Import the handler AFTER setting env
+        POST = (await import('../../api/login/route')).POST;
+    });
     const mockUser = {
         id: 'user123',
         email: 'test@example.com',

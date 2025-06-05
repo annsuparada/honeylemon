@@ -1,4 +1,3 @@
-import { title } from "process";
 import SectionHeader from "./SectionHeader";
 
 export type FeatureItem = {

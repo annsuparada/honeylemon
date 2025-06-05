@@ -42,13 +42,13 @@ const BlogSection: React.FC<BlogSectionProps> = ({
           {/* Loading Spinner */}
           {loading ? (
             <div className="flex justify-center items-center h-48">
-              <span className="loading loading-spinner loading-xl"></span>
+              <span role="status" className="loading loading-spinner loading-xl"></span>
             </div>
           ) : (
             <div
               className={`mt-16 ${threeColumns
-                  ? 'grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3'
-                  : 'space-y-20 lg:mt-20 lg:space-y-20'
+                ? 'grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3'
+                : 'space-y-20 lg:mt-20 lg:space-y-20'
                 }`}
             >
               {posts.map((post) => {
