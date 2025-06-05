@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import Image from 'next/image'
 import BlogSection from '@/app/components/BlogSection'
 import sanitizeHtml from 'sanitize-html';
-import FormattedDate from '@/app/components/FormattedDate';
 import './article.css'
 import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';

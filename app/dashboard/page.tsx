@@ -18,7 +18,7 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
-    const itemsPerPage = 10;
+    const itemsPerPage = 5;
     const [currentItems, setCurrentItems] = useState<BlogPost[]>([]);
 
     // Fetch posts only on initial mount
@@ -88,10 +88,10 @@ export default function Dashboard() {
 
                 {/* Status Filter Dropdown */}
                 <div className="w-50 p-0 m-0 mb-6">
-                    <label className="block text-lg font-semibold text-gray-700 mb-2">
+                    <label className="block text-lg font-semibold mb-2">
                         Status{" "}
                         <select
-                            className="border border-gray-300 p-2 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+                            className="border p-2 rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
                             value={selectedStatus}
                             onChange={(e) => setSelectedStatus(e.target.value)}
                         >
@@ -179,7 +179,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Pagination */}
-                {blogPosts.length > 10 && (
+                {blogPosts.length > 5 && (
                     <div className="mb-10">
                         <Pagination items={filteredPosts} itemsPerPage={itemsPerPage} onPageChange={setCurrentItems} />
                     </div>

@@ -11,12 +11,15 @@ import { fetchPosts } from "@/utils/postActions";
 
 const Home = () => {
   const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
 
     async function loadPosts() {
+      setLoading(true)
       const loadedPosts = await fetchPosts("PUBLISHED", 5)
       setPosts(loadedPosts)
+      setLoading(false)
     }
 
     loadPosts()
@@ -33,7 +36,13 @@ const Home = () => {
       />
       <BentoFeatures features={features} sectionTitle="Featured This Week" sectionSubTitle="Book now. Explore more. Spend less." />
       <CardSection cardData={destinations} title="Popular Destinations" subtitle="Top travel spots our readers love" />
-      <BlogSection posts={posts} title={'Latest Travel Guides '} subTitle={"Fresh tips, itineraries, and destination insights"} />
+      <BlogSection
+        loading={loading}
+        posts={posts}
+        title="Latest Travel Guides"
+        subTitle="Fresh tips, itineraries, and destination insights"
+        threeColumns={true}
+      />
       <NewsLetterSection />
     </main>
   );
