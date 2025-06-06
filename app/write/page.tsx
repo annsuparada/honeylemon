@@ -13,7 +13,7 @@ import ProtectedPage from '../components/ProtectedPage'
 import MenuBar from '../components/tiptap/MenuBar'
 import { Author, Category } from '../types'
 import Image from 'next/image'
-import { PostStatus } from '@prisma/client'
+import { PageType, PostStatus } from '@prisma/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import BulletList from '@tiptap/extension-bullet-list'
 import OrderedList from '@tiptap/extension-ordered-list'
@@ -21,6 +21,7 @@ import ListItem from '@tiptap/extension-list-item'
 import LinkExtension from "@tiptap/extension-link";
 import AlertMessage from '../components/AlertMessage'
 import { ImageWithAlt } from '../components/tiptap/ImageWithAlt'
+import SelectInput from '../components/SelectInput'
 
 const extensions = [
     Color,
@@ -136,20 +137,18 @@ const WritePage = () => {
         }
     }, [slug]);
 
-
-    async function handleCreateCategory() {
-        if (!newCategory.trim()) {
+    async function handleCreateCategory(name: string) {
+        if (!name.trim()) {
             setMessage({ type: "error", text: "Please enter a category" });
             return null;
         }
 
         try {
-            const created = await createCategory(newCategory, token!);
+            const created = await createCategory(name, token!);
             if (created) {
-                setCategories([...categories, created]);
-                setNewCategory("");
+                setCategories(prev => [...prev, created]);
                 setMessage({ type: "success", text: "Category created successfully!" });
-                return created; // Return the created category to auto-select
+                return { label: created.name, value: created.id };
             } else {
                 setMessage({ type: "error", text: "Failed to create category. Try again!" });
             }
@@ -188,6 +187,7 @@ const WritePage = () => {
             status: isPublish ? PostStatus.PUBLISHED : PostStatus.DRAFT,
             authorId: user.id,
             categoryId: selectedCategory,
+            type: PageType.ARTICLE
         };
 
         try {
@@ -259,7 +259,7 @@ const WritePage = () => {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Title</label>
                         <input
                             type="text"
-                            className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+                            className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
                             placeholder="Enter title here..."
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -270,7 +270,7 @@ const WritePage = () => {
                     <div className="mb-4">
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Description</label>
                         <textarea
-                            className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+                            className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
                             placeholder="Write a short description..."
                             value={description}
                             onChange={(e) => setDesciption(e.target.value)}
@@ -279,70 +279,19 @@ const WritePage = () => {
                     </div>
 
                     {/* Category Selection / Creation */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end mb-6">
-                        {/* Select Category */}
-                        <div>
-                            <label className="block text-lg font-semibold text-gray-700 mb-2">Select Category</label>
-                            <select
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                                value={selectedCategory || ""}
-                                className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
-                            >
-                                <option value="">Select Category</option>
-                                {categories.map((cat) => (
-                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                ))}
-                            </select>
-                        </div>
+                    <SelectInput
+                        label="Category"
+                        options={categories.map(cat => ({ label: cat.name, value: cat.id }))}
+                        selectedValue={selectedCategory}
+                        onChange={setSelectedCategory}
+                        enableCreate={true}
+                        onCreateNew={handleCreateCategory}
 
-                        {/* Create New Category */}
-                        <div>
-                            <label className="block text-lg font-semibold text-gray-700 mb-2">Create New Category</label>
+                    />
 
-                            {/* Show button when input is hidden */}
-                            {!showCategoryInput && (
-                                <button
-                                    className="btn btn-outline w-full"
-                                    onClick={() => setShowCategoryInput(true)}
-                                >
-                                    Create New Category
-                                </button>
-                            )}
-
-                            {/* Show input when button is clicked */}
-                            {showCategoryInput && (
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="text"
-                                        className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
-                                        placeholder="Enter new category"
-                                        value={newCategory}
-                                        onChange={(e) => setNewCategory(e.target.value)}
-                                    />
-                                    <button
-                                        className="btn btn-outline btn-primary"
-                                        onClick={async () => {
-                                            const created = await handleCreateCategory();
-                                            if (created) {
-                                                setSelectedCategory(created.id); // Auto-select new category
-                                                setShowCategoryInput(false); // Hide input after creation
-                                            }
-                                        }}
-                                    >
-                                        Save
-                                    </button>
-                                    <button
-                                        className="btn btn-outline"
-                                        onClick={() => setShowCategoryInput(false)} // Cancel input
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    {/* </div> */}
                     <button
-                        className='btn btn-outline'
+                        className='btn btn-outline bg-gray-100'
                         onClick={() => {
                             const url = window.prompt('Enter Image URL', image);
                             if (url) setImage(url);
