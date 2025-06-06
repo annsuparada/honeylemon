@@ -240,7 +240,7 @@ const WritePage = () => {
     return (
         <ProtectedPage>
             <div className='bg-primary py-16'>
-                <h1 className="text-4xl font-bold mb-3 text-center text-white">Write Your Blog</h1>
+                <h1 className="text-4xl font-bold mb-3 text-center text-white mt-20 mb-10">Write Your Blog</h1>
             </div>
             <div className="min-h-screen py-16 px-2 max-w-screen-lg mx-auto">
                 <div className="flex justify-end">
@@ -322,20 +322,20 @@ const WritePage = () => {
                 <div className="mb-4">
                     <label className="block text-lg font-semibold text-gray-700 mb-2 mt-4">Cover Image</label>
 
-                    <div className="relative w-full h-64 border rounded-md overflow-hidden">
+                    <div className="relative w-full aspect-[3/1] border rounded-md overflow-hidden">
                         <Image
                             src={image}
                             alt="Article cover image"
-                            width={500}
-                            height={400}
-                            className="w-full h-full object-cover cursor-pointer"
+                            fill
+                            className="object-cover cursor-pointer block"
                             onClick={() => {
-                                const url = window.prompt('Enter Image URL', image);
+                                const url = window.prompt("Enter Image URL", image);
                                 if (url) setImage(url);
                             }}
                             priority
                         />
                     </div>
+
                 </div>
 
                 {isClient && (
