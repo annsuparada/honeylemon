@@ -182,6 +182,11 @@ const WritePage = () => {
             return;
         }
 
+        if (content.length < 10) {
+            setMessage({ type: "error", text: "Content must be at least 10 characters long!" });
+            return;
+        }
+
         setLoading(true);
         setMessage(null);
 
