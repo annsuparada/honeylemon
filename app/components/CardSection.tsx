@@ -9,26 +9,22 @@ export type CardProps = {
 
 const Card = ({ card }: { card: CardProps }) => {
     return (
-        <a href={card.href} className="group">
-            <article
-                className="relative isolate flex flex-col justify-end overflow-hidden rounded-md bg-gray-900 px-6 pt-40 pb-6 sm:pt-56 lg:pt-64 transition hover:scale-[1.01]"
-            >
+        <a href={card.href} className="group block rounded-lg overflow-hidden shadow transition hover:scale-[1.01]">
+            <div className="relative h-64 w-full">
                 <img
-                    alt={card.title}
                     src={card.imageUrl}
-                    className="absolute inset-0 -z-10 size-full object-cover"
+                    alt={card.title}
+                    className="absolute inset-0 h-full w-full object-cover"
                 />
-                {/* Overlay */}
-                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-                <div className="absolute inset-0 -z-10 rounded-md ring-1 ring-white/10 ring-inset" />
-
-                <h3 className="mt-3 text-xl font-semibold text-white drop-shadow-md">
-                    {card.title}
-                </h3>
-            </article>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+                <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-lg" />
+                <div className="absolute bottom-4 left-4 z-10">
+                    <h3 className="text-white text-lg font-semibold drop-shadow-md">{card.title}</h3>
+                </div>
+            </div>
         </a>
-    )
-}
+    );
+};
 
 
 
