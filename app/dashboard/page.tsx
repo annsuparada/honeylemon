@@ -1,188 +1,155 @@
 "use client";
 
-import ProtectedPage from "../components/ProtectedPage";
-import Image from 'next/image'
-import Link from 'next/link'
-import FormattedDate from '../components/FormattedDate';
-import { deletePost, fetchPosts, updatePost } from '@/utils/postActions';
-import { BlogPost } from '../types';
-import { FaEdit, FaRegEye } from "react-icons/fa";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SlOptionsVertical } from "react-icons/sl";
+import { fetchPosts, deletePost, updatePost } from "@/utils/postActions";
+import { BlogPost } from "../types";
+import FormattedDate from "../components/FormattedDate";
 import AlertMessage from "../components/AlertMessage";
 import Pagination from "../components/PaginationClient";
+import { FaEdit, FaRegEye } from "react-icons/fa";
+import { SlOptionsVertical } from "react-icons/sl";
+import ProtectedPage from "../components/ProtectedPage";
 
 export default function Dashboard() {
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
     const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
-    const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-    const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
+    const [selectedStatus, setSelectedStatus] = useState("ALL");
     const itemsPerPage = 5;
     const [currentItems, setCurrentItems] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // Fetch posts only on initial mount
     useEffect(() => {
         async function loadPosts() {
             setLoading(true);
-            try {
-                const posts = await fetchPosts();
-                setBlogPosts(posts);
-                setFilteredPosts(posts); // Initialize filtered list
-                setCurrentItems(posts.slice(0, itemsPerPage));
-            } catch (error) {
-                console.error("Failed to fetch posts", error);
-            } finally {
-                setLoading(false);
-            }
+            const posts = await fetchPosts();
+            setBlogPosts(posts);
+            setFilteredPosts(posts);
+            setCurrentItems(posts.slice(0, itemsPerPage));
+            setLoading(false);
         }
         loadPosts();
-    }, []); // empty dependency array ensures this runs once\
+    }, []);
 
     useEffect(() => {
-        let updatedPost;
-        if (selectedStatus === "ALL") {
-            updatedPost = blogPosts
-        } else {
-            updatedPost = blogPosts.filter(post => post.status === selectedStatus)
-        }
-        setFilteredPosts(updatedPost)
-        setCurrentItems(updatedPost.slice(0, itemsPerPage)); // Reset pagination
+        const updated = selectedStatus === "ALL"
+            ? blogPosts
+            : blogPosts.filter(post => post.status === selectedStatus);
+        setFilteredPosts(updated);
+        setCurrentItems(updated.slice(0, itemsPerPage));
     }, [selectedStatus, blogPosts]);
 
     const handleArchive = async (post: BlogPost) => {
         const updatedPost = await updatePost({ ...post, status: "ARCHIVED" });
         if (updatedPost) {
-            setBlogPosts(prevPosts =>
-                prevPosts.map(p => (p.id === post.id ? { ...p, status: "ARCHIVED" } : p))
-            );
-            setMessage({ type: "success", text: "Archived post successfully" });
+            setBlogPosts(prev => prev.map(p => p.id === post.id ? updatedPost : p));
+            setMessage({ type: "success", text: "Post archived." });
         }
     };
 
     const handleDelete = async (postId: string) => {
-        const confirmed = confirm("Are you sure you want to delete this post?");
-        if (!confirmed) return;
-
+        if (!confirm("Delete this post?")) return;
         const result = await deletePost(postId);
         if (result) {
-            setBlogPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
-            setMessage({ type: "success", text: "Deleted post successfully" });
+            setBlogPosts(prev => prev.filter(p => p.id !== postId));
+            setMessage({ type: "success", text: "Post deleted." });
         }
     };
 
     return (
         <ProtectedPage>
-            <div className='bg-primary py-16'>
-                <h1 className="text-4xl font-bold mb-3 text-center text-white">DASHBOARD</h1>
+            <div className="bg-primary text-white py-12 text-center">
+                <h1 className="text-4xl font-bold mt-20 mb-10">DASHBOARD</h1>
             </div>
 
-            <div className="max-w-screen-lg mx-auto">
-                {/* Hero Section */}
-                <div className="py-16 flex justify-between items-center">
-                    <h1 className="text-4xl font-bold">Your Stories</h1>
-                    <div>
-                        <Link className="btn btn-primary btn-lg" href={"/write"}>Write</Link>
-                    </div>
+            <div className="max-w-screen-lg mx-auto px-4 py-12">
+                <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-3xl font-bold">Your Stories</h2>
+                    <Link href="/write" className="btn btn-primary text-white">Write</Link>
                 </div>
 
-                {/* Status Filter Dropdown */}
-                <div className="w-50 p-0 m-0 mb-6">
-                    <label className="block text-lg font-semibold mb-2">
-                        Status{" "}
-                        <select
-                            className="border p-2 rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
-                        >
-                            <option value="ALL">All</option>
-                            <option value="DRAFT">Draft</option>
-                            <option value="PUBLISHED">Published</option>
-                            <option value="ARCHIVED">Archived</option>
-                        </select>
-                    </label>
+                <div className="mb-6">
+                    <label className="font-semibold mr-2">Status</label>
+                    <select
+                        className="border p-2 rounded bg-white"
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                    >
+                        <option value="ALL">All</option>
+                        <option value="DRAFT">Draft</option>
+                        <option value="PUBLISHED">Published</option>
+                        <option value="ARCHIVED">Archived</option>
+                    </select>
                 </div>
 
-                {/* Blog Posts Section */}
-                <div className="p-6 grid gap-12 grid-cols-1">
-                    {/* Alert Message */}
-                    {message && <AlertMessage message={message} onClose={() => setMessage(null)} />}
+                {message && <AlertMessage message={message} onClose={() => setMessage(null)} />}
 
-                    {/* Loading Indicator */}
-                    {loading && (
-                        <div className="flex items-center justify-center my-4">
-                            <span className="loading loading-spinner loading-lg"></span>
+                {loading ? (
+                    <div className="text-center py-10">Loading...</div>
+                ) : currentItems.map(post => (
+                    <div key={post.slug} className="flex flex-col md:flex-row overflow-hidden rounded shadow-lg mb-8">
+                        <div className="md:w-1/3 w-full h-48 md:h-auto">
+                            <Image
+                                src={post.image || "https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp"}
+                                alt={post.title}
+                                width={400}
+                                height={266}
+                                className="w-full h-full object-cover block"
+                            />
                         </div>
-                    )}
 
-                    {currentItems.map((post) => (
-                        <div key={post.slug} className="flex flex-col md:flex-row rounded-sm shadow-lg overflow-hidden glass-bg">
-                            {/* Image */}
-                            <div className="w-full md:w-1/3 relative h-48 md:h-auto flex-shrink-0">
-                                <Image
-                                    src={post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
-                                    alt={post.title}
-                                    fill
-                                    style={{ objectFit: "cover" }}
-                                    className="rounded-t-sm md:rounded-none md:rounded-l-sm"
-                                />
+                        <div className="md:w-2/3 w-full p-6 relative bg-white">
+                            <div className="absolute top-4 right-4">
+                                <div className="dropdown dropdown-end">
+                                    <div tabIndex={0} role="button">
+                                        <SlOptionsVertical />
+                                    </div>
+                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded w-44 shadow">
+                                        <li><a onClick={() => handleArchive(post)}>Archive</a></li>
+                                        <li><a className="text-red-500" onClick={() => handleDelete(post.id)}>Delete</a></li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            {/* Text Content */}
-                            <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
-                                <div className="absolute top-0 right-0 p-2 cursor-pointer">
-                                    <div className="dropdown dropdown-end">
-                                        <div tabIndex={0} role="button">
-                                            <SlOptionsVertical className="text-gray-500 hover:text-gray-700 transition duration-200" />
-                                        </div>
-                                        <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-sm z-1 w-52 p-2 shadow-xl">
-                                            <li><a onClick={() => handleArchive(post)}>Archive</a></li>
-                                            <li><a onClick={() => handleDelete(post.id)} className="text-red-500">Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+                            <p className="text-sm text-gray-500">
+                                <FormattedDate dateString={post.createdAt} /> · {post.category?.name || "Uncategorized"} ·{" "}
+                                <span className={`badge rounded ${post.status === "DRAFT" ? "badge-warning" : post.status === "PUBLISHED" ? "badge-info" : "badge-error"}`}>
+                                    {post.status}
+                                </span>
+                            </p>
+                            <h3 className="text-2xl font-bold mt-2">{post.title}</h3>
+                            <p className="mt-2 text-gray-700">
+                                {post.description?.slice(0, 200)}
+                                {post.description && post.description.length > 200 ? "..." : ""}
 
-                                <div>
-                                    <p className="text-sm">
-                                        <span className='text-gray-500'><FormattedDate dateString={post.createdAt} /> </span>·{' '}
-                                        <span className="badge badge-soft badge-neutral rounded-sm mr-2">{post.category?.name || "Uncategorized"}</span>
-                                        <span className={`badge rounded-sm ${post.status === "DRAFT" ? "badge-warning" : post.status === "PUBLISHED" ? "badge-info" : post.status === "ARCHIVED" ? "badge-error" : "badge-secondary"}`}>
-                                            {post.status || "Uncategorized"}
-                                        </span>
-                                    </p>
-                                    <h2 className="text-2xl font-bold mt-2">{post.title}</h2>
-                                    <p className="mt-4">
-                                        {post.description && post.description.length > 200
-                                            ? post.description?.slice(0, 200) + "..."
-                                            : post.description}
-                                    </p>
-                                </div>
-
-                                {/* Tags and Read More */}
-                                <div className="flex items-center justify-between mt-6">
-                                    <div className="flex space-x-2">
-                                        <span className='font-bold text-gray-600'>{post.author?.name} {post.author?.lastName}</span>
-                                    </div>
-                                    <div>
-                                        <Link href={`/write?slug=${post.slug}`} className="btn btn-outline btn-accent btn-sm rounded-sm mr-2">
-                                            <FaEdit /> Edit
-                                        </Link>
-
-                                        <Link href={`/blog/${post.slug}`} className="btn btn-outline btn-info btn-sm rounded-sm">
-                                            <FaRegEye /> View
-                                        </Link>
-                                    </div>
-                                </div>
+                            </p>
+                            <div className="flex md:absolute md:bottom-4 md:right-4 gap-2 mt-4 md:mt-0">
+                                <Link
+                                    href={`/write?slug=${post.slug}`}
+                                    className="btn btn-outline btn-accent btn-sm rounded"
+                                >
+                                    <FaEdit /> Edit
+                                </Link>
+                                <Link
+                                    href={`/blog/${post.slug}`}
+                                    className="btn btn-outline btn-info btn-sm rounded"
+                                >
+                                    <FaRegEye /> View
+                                </Link>
                             </div>
-                        </div>
-                    ))}
-                </div>
 
-                {/* Pagination */}
-                {blogPosts.length > 5 && (
-                    <div className="mb-10">
-                        <Pagination items={filteredPosts} itemsPerPage={itemsPerPage} onPageChange={setCurrentItems} />
+                        </div>
                     </div>
+                ))}
+
+                {filteredPosts.length > itemsPerPage && (
+                    <Pagination
+                        items={filteredPosts}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={setCurrentItems}
+                    />
                 )}
             </div>
         </ProtectedPage>
