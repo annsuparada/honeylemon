@@ -78,13 +78,17 @@ const WritePage = () => {
     const [user, setUser] = useState<Author | null>(null);
     const [categories, setCategories] = useState<Category[] | []>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
-    const [newCategory, setNewCategory] = useState("");
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-    const [showCategoryInput, setShowCategoryInput] = useState(false);
     const [image, setImage] = useState<string>(placeholderImg);
     const [postId, setPostId] = useState<string | null>(null);
+    const [pageType, setPageType] = useState<PageType | null>(null);
+
+    const pageTypeOptions = Object.values(PageType).map(type => ({
+        label: type,
+        value: type
+    }))
 
 
     useEffect(() => {
@@ -105,6 +109,7 @@ const WritePage = () => {
 
             try {
                 const post = await fetchPostBySlug(slug);
+                console.log('post---', post)
                 if (post) {
                     setPostId(post.id);
                     setTitle(post.title);
@@ -112,6 +117,7 @@ const WritePage = () => {
                     setDesciption(post.description);
                     setImage(post.image || placeholderImg);
                     setSelectedCategory(post.categoryId);
+                    setPageType(post.type)
                 }
             } catch (error) {
                 console.error("Error loading draft post:", error);
@@ -134,6 +140,7 @@ const WritePage = () => {
             setDesciption("");
             setImage(placeholderImg);
             setSelectedCategory("");
+            setPageType(null)
         }
     }, [slug]);
 
@@ -187,7 +194,7 @@ const WritePage = () => {
             status: isPublish ? PostStatus.PUBLISHED : PostStatus.DRAFT,
             authorId: user.id,
             categoryId: selectedCategory,
-            type: PageType.ARTICLE
+            type: pageType ?? undefined
         };
 
         try {
@@ -288,6 +295,16 @@ const WritePage = () => {
                         onCreateNew={handleCreateCategory}
 
                     />
+
+                    {/* Select Page type */}
+                    <SelectInput
+                        label="Page Type"
+                        options={pageTypeOptions}
+                        selectedValue={pageType ?? ""}
+                        onChange={(val) => setPageType(val as PageType)}
+
+                    />
+
 
                     {/* </div> */}
                     <button

@@ -249,7 +249,7 @@ describe('Post API', () => {
 
     it('PATCH: should update a post', async () => {
         (prisma.post.findFirst as jest.Mock).mockResolvedValue({ id: 'post123', title: 'Old' });
-        (prisma.post.update as jest.Mock).mockResolvedValue({ id: 'post123', title: 'Updated' });
+        (prisma.post.update as jest.Mock).mockResolvedValue({ id: 'post123', title: 'Updated', type: 'ARTICLE' });
 
         const req = new Request('http://localhost/api/posts', {
             method: 'PATCH',
@@ -257,12 +257,19 @@ describe('Post API', () => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer token',
             },
-            body: JSON.stringify({ id: 'post123', title: 'Updated' }),
+            body: JSON.stringify({
+                id: 'post123',
+                title: 'Updated',
+                content: 'Updated content', // required by schema
+                categoryId: 'cat123',       // required by schema
+                type: 'ARTICLE',            // required by schema
+            }),
         });
 
         const res = await PATCH(req as any);
         const json = await res.json();
 
+        expect(res.status).toBe(200);
         expect(json.success).toBe(true);
         expect(json.post.title).toBe('Updated');
     });
@@ -276,7 +283,13 @@ describe('Post API', () => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer token',
             },
-            body: JSON.stringify({ id: 'nonexistent', title: 'Updated' }),
+            body: JSON.stringify({
+                id: 'nonexistent',
+                title: 'Updated',
+                content: 'This is updated content.',
+                categoryId: 'cat123',
+                type: 'ARTICLE',
+            }),
         });
 
         const res = await PATCH(req as any);

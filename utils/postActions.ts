@@ -1,3 +1,4 @@
+import { PageType, PostStatus } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 const POST_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/post` || "http://localhost:3000/api/post";
 
@@ -67,7 +68,8 @@ export async function createPost(params: {
   image?: string;
   categoryId?: string;
   authorId: string;
-  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  status?: PostStatus;
+  type?: PageType
 }) {
   try {
     const token = localStorage.getItem("token");
@@ -113,6 +115,7 @@ export async function updatePost(data: any) {
         image: data.image,
         status: data.status,
         categoryId: data.categoryId,
+        type: data.type
       }),
     });
     return await res.json();

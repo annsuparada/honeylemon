@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { PageType, PostStatus } from "@prisma/client";
 import prisma from "@/prisma/client";
 import { z } from "zod";
-import { postSchema } from "@/schemas/postSchema";
+import { postSchema, updatePostSchema } from "@/schemas/postSchema";
 import { verifyToken } from "@/utils/auth";
 
 
@@ -137,18 +137,7 @@ export async function PATCH(req: Request) {
         const body = await req.json();
 
         // Validate input
-        const schema = z.object({
-            id: z.string().min(1, "Post ID is required"),
-            title: z.string().min(3).optional(),
-            slug: z.string().optional(),
-            content: z.string().min(10).optional(),
-            description: z.string().optional(),
-            image: z.string().url().optional(),
-            status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
-            categoryId: z.string().optional(),
-        });
-
-        const validatedData = schema.parse(body);
+        const validatedData = updatePostSchema.parse(body);
 
         // Check if post exists
         const post = await prisma.post.findFirst({ where: { id: validatedData.id } });
@@ -167,7 +156,7 @@ export async function PATCH(req: Request) {
                 image: validatedData.image ?? post.image,
                 status: validatedData.status ?? post.status,
                 categoryId: validatedData.categoryId ?? post.categoryId,
-                updatedAt: new Date(),
+                type: validatedData.type,
             },
         });
 
