@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { usePathname, useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 const navLinks = [
   { href: '/deals', label: 'Deals' },
@@ -61,7 +62,14 @@ const Navigation = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
         <div className="text-xl text-white font-bold" style={{ textShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}>
-          <Link href="/">Travomad</Link>
+          <Link href="/">
+            <Image
+              src={"https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"}
+              alt={'Travomad Logo'}
+              width={150}
+              height={30}
+            />
+          </Link>
         </div>
 
         {/* Desktop Navigation */}

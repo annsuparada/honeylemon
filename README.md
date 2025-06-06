@@ -6,16 +6,16 @@ Todo
     - [x] `api/login`
     - [x] `api/post`
     - [x] `api/user` 
-- [] write tests for front end
-    - [] test for components
-    - [] test for all pages
+- [x] write tests for front end
+    - [x] test for components
+    - [x] test for all pages
 - [x] update UI on sigle blog page 
 - [x] update share buttons, display all the buttons, remove dropdown
 - [] add dropdow to seclect pageType on write page
 - [x] add pagination to blog section
 - [x] add loading when fetching blogs (client side)
+- [x] update logo
 - [] render blog by page/category
-- [] update logo
 - [] create admin profile
 - [] create newsletters feature
 - [] add color to category bage
