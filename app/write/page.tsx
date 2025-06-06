@@ -83,7 +83,7 @@ const WritePage = () => {
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [image, setImage] = useState<string>(placeholderImg);
     const [postId, setPostId] = useState<string | null>(null);
-    const [pageType, setPageType] = useState<PageType | null>(null);
+    const [pageType, setPageType] = useState<PageType>('ARTICLE');
 
     const pageTypeOptions = Object.values(PageType).map(type => ({
         label: type,
@@ -109,7 +109,6 @@ const WritePage = () => {
 
             try {
                 const post = await fetchPostBySlug(slug);
-                console.log('post---', post)
                 if (post) {
                     setPostId(post.id);
                     setTitle(post.title);
@@ -140,7 +139,7 @@ const WritePage = () => {
             setDesciption("");
             setImage(placeholderImg);
             setSelectedCategory("");
-            setPageType(null)
+            setPageType("ARTICLE")
         }
     }, [slug]);
 
@@ -293,14 +292,13 @@ const WritePage = () => {
                         onChange={setSelectedCategory}
                         enableCreate={true}
                         onCreateNew={handleCreateCategory}
-
                     />
 
                     {/* Select Page type */}
                     <SelectInput
                         label="Page Type"
                         options={pageTypeOptions}
-                        selectedValue={pageType ?? ""}
+                        selectedValue={pageType}
                         onChange={(val) => setPageType(val as PageType)}
 
                     />
