@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import fetchMock from 'jest-fetch-mock';
 
+
 fetchMock.enableMocks();
 
 // Optional: silence console noise during test runs
@@ -32,3 +33,4 @@ jest.mock('next/server', () => {
     };
 });
 
+jest.mock('@/prisma/client');
