@@ -165,25 +165,24 @@ const WritePage = () => {
         return null;
     }
 
-
     const handleSave = async (isPublish: boolean) => {
         if (!title.trim()) {
-            setMessage({ type: "error", text: "Title is required!" });
+            setMessage({ type: 'error', text: 'Title is required!' });
             return;
         }
 
         if (!user || !user.id) {
-            setMessage({ type: "error", text: "Author ID is missing! Please log in." });
+            setMessage({ type: 'error', text: 'Author ID is missing! Please log in.' });
             return;
         }
 
         if (!selectedCategory.trim()) {
-            setMessage({ type: "error", text: "Category is required!" });
+            setMessage({ type: 'error', text: 'Category is required!' });
             return;
         }
 
         if (content.length < 10) {
-            setMessage({ type: "error", text: "Content must be at least 10 characters long!" });
+            setMessage({ type: 'error', text: 'Content must be at least 10 characters long!' });
             return;
         }
 
@@ -202,40 +201,27 @@ const WritePage = () => {
         };
 
         try {
-            let result;
+            const result = postId
+                ? await updatePost({ id: postId, ...postData })
+                : await createPost(postData);
 
-            if (postId) {
-                // If postId exists, update the existing post
-                result = await updatePost({ id: postId, ...postData });
+            if (result.success) {
+                setMessage({ type: 'success', text: 'Post saved successfully!' });
+
+                const param = slug || result.post?.slug;
+                router.push(isPublish ? `/blog/${param}` : '/dashboard');
             } else {
-                // If no postId, create a new post
-                result = await createPost(postData);
-            }
-
-            if (result && !result.error) {
-                setMessage({ type: "success", text: "Post saved successfully!" });
-
-                let param
-                if (slug) {
-                    param = slug
-                } else {
-                    param = result.post.slug
-                }
-                if (isPublish) {
-                    router.push(`/blog/${param}`);
-                } else {
-                    router.push('/dashboard')
-                }
-
-            } else {
-                setMessage({ type: "error", text: "Failed to save post. Try again later." });
+                const fallback = 'Failed to save post. Try again later.';
+                const message = result.validationErrors?.[0]?.message || result.error || fallback;
+                setMessage({ type: 'error', text: message });
             }
         } catch (error) {
-            setMessage({ type: "error", text: "An error occurred while saving the post." });
+            setMessage({ type: 'error', text: 'An error occurred while saving the post.' });
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <ProtectedPage>

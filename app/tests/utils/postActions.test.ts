@@ -7,7 +7,7 @@ import {
     fetchPostBySlug,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
 } from '@/utils/postActions';
 
 import fetchMock from 'jest-fetch-mock';
@@ -27,7 +27,6 @@ describe('postActions', () => {
 
     describe('fetchPosts', () => {
         it('returns only posts with DRAFT status', async () => {
-            // Simulate that the API is filtering by status=DRAFT
             fetchMock.mockResponseOnce(
                 JSON.stringify({ posts: mockPosts.filter(p => p.status === 'DRAFT') })
             );
@@ -36,10 +35,9 @@ describe('postActions', () => {
 
             expect(posts).toEqual([
                 { id: '1', title: 'Draft Post 1', status: 'DRAFT' },
-                { id: '2', title: 'Draft Post 2', status: 'DRAFT' }
+                { id: '2', title: 'Draft Post 2', status: 'DRAFT' },
             ]);
 
-            // Confirm the correct query string was used
             expect(fetchMock).toHaveBeenCalledWith(
                 expect.stringContaining('status=DRAFT'),
                 expect.any(Object)
@@ -49,7 +47,7 @@ describe('postActions', () => {
         it('returns all posts if no status is passed', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ posts: mockPosts }));
 
-            const posts = await fetchPosts(); // no status
+            const posts = await fetchPosts();
 
             expect(posts.length).toBe(3);
             expect(posts[0].title).toBe('Draft Post 1');
@@ -94,6 +92,7 @@ describe('postActions', () => {
     });
 
     describe('createPost', () => {
+
         const validPost = {
             title: 'My Post',
             content: 'Valid content here',
@@ -107,37 +106,48 @@ describe('postActions', () => {
 
         it('creates a post successfully', async () => {
             localStorage.setItem('token', 'fake-token');
-            fetchMock.mockResponseOnce(JSON.stringify({ success: true }));
+            fetchMock.mockResponseOnce(JSON.stringify({ success: true, post: { slug: 'my-post' } }));
 
             const res = await createPost(validPost);
             expect(res.success).toBe(true);
+            if (res.success) {
+                expect(res.post.slug).toBe('my-post');
+            }
         });
 
         it('fails validation with short title', async () => {
-            const badPost = { ...validPost, title: 'Hi' }; // < 3 chars
+            localStorage.setItem('token', 'fake-token');
+            const badPost = { ...validPost, title: 'Hi' }; // too short
             const res = await createPost(badPost as any);
-            console.log('res--', res)
-            expect(res).toBeNull();
+            expect(res.success).toBe(false);
+            if (!res.success) {
+                expect(res.error).toBe('Validation failed');
+                expect(res.validationErrors).toBeDefined();
+            }
         });
 
-        it('returns null if no token', async () => {
+        it('returns error if no token is present', async () => {
             const res = await createPost(validPost);
-            expect(res).toBeNull();
+            expect(res).toEqual({ success: false, error: 'Unauthorized' });
         });
 
-        it('returns null on fetch error', async () => {
+        it('returns error on fetch failure', async () => {
             localStorage.setItem('token', 'fake-token');
             fetchMock.mockRejectOnce(new Error('Fail'));
             const res = await createPost(validPost);
-            expect(res).toBeNull();
+            expect(res.success).toBe(false);
+            if (!res.success) {
+                expect(res.error).toContain('Unexpected error');
+            }
         });
     });
 
     describe('updatePost', () => {
+
         const validUpdate = {
             id: 'post1',
             title: 'Updated Post',
-            content: 'This is updated',
+            content: 'This is updated content.',
             description: 'Updated desc',
             image: 'https://img.com/photo.png',
             categoryId: 'cat2',
@@ -147,25 +157,39 @@ describe('postActions', () => {
 
         it('updates a post successfully', async () => {
             localStorage.setItem('token', 'valid-token');
-            fetchMock.mockResponseOnce(JSON.stringify({ success: true }));
+            fetchMock.mockResponseOnce(JSON.stringify({ success: true, post: { id: 'post1' } }));
             const res = await updatePost(validUpdate);
             expect(res.success).toBe(true);
         });
 
         it('fails validation with missing content', async () => {
+            localStorage.setItem('token', 'fake-token');
             const badUpdate = { ...validUpdate, content: '' };
             const res = await updatePost(badUpdate as any);
-            expect(res).toBeNull();
+            expect(res.success).toBe(false);
+            if (!res.success) {
+                expect(res.error).toBe('Validation failed');
+            }
         });
 
-        it('returns null without token', async () => {
+        it('returns error without token', async () => {
             const res = await updatePost(validUpdate);
-            expect(res).toBeNull();
+            expect(res).toEqual({ success: false, error: 'Unauthorized' });
+        });
+
+        it('returns error on fetch failure', async () => {
+            localStorage.setItem('token', 'valid-token');
+            fetchMock.mockRejectOnce(new Error('Network error'));
+            const res = await updatePost(validUpdate);
+            expect(res.success).toBe(false);
+            if (!res.success) {
+                expect(res.error).toContain('Unexpected error');
+            }
         });
     });
 
     describe('deletePost', () => {
-        it('deletes a post', async () => {
+        it('deletes a post successfully', async () => {
             localStorage.setItem('token', 'token');
             fetchMock.mockResponseOnce(JSON.stringify({ success: true }));
             const res = await deletePost('post123');
@@ -177,7 +201,7 @@ describe('postActions', () => {
             expect(res).toBeNull();
         });
 
-        it('returns null on error', async () => {
+        it('returns null on fetch failure', async () => {
             localStorage.setItem('token', 'token');
             fetchMock.mockRejectOnce(new Error('Failed'));
             const res = await deletePost('post123');

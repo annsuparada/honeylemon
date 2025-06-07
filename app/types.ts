@@ -57,3 +57,19 @@ export type BlogPostInput = {
     authorId: string; // Ensure we pass only the ID
     category?: { id?: string; slug?: string };
 };
+
+export type ApiSuccess<T> = {
+    success: true;
+    post?: T;
+};
+
+export type ApiError = {
+    success: false;
+    error: string;
+    validationErrors?: {
+        path: (string | number)[];
+        message: string;
+    }[];
+};
+
+export type ApiResponse<T> = ApiSuccess<T> | ApiError;

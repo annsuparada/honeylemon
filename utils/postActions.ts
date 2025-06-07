@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/app/types';
 import { postSchema, updatePostSchema } from '@/schemas/postSchema';
 import { PageType, PostStatus } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
@@ -50,12 +51,11 @@ export async function fetchPostBySlug(slug: string) {
 }
 
 // Create a new post, validating with postSchema
-export async function createPost(input: z.infer<typeof postSchema>) {
+export async function createPost(input: z.infer<typeof postSchema>): Promise<ApiResponse<any>> {
   try {
     const token = localStorage.getItem('token');
-    if (!token) throw new Error('Unauthorized');
+    if (!token) return { success: false, error: 'Unauthorized' };
 
-    // Validate client-side input
     const validated = postSchema.parse(input);
     const slug = generateSlug(validated.title);
 
@@ -63,29 +63,42 @@ export async function createPost(input: z.infer<typeof postSchema>) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ ...validated, slug }),
     });
 
-    return await res.json();
+    const data = await res.json();
+
+    if (res.ok) {
+      return { success: true, post: data.post };
+    } else {
+      return { success: false, error: data.error || 'Unknown error' };
+    }
   } catch (err) {
     if (err instanceof z.ZodError) {
-      console.error('Validation failed:', err.errors);
-    } else {
-      console.error('Error creating post:', err);
+      return {
+        success: false,
+        error: 'Validation failed',
+        validationErrors: err.errors,
+      };
     }
-    return null;
+
+    return {
+      success: false,
+      error: 'Unexpected error occurred while creating post',
+    };
   }
 }
 
 // Update an existing post, validating with updatePostSchema
-export async function updatePost(input: z.infer<typeof updatePostSchema>) {
+export async function updatePost(input: z.infer<typeof updatePostSchema>): Promise<ApiResponse<any>> {
   try {
     const token = localStorage.getItem('token');
-    if (!token) throw new Error('Unauthorized');
+    if (!token) {
+      return { success: false, error: 'Unauthorized' };
+    }
 
-    // Validate client-side input
     const validated = updatePostSchema.parse(input);
 
     const res = await fetch(POST_API_URL, {
@@ -97,14 +110,26 @@ export async function updatePost(input: z.infer<typeof updatePostSchema>) {
       body: JSON.stringify(validated),
     });
 
-    return await res.json();
+    const data = await res.json();
+
+    if (res.ok) {
+      return { success: true, post: data.post };
+    } else {
+      return { success: false, error: data.error || 'Failed to update post' };
+    }
   } catch (err) {
     if (err instanceof z.ZodError) {
-      console.error('Validation failed:', err.errors);
-    } else {
-      console.error('Error updating post:', err);
+      return {
+        success: false,
+        error: 'Validation failed',
+        validationErrors: err.errors,
+      };
     }
-    return null;
+
+    return {
+      success: false,
+      error: 'Unexpected error occurred while updating the post',
+    };
   }
 }
 
