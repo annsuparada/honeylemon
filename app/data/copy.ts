@@ -141,6 +141,7 @@ export const budgetPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "budget-2",
@@ -162,6 +163,7 @@ export const budgetPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: "ARTICLE"
   },
   {
     id: "budget-3",
@@ -183,6 +185,7 @@ export const budgetPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "budget-4",
@@ -204,6 +207,7 @@ export const budgetPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "budget-5",
@@ -225,6 +229,7 @@ export const budgetPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "budget-6",
@@ -246,6 +251,7 @@ export const budgetPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
 ];
 
@@ -270,6 +276,7 @@ export const midRangePosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "mid-2",
@@ -291,6 +298,7 @@ export const midRangePosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "mid-3",
@@ -312,6 +320,7 @@ export const midRangePosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "mid-4",
@@ -333,6 +342,7 @@ export const midRangePosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "mid-5",
@@ -354,6 +364,7 @@ export const midRangePosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "mid-6",
@@ -375,6 +386,7 @@ export const midRangePosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
 ];
 
@@ -399,6 +411,7 @@ export const luxuryPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: 'ARTICLE'
   },
   {
     id: "luxury-2",
@@ -420,6 +433,7 @@ export const luxuryPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: "ARTICLE"
   },
   {
     id: "luxury-3",
@@ -441,6 +455,7 @@ export const luxuryPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: "ARTICLE"
   },
   {
     id: "luxury-4",
@@ -462,6 +477,7 @@ export const luxuryPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: "ARTICLE"
   },
   {
     id: "luxury-5",
@@ -483,6 +499,7 @@ export const luxuryPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: "ARTICLE"
   },
   {
     id: "luxury-6",
@@ -504,6 +521,7 @@ export const luxuryPosts: BlogPost[] = [
       name: "Ann",
       username: "anntravels",
     },
+    type: "ARTICLE"
   },
 ];
 

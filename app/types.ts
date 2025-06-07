@@ -1,3 +1,4 @@
+import { PageType, PostStatus } from '@prisma/client';
 import { IconType } from 'react-icons'
 
 export interface Author {
@@ -17,9 +18,9 @@ export interface Category {
     slug: string;
 }
 
-export type PostStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 export type BlogPost = {
+    type: PageType;
     id: string;
     title: string;
     slug: string;

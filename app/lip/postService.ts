@@ -50,6 +50,7 @@ export async function getPublishedPosts(limit?: number | undefined) {
             username: post.author.username,
             profilePicture: post.author.profilePicture ?? undefined,
         },
+        type: post.type
     }));
 
     return posts;
@@ -103,5 +104,6 @@ export async function getPostBySlug(slug: string) {
             username: post.author.username,
             profilePicture: post.author.profilePicture ?? undefined,
         },
+        type: post.type
     } satisfies BlogPost;
 }

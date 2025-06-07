@@ -42,12 +42,31 @@ export default function Dashboard() {
     }, [selectedStatus, blogPosts]);
 
     const handleArchive = async (post: BlogPost) => {
-        const updatedPost = await updatePost({ ...post, status: "ARCHIVED" });
-        if (updatedPost) {
-            setBlogPosts(prev => prev.map(p => p.id === post.id ? updatedPost : p));
+        const result = await updatePost({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            content: post.content,
+            description: post.description,
+            image: post.image,
+            status: "ARCHIVED",
+            type: post.type,
+            categoryId: post.category.id,
+        });
+
+        // Check if it's a successful response (your updatePost returns ApiResponse<BlogPost>)
+        if (result?.success && 'post' in result) {
+            setBlogPosts(prev =>
+                prev.map(p => p.id === post.id ? result.post : p)
+            );
             setMessage({ type: "success", text: "Post archived." });
+        } else {
+            setMessage({ type: "error", text: "Failed to archive post." });
         }
     };
+
+
+
 
     const handleDelete = async (postId: string) => {
         if (!confirm("Delete this post?")) return;
