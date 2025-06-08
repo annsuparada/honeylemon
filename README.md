@@ -15,9 +15,9 @@ Todo
 - [x] add pagination to blog section
 - [x] add loading when fetching blogs (client side)
 - [x] update logo
-- [] Write tests for api actions
-- [] Write test for libs SSR
-- [] add filter by page on dashboard
+- [x] Write tests for api actions
+- [x] Write test for libs SSR
+- [x] add filter by page on dashboard
 - [] create admin profile
 - [] render blog by page/category
 - [] create newsletters feature

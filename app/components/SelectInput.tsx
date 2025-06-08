@@ -14,6 +14,7 @@ type Props = {
     onChange: (value: string) => void
     onCreateNew?: (newValue: string) => Promise<Option | null>
     enableCreate?: boolean
+    className?: string
 }
 
 const SelectInput = ({
@@ -23,6 +24,7 @@ const SelectInput = ({
     onChange,
     onCreateNew,
     enableCreate = false,
+    className,
 }: Props) => {
     const [creating, setCreating] = useState(false)
     const [newValue, setNewValue] = useState('')
@@ -32,15 +34,15 @@ const SelectInput = ({
 
         const created = await onCreateNew(newValue.trim())
         if (created) {
-            onChange(created.value) // auto-select new
+            onChange(created.value)
             setNewValue('')
             setCreating(false)
         }
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end mb-6">
-            <div>
+        <div className={enableCreate ? "grid grid-cols-1 md:grid-cols-2 gap-6 items-end mb-6" : "mb-6"}>
+            <div className={className}>
                 <label className="block text-lg font-semibold text-gray-700 mb-2">{label}</label>
                 <select
                     onChange={(e) => onChange(e.target.value)}
@@ -53,34 +55,35 @@ const SelectInput = ({
                     ))}
                 </select>
             </div>
-            <div>
-                {enableCreate && !creating && (
-                    <button
-                        type="button"
-                        className="btn btn-outline bg-gray-100 w-full"
-                        onClick={() => setCreating(true)}
-                    >
-                        Create New {label}
-                    </button>
-                )}
 
-                {enableCreate && creating && (
-                    <div className="flex gap-2 mt-2">
-                        <input
-                            type="text"
-                            className="border border-gray-300 p-2 rounded-md w-full bg-white"
-                            value={newValue}
-                            onChange={(e) => setNewValue(e.target.value)}
-                            placeholder={`New ${label} name`}
-                        />
-                        <button className="btn btn-outline btn-primary" onClick={handleCreate}>Save</button>
-                        <button className="btn btn-outline" onClick={() => {
-                            setCreating(false)
-                            setNewValue('')
-                        }}>Cancel</button>
-                    </div>
-                )}
-            </div>
+            {enableCreate && (
+                <div>
+                    {!creating ? (
+                        <button
+                            type="button"
+                            className="btn btn-outline bg-gray-100 w-full"
+                            onClick={() => setCreating(true)}
+                        >
+                            Create New {label}
+                        </button>
+                    ) : (
+                        <div className="flex gap-2 mt-2">
+                            <input
+                                type="text"
+                                className="border border-gray-300 p-2 rounded-md w-full bg-white"
+                                value={newValue}
+                                onChange={(e) => setNewValue(e.target.value)}
+                                placeholder={`New ${label} name`}
+                            />
+                            <button className="btn btn-outline btn-primary" onClick={handleCreate}>Save</button>
+                            <button className="btn btn-outline" onClick={() => {
+                                setCreating(false)
+                                setNewValue('')
+                            }}>Cancel</button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

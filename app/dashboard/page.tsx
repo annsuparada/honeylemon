@@ -11,15 +11,34 @@ import Pagination from "../components/PaginationClient";
 import { FaEdit, FaRegEye } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
 import ProtectedPage from "../components/ProtectedPage";
+import { PageType, PostStatus } from "@prisma/client";
+import SelectInput from "../components/SelectInput";
 
 export default function Dashboard() {
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
     const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [selectedStatus, setSelectedStatus] = useState("ALL");
+    const [selectedPageType, setSelectedPageType] = useState("ALL");
     const itemsPerPage = 5;
     const [currentItems, setCurrentItems] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const postStatusOptions = [
+        { label: "All", value: "ALL" },
+        ...Object.values(PostStatus).map((status) => ({
+            label: status.charAt(0) + status.slice(1).toLowerCase(),
+            value: status,
+        })),
+    ];
+
+    const pageTypeOptions = [
+        { label: "All", value: "ALL" },
+        ...Object.values(PageType).map((type) => ({
+            label: type.charAt(0) + type.slice(1).toLowerCase(),
+            value: type,
+        })),
+    ];
 
     useEffect(() => {
         async function loadPosts() {
@@ -34,12 +53,20 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
-        const updated = selectedStatus === "ALL"
-            ? blogPosts
-            : blogPosts.filter(post => post.status === selectedStatus);
+        let updated = blogPosts;
+
+        if (selectedStatus !== "ALL") {
+            updated = updated.filter(post => post.status === selectedStatus);
+        }
+
+        if (selectedPageType !== "ALL") {
+            updated = updated.filter(post => post.type === selectedPageType);
+        }
+
         setFilteredPosts(updated);
         setCurrentItems(updated.slice(0, itemsPerPage));
-    }, [selectedStatus, blogPosts]);
+    }, [selectedStatus, selectedPageType, blogPosts]);
+
 
     const handleArchive = async (post: BlogPost) => {
         const result = await updatePost({
@@ -65,9 +92,6 @@ export default function Dashboard() {
         }
     };
 
-
-
-
     const handleDelete = async (postId: string) => {
         if (!confirm("Delete this post?")) return;
         const result = await deletePost(postId);
@@ -88,19 +112,19 @@ export default function Dashboard() {
                     <h2 className="text-3xl font-bold">Your Stories</h2>
                     <Link href="/write" className="btn btn-primary text-white">Write</Link>
                 </div>
-
-                <div className="mb-6">
-                    <label className="font-semibold mr-2">Status</label>
-                    <select
-                        className="border p-2 rounded bg-white"
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                    >
-                        <option value="ALL">All</option>
-                        <option value="DRAFT">Draft</option>
-                        <option value="PUBLISHED">Published</option>
-                        <option value="ARCHIVED">Archived</option>
-                    </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <SelectInput
+                        label="Status"
+                        selectedValue={selectedStatus}
+                        options={postStatusOptions}
+                        onChange={(value) => setSelectedStatus(value)}
+                    />
+                    <SelectInput
+                        label="Page Type"
+                        selectedValue={selectedPageType}
+                        options={pageTypeOptions}
+                        onChange={(value) => setSelectedPageType(value)}
+                    />
                 </div>
 
                 {message && <AlertMessage message={message} onClose={() => setMessage(null)} />}
