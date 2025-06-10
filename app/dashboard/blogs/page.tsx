@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchPosts, deletePost, updatePost } from "@/utils/postActions";
 import { FaEdit, FaRegEye } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
@@ -14,6 +14,21 @@ import AlertMessage from "@/app/components/AlertMessage";
 import FormattedDate from "@/app/components/FormattedDate";
 import PaginationClient from "@/app/components/PaginationClient";
 
+function getStatusCounts(posts: BlogPost[]) {
+    return posts.reduce((acc, post) => {
+        acc[post.status] = (acc[post.status] || 0) + 1;
+        return acc;
+    }, {} as Record<PostStatus, number>);
+}
+
+function getTypeCounts(posts: BlogPost[]) {
+    return posts.reduce((acc, post) => {
+        acc[post.type] = (acc[post.type] || 0) + 1;
+        return acc;
+    }, {} as Record<PageType, number>);
+}
+
+
 export default function Dashboard() {
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
     const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
@@ -24,21 +39,37 @@ export default function Dashboard() {
     const [currentItems, setCurrentItems] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const postStatusOptions = [
-        { label: "All", value: "ALL" },
+    const statusCounts = useMemo(() => {
+        return blogPosts.reduce((acc, post) => {
+            if (selectedPageType !== "ALL" && post.type !== selectedPageType) return acc;
+            acc[post.status] = (acc[post.status] || 0) + 1;
+            return acc;
+        }, {} as Record<PostStatus, number>);
+    }, [blogPosts, selectedPageType]);
+
+    const pageTypeCounts = useMemo(() => {
+        return blogPosts.reduce((acc, post) => {
+            if (selectedStatus !== "ALL" && post.status !== selectedStatus) return acc;
+            acc[post.type] = (acc[post.type] || 0) + 1;
+            return acc;
+        }, {} as Record<PageType, number>);
+    }, [blogPosts, selectedStatus]);
+
+    const postStatusOptions = useMemo(() => ([
+        { label: `All (${filteredPosts.length})`, value: "ALL" },
         ...Object.values(PostStatus).map((status) => ({
-            label: status.charAt(0) + status.slice(1).toLowerCase(),
+            label: `${status.charAt(0) + status.slice(1).toLowerCase()} (${statusCounts[status] || 0})`,
             value: status,
         })),
-    ];
+    ]), [statusCounts, filteredPosts.length]);
 
-    const pageTypeOptions = [
-        { label: "All", value: "ALL" },
+    const pageTypeOptions = useMemo(() => ([
+        { label: `All (${filteredPosts.length})`, value: "ALL" },
         ...Object.values(PageType).map((type) => ({
-            label: type.charAt(0) + type.slice(1).toLowerCase(),
+            label: `${type.charAt(0) + type.slice(1).toLowerCase()} (${pageTypeCounts[type] || 0})`,
             value: type,
         })),
-    ];
+    ]), [pageTypeCounts, filteredPosts.length]);
 
     useEffect(() => {
         async function loadPosts() {
