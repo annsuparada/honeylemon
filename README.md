@@ -25,7 +25,6 @@ Todo
     - [x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
 
 - [] create admin profile
-
     Write page features
     - [] Scheduled publishing
 

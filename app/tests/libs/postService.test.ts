@@ -57,10 +57,10 @@ describe('getPublishedPosts', () => {
             slug: 'title',
             status: PostStatus.PUBLISHED,
             category: {
-                id: 'cat1',
                 name: 'Tech',
                 slug: 'tech',
             },
+            categoryId: 'cat1',
             author: {
                 id: 'user1',
                 name: 'John',
