@@ -9,24 +9,10 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { PageType, PostStatus } from "@prisma/client";
 import { BlogPost } from "@/app/types";
 import ProtectedPage from "@/app/components/ProtectedPage";
-import SelectInput from "@/app/components/SelectInput";
 import AlertMessage from "@/app/components/AlertMessage";
 import FormattedDate from "@/app/components/FormattedDate";
 import PaginationClient from "@/app/components/PaginationClient";
-
-function getStatusCounts(posts: BlogPost[]) {
-    return posts.reduce((acc, post) => {
-        acc[post.status] = (acc[post.status] || 0) + 1;
-        return acc;
-    }, {} as Record<PostStatus, number>);
-}
-
-function getTypeCounts(posts: BlogPost[]) {
-    return posts.reduce((acc, post) => {
-        acc[post.type] = (acc[post.type] || 0) + 1;
-        return acc;
-    }, {} as Record<PageType, number>);
-}
+import DashboardFilters from "./coponents/blogFilter";
 
 
 export default function Dashboard() {
@@ -154,27 +140,16 @@ export default function Dashboard() {
                     <h2 className="text-3xl font-bold">Your Stories</h2>
                     <Link href="/write" className="btn btn-primary text-white">Write</Link>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                    <SelectInput
-                        label="Status"
-                        selectedValue={selectedStatus}
-                        options={postStatusOptions}
-                        onChange={(value) => setSelectedStatus(value)}
-                    />
-                    <SelectInput
-                        label="Page Type"
-                        selectedValue={selectedPageType}
-                        options={pageTypeOptions}
-                        onChange={(value) => setSelectedPageType(value)}
-                    />
-                    <SelectInput
-                        label="Sort by"
-                        selectedValue={sortOrder}
-                        options={sortOptions}
-                        onChange={(value) => setSortOrder(value)}
-                    />
-
-                </div>
+                <DashboardFilters
+                    selectedStatus={selectedStatus}
+                    selectedPageType={selectedPageType}
+                    sortOrder={sortOrder}
+                    onStatusChange={(value) => setSelectedStatus(value)}
+                    onTypeChange={(value) => setSelectedPageType(value)}
+                    onSortChange={(value) => setSortOrder(value)}
+                    statusOptions={postStatusOptions}
+                    typeOptions={pageTypeOptions}
+                    sortOptions={sortOptions} />
 
                 {message && <AlertMessage message={message} onClose={() => setMessage(null)} />}
 
