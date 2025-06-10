@@ -39,10 +39,10 @@ export async function getPublishedPosts(limit?: number | undefined) {
         createdAt: post.createdAt.toISOString(),
         updatedAt: post.updatedAt.toISOString(),
         category: {
-            id: post.category.id,
             name: post.category.name,
             slug: post.category.slug,
         },
+        categoryId: post.category.id,
         author: {
             id: post.author.id,
             name: post.author.name ?? '',
@@ -93,10 +93,10 @@ export async function getPostBySlug(slug: string) {
         createdAt: post.createdAt.toISOString(),
         updatedAt: post.updatedAt.toISOString(),
         category: {
-            id: post.category.id,
             name: post.category.name,
             slug: post.category.slug,
         },
+        categoryId: post.category.id,
         author: {
             id: post.author.id,
             name: post.author.name ?? '',

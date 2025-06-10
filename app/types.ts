@@ -30,7 +30,8 @@ export type BlogPost = {
     status: PostStatus;
     createdAt: string;
     updatedAt: string;
-    category: { id: string; name: string; slug: string };
+    category: { name: string; slug: string };
+    categoryId: string;
     author: {
         role?: string;
         id: string;

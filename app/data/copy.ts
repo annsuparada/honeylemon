@@ -132,10 +132,10 @@ export const budgetPosts: BlogPost[] = [
     createdAt: "2025-04-01T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-budget",
       name: "Budget Travel",
       slug: "budget-travel",
     },
+    categoryId: "cat-budget",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -154,10 +154,10 @@ export const budgetPosts: BlogPost[] = [
     createdAt: "2025-04-02T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-budget",
       name: "Budget Travel",
       slug: "budget-travel",
     },
+    categoryId: "cat-budget",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -176,10 +176,10 @@ export const budgetPosts: BlogPost[] = [
     createdAt: "2025-04-03T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-budget",
       name: "Budget Travel",
       slug: "budget-travel",
     },
+    categoryId: "cat-budget",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -198,10 +198,10 @@ export const budgetPosts: BlogPost[] = [
     createdAt: "2025-04-04T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-budget",
       name: "Budget Travel",
       slug: "budget-travel",
     },
+    categoryId: "cat-budget",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -220,10 +220,10 @@ export const budgetPosts: BlogPost[] = [
     createdAt: "2025-04-05T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-budget",
       name: "Budget Travel",
       slug: "budget-travel",
     },
+    categoryId: "cat-budget",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -242,10 +242,10 @@ export const budgetPosts: BlogPost[] = [
     createdAt: "2025-04-06T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-budget",
       name: "Budget Travel",
       slug: "budget-travel",
     },
+    categoryId: "cat-budget",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -267,10 +267,10 @@ export const midRangePosts: BlogPost[] = [
     createdAt: "2025-04-01T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-mid",
       name: "Mid-Range Travel",
       slug: "mid-range-travel",
     },
+    categoryId: "cat-mid",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -289,10 +289,10 @@ export const midRangePosts: BlogPost[] = [
     createdAt: "2025-04-02T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-mid",
       name: "Mid-Range Travel",
       slug: "mid-range-travel",
     },
+    categoryId: "cat-mid",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -311,10 +311,10 @@ export const midRangePosts: BlogPost[] = [
     createdAt: "2025-04-03T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-mid",
       name: "Mid-Range Travel",
       slug: "mid-range-travel",
     },
+    categoryId: "cat-mid",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -333,10 +333,10 @@ export const midRangePosts: BlogPost[] = [
     createdAt: "2025-04-04T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-mid",
       name: "Mid-Range Travel",
       slug: "mid-range-travel",
     },
+    categoryId: "cat-mid",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -355,10 +355,10 @@ export const midRangePosts: BlogPost[] = [
     createdAt: "2025-04-05T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-mid",
       name: "Mid-Range Travel",
       slug: "mid-range-travel",
     },
+    categoryId: "cat-mid",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -377,10 +377,10 @@ export const midRangePosts: BlogPost[] = [
     createdAt: "2025-04-06T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-mid",
       name: "Mid-Range Travel",
       slug: "mid-range-travel",
     },
+    categoryId: "cat-mid",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -402,10 +402,10 @@ export const luxuryPosts: BlogPost[] = [
     createdAt: "2025-04-01T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-luxury",
       name: "Luxury Travel",
       slug: "luxury-travel",
     },
+    categoryId: "cat-luxury",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -424,10 +424,10 @@ export const luxuryPosts: BlogPost[] = [
     createdAt: "2025-04-02T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-luxury",
       name: "Luxury Travel",
       slug: "luxury-travel",
     },
+    categoryId: "cat-luxury",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -446,10 +446,10 @@ export const luxuryPosts: BlogPost[] = [
     createdAt: "2025-04-03T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-luxury",
       name: "Luxury Travel",
       slug: "luxury-travel",
     },
+    categoryId: "cat-luxury",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -468,10 +468,10 @@ export const luxuryPosts: BlogPost[] = [
     createdAt: "2025-04-04T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-luxury",
       name: "Luxury Travel",
       slug: "luxury-travel",
     },
+    categoryId: "cat-luxury",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -490,10 +490,10 @@ export const luxuryPosts: BlogPost[] = [
     createdAt: "2025-04-05T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-luxury",
       name: "Luxury Travel",
       slug: "luxury-travel",
     },
+    categoryId: "cat-luxury",
     author: {
       id: "author-ann",
       name: "Ann",
@@ -512,10 +512,10 @@ export const luxuryPosts: BlogPost[] = [
     createdAt: "2025-04-06T08:00:00Z",
     updatedAt: "2025-04-01T08:00:00Z",
     category: {
-      id: "cat-luxury",
       name: "Luxury Travel",
       slug: "luxury-travel",
     },
+    categoryId: "cat-luxury",
     author: {
       id: "author-ann",
       name: "Ann",

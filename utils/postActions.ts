@@ -1,6 +1,5 @@
 import { ApiResponse } from '@/app/types';
 import { postSchema, updatePostSchema } from '@/schemas/postSchema';
-import { PageType, PostStatus } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 

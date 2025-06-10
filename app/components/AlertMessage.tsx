@@ -22,7 +22,7 @@ const Alert: React.FC<AlertProps> = ({ message, onClose, duration = 5000 }) => {
     return (
         <div
             role="alert"
-            className={`alert ${message.type === "error" ? "alert-error" : "alert-success"} flex items-center justify-between p-4 rounded-md`}
+            className={`alert ${message.type === "error" ? "alert-error" : "alert-success"} flex items-center justify-between p-4 rounded-md mb-4`}
         >
             <div className="flex items-center">
                 <span className="ml-2">{message.text}</span>

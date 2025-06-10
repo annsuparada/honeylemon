@@ -20,10 +20,9 @@ Todo
 
     Dashboard Featurs
     - [x] add filter by page on dashboard
-    -[x] Sorting — e.g. by date
-    -[] Search — full-text search (title/description)
-    -[x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
-    -[]
+    - [x] Sorting — e.g. by date
+    - [] Search — full-text search (title/description)
+    - [x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
 
 - [] create admin profile
 
