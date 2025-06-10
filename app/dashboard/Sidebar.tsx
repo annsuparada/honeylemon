@@ -16,7 +16,6 @@ import {
     UserIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { FC } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -30,7 +29,6 @@ interface NavItem {
     icon: FC<React.SVGProps<SVGSVGElement>>
     current: boolean
 }
-
 
 const navigation: Omit<NavItem, 'current'>[] = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -78,7 +76,7 @@ const Sidebar: FC = () => {
                                 <div className="flex h-16 shrink-0 items-center">
                                     <Link href={'/'}>
                                         <Image
-                                            alt="Your Company"
+                                            alt="Travamad Logo"
                                             src="https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"
                                             className="h-8 w-auto"
                                             width={150}
@@ -144,11 +142,15 @@ const Sidebar: FC = () => {
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-primary px-6 pb-4">
                         <div className="flex h-16 shrink-0 items-center">
-                            <img
-                                alt="Your Company"
-                                src="https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"
-                                className="h-8 w-auto"
-                            />
+                            <Link href={'/'}>
+                                <Image
+                                    alt="Travamad Logo"
+                                    src="https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"
+                                    className="h-8 w-auto"
+                                    width={150}
+                                    height={100}
+                                />
+                            </Link>
                         </div>
 
                         <nav className="flex flex-1 flex-col">

@@ -25,13 +25,14 @@ const mockPosts: BlogPost[] = [
         },
         category: {
             name: 'Tech',
-            id: 'cat1',
             slug: 'tech'
         },
+        categoryId: 'cat1',
         updatedAt: '2024-01-01',
         id: '123',
         content: 'Short content',
-        status: 'DRAFT'
+        status: 'DRAFT',
+        type: 'DEAL'
     },
 ];
 
