@@ -8,8 +8,8 @@ import { BlogPost } from "@/app/types";
 import ProtectedPage from "@/app/components/ProtectedPage";
 import AlertMessage from "@/app/components/AlertMessage";
 import PaginationClient from "@/app/components/PaginationClient";
-import DashboardFilters from "./coponents/blogFilter";
 import DashboardBlogList from "./coponents/DashboardBlogList";
+import DashboardFilters from "./coponents/BlogFilter";
 
 export default function Dashboard() {
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
