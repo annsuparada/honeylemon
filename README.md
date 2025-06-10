@@ -21,14 +21,15 @@ Todo
     Dashboard Featurs
     - [x] add filter by page on dashboard
     - [x] Sorting — e.g. by date
-    - [] Search — full-text search (title/description)
     - [x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
+    - [] write all tests
 
 - [] create admin profile
     Write page features
     - [] Scheduled publishing
 
 
+- [] Search — full-text search (title/description)
 - [] render blog by page/category
 - [] create newsletters feature
 - [] add color to category bage
