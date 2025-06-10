@@ -17,8 +17,20 @@ Todo
 - [x] update logo
 - [x] Write tests for api actions
 - [x] Write test for libs SSR
-- [x] add filter by page on dashboard
+
+    Dashboard Featurs
+    - [x] add filter by page on dashboard
+    -[] Sorting — e.g. by date, title, popularity (dropdown or column header toggle)
+    -[] Search — full-text search (title/description)
+    -[] Post counts by status — e.g. “Draft (3)”, “Published (12)”
+    -[]
+
 - [] create admin profile
+
+    Write page features
+    - [] Scheduled publishing
+
+    
 - [] render blog by page/category
 - [] create newsletters feature
 - [] add color to category bage

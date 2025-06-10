@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Navigation from './components/layout/Navigation'
-import Footer from './components/layout/Footer'
-import Script from 'next/script'
+import ConditionalLayout from './components/layout/ConditionalLayout.tsx'
 require('dotenv').config()
 
 const inter = Inter({ subsets: ['latin'] })
@@ -24,9 +22,7 @@ export default function RootLayout({
 
       </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <Navigation />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   )
