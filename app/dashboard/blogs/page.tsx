@@ -38,6 +38,8 @@ export default function Dashboard() {
     const itemsPerPage = 5;
     const [currentItems, setCurrentItems] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
+    const [sortOrder, setSortOrder] = useState('newest');
+
 
     const statusCounts = useMemo(() => {
         return blogPosts.reduce((acc, post) => {
@@ -71,6 +73,12 @@ export default function Dashboard() {
         })),
     ]), [pageTypeCounts, filteredPosts.length]);
 
+    const sortOptions = [
+        { label: 'Newest First', value: 'newest' },
+        { label: 'Oldest First', value: 'oldest' },
+    ];
+
+
     useEffect(() => {
         async function loadPosts() {
             setLoading(true);
@@ -94,9 +102,16 @@ export default function Dashboard() {
             updated = updated.filter(post => post.type === selectedPageType);
         }
 
+        updated = updated.sort((a, b) => {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+        });
+
         setFilteredPosts(updated);
         setCurrentItems(updated.slice(0, itemsPerPage));
-    }, [selectedStatus, selectedPageType, blogPosts]);
+    }, [selectedStatus, selectedPageType, sortOrder, blogPosts]);
+
 
 
     const handleArchive = async (post: BlogPost) => {
@@ -139,7 +154,7 @@ export default function Dashboard() {
                     <h2 className="text-3xl font-bold">Your Stories</h2>
                     <Link href="/write" className="btn btn-primary text-white">Write</Link>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                     <SelectInput
                         label="Status"
                         selectedValue={selectedStatus}
@@ -152,6 +167,13 @@ export default function Dashboard() {
                         options={pageTypeOptions}
                         onChange={(value) => setSelectedPageType(value)}
                     />
+                    <SelectInput
+                        label="Sort by"
+                        selectedValue={sortOrder}
+                        options={sortOptions}
+                        onChange={(value) => setSortOrder(value)}
+                    />
+
                 </div>
 
                 {message && <AlertMessage message={message} onClose={() => setMessage(null)} />}
