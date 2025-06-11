@@ -101,4 +101,32 @@ describe('DashboardBlogList', () => {
         fireEvent.click(screen.getByText('Delete'))
         expect(mockDelete).toHaveBeenCalledWith(mockPost.id)
     })
+
+    it('navigates to the edit page on Edit link click', () => {
+        render(
+            <DashboardBlogList
+                posts={[mockPost]}
+                loading={false}
+                handleArchive={jest.fn()}
+                handleDelete={jest.fn()}
+            />
+        )
+
+        const editLink = screen.getByRole('link', { name: /edit/i })
+        expect(editLink).toHaveAttribute('href', `/write?slug=${mockPost.slug}`)
+    })
+
+    it('navigates to the blog view page on View link click', () => {
+        render(
+            <DashboardBlogList
+                posts={[mockPost]}
+                loading={false}
+                handleArchive={jest.fn()}
+                handleDelete={jest.fn()}
+            />
+        )
+
+        const viewLink = screen.getByRole('link', { name: /view/i })
+        expect(viewLink).toHaveAttribute('href', `/blog/${mockPost.slug}`)
+    })
 })

@@ -22,6 +22,7 @@ Todo
     - [x] add filter by page on dashboard
     - [x] Sorting — e.g. by date
     - [x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
+    - [] limit description to max at 300 char
     - [] write all tests
 
 - [] remove expried login token
