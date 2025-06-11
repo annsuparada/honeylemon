@@ -62,16 +62,24 @@ export default function Dashboard() {
 
     useEffect(() => {
         async function loadPosts() {
-            setLoading(true);
-            const posts = await fetchPosts();
-            console.log('fetch posts action', posts)
-            setBlogPosts(posts);
-            setFilteredPosts(posts);
-            setCurrentItems(posts.slice(0, itemsPerPage));
-            setLoading(false);
+            try {
+                setLoading(true)
+                const posts = await fetchPosts()
+                setBlogPosts(posts)
+                setFilteredPosts(posts)
+                setCurrentItems(posts.slice(0, itemsPerPage))
+            } catch (error) {
+                console.error('Failed to fetch posts:', error)
+                setBlogPosts([])
+                setFilteredPosts([])
+                setCurrentItems([])
+            } finally {
+                setLoading(false)
+            }
         }
-        loadPosts();
-    }, []);
+        loadPosts()
+    }, [])
+
 
     useEffect(() => {
         let updated = blogPosts;
