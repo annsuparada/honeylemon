@@ -8,12 +8,12 @@ import { createCategory, fetchAllCategories } from '@/utils/categotyAction'
 import ProtectedPage from '../components/ProtectedPage'
 import MenuBar from '../components/tiptap/MenuBar'
 import { Author, Category } from '../types'
-import Image from 'next/image'
 import { PageType, PostStatus } from '@prisma/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AlertMessage from '../components/AlertMessage'
 import { extensions } from '../lip/tiptapExtensions'
 import WriteForm from './components/WriteForm'
+import { handleSavePost } from '@/utils/handlers/savePostHandler'
 
 
 const placeholderImg = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
@@ -116,65 +116,23 @@ const WritePage = () => {
     }
 
     const handleSave = async (isPublish: boolean) => {
-        if (!title.trim()) {
-            setMessage({ type: 'error', text: 'Title is required!' });
-            return;
-        }
-
-        if (!user || !user.id) {
-            setMessage({ type: 'error', text: 'Author ID is missing! Please log in.' });
-            return;
-        }
-
-        if (!selectedCategory.trim()) {
-            setMessage({ type: 'error', text: 'Category is required!' });
-            return;
-        }
-
-        if (content.length < 10) {
-            setMessage({ type: 'error', text: 'Content must be at least 10 characters long!' });
-            return;
-        }
-
-        if (description.length > 300) {
-            setMessage({ type: 'error', text: 'Description must not be longer then 300 characters!' });
-            return;
-        }
-
-        setLoading(true);
-        setMessage(null);
-
-        const postData = {
+        await handleSavePost({
             title,
             content,
-            image,
             description,
-            status: isPublish ? PostStatus.PUBLISHED : PostStatus.DRAFT,
-            authorId: user.id,
-            categoryId: selectedCategory,
-            type: pageType ?? undefined
-        };
-
-        try {
-            const result = postId
-                ? await updatePost({ id: postId, ...postData })
-                : await createPost(postData);
-
-            if (result.success) {
-                setMessage({ type: 'success', text: 'Post saved successfully!' });
-
-                const param = slug || result.post?.slug;
-                router.push(isPublish ? `/blog/${param}` : '/dashboard/blogs');
-            } else {
-                const fallback = 'Failed to save post. Try again later.';
-                const message = result.validationErrors?.[0]?.message || result.error || fallback;
-                setMessage({ type: 'error', text: message });
-            }
-        } catch (error) {
-            setMessage({ type: 'error', text: 'An error occurred while saving the post.' });
-        } finally {
-            setLoading(false);
-        }
+            selectedCategory,
+            image,
+            pageType,
+            postId,
+            slug,
+            user,
+            isPublish,
+            createPost,
+            updatePost,
+            router,
+            setMessage,
+            setLoading
+        });
     };
 
     return (
