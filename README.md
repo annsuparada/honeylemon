@@ -18,15 +18,19 @@ Todo
 - [x] Write tests for api actions
 - [x] Write test for libs SSR
 
-    Dashboard Featurs
+Dashboard Featurs
     - [x] add filter by page on dashboard
     - [x] Sorting — e.g. by date
     - [x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
-    - [] limit description to max at 300 char
+    - [x] write all tests
+
+update write page
+    - [x] redirect save darft on write page to dashboard/blogs
+    - [x] limit description to max at 300 char   
     - [] write all tests
 
+
 - [] remove expried login token
-- [] redirect save darft on write page to dashboard/blogs
 
 - [] create admin profile
     Write page features

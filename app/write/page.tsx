@@ -1,11 +1,7 @@
 'use client'
-import './styles.css'
 
-import { Color } from '@tiptap/extension-color'
-import TextStyle from '@tiptap/extension-text-style'
+import './styles.css'
 import { EditorProvider } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Placeholder from '@tiptap/extension-placeholder';
 import React, { useEffect, useState } from 'react'
 import { createPost, fetchPostBySlug, updatePost } from '@/utils/postActions'
 import { createCategory, fetchAllCategories } from '@/utils/categotyAction'
@@ -15,56 +11,12 @@ import { Author, Category } from '../types'
 import Image from 'next/image'
 import { PageType, PostStatus } from '@prisma/client'
 import { useRouter, useSearchParams } from 'next/navigation'
-import BulletList from '@tiptap/extension-bullet-list'
-import OrderedList from '@tiptap/extension-ordered-list'
-import ListItem from '@tiptap/extension-list-item'
-import LinkExtension from "@tiptap/extension-link";
 import AlertMessage from '../components/AlertMessage'
-import { ImageWithAlt } from '../components/tiptap/ImageWithAlt'
 import SelectInput from '../components/SelectInput'
+import { extensions } from '../lip/tiptapExtensions'
+import WriteForm from './components/WriteForm'
 
-const extensions = [
-    Color,
-    TextStyle,
-    Placeholder.configure({
-        placeholder: "Start writing here...",
-        emptyEditorClass: "before:content-[attr(data-placeholder)] before:absolute before:text-gray-400 before:italic before:pointer-events-none",
-    }),
 
-    StarterKit.configure({
-        bulletList: false,  // Disable default bullet list
-        orderedList: false, // Disable default ordered list
-        listItem: false,
-    }),
-    ListItem.configure({
-        HTMLAttributes: {
-            class: "ml-6",
-        },
-    }),
-    BulletList.configure({
-        HTMLAttributes: {
-            class: "list-disc",
-        },
-    }),
-    OrderedList.configure({
-        HTMLAttributes: {
-            class: "list-decimal",
-        },
-    }),
-    ImageWithAlt.configure({
-        HTMLAttributes: {
-            class: 'my-image-class',
-        },
-    }),
-    LinkExtension.configure({
-        openOnClick: true,
-        autolink: true,
-        HTMLAttributes: {
-            class: "tiptap-link",
-        },
-    }),
-
-]
 const placeholderImg = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 const WritePage = () => {
     const router = useRouter();
@@ -73,7 +25,7 @@ const WritePage = () => {
 
     const [content, setContent] = useState('');
     const [title, setTitle] = useState('')
-    const [description, setDesciption] = useState('')
+    const [description, setDescription] = useState('')
     const [isClient, setIsClient] = useState(false);
     const [user, setUser] = useState<Author | null>(null);
     const [categories, setCategories] = useState<Category[] | []>([]);
@@ -113,7 +65,7 @@ const WritePage = () => {
                     setPostId(post.id);
                     setTitle(post.title);
                     setContent(post.content);
-                    setDesciption(post.description);
+                    setDescription(post.description);
                     setImage(post.image || placeholderImg);
                     setSelectedCategory(post.categoryId);
                     setPageType(post.type)
@@ -136,7 +88,7 @@ const WritePage = () => {
             setPostId(null);
             setTitle("");
             setContent("");
-            setDesciption("");
+            setDescription("");
             setImage(placeholderImg);
             setSelectedCategory("");
             setPageType("ARTICLE")
@@ -186,6 +138,11 @@ const WritePage = () => {
             return;
         }
 
+        if (description.length > 300) {
+            setMessage({ type: 'error', text: 'Description must not be longer then 300 characters!' });
+            return;
+        }
+
         setLoading(true);
         setMessage(null);
 
@@ -209,7 +166,7 @@ const WritePage = () => {
                 setMessage({ type: 'success', text: 'Post saved successfully!' });
 
                 const param = slug || result.post?.slug;
-                router.push(isPublish ? `/blog/${param}` : '/dashboard');
+                router.push(isPublish ? `/blog/${param}` : '/dashboard/blogs');
             } else {
                 const fallback = 'Failed to save post. Try again later.';
                 const message = result.validationErrors?.[0]?.message || result.error || fallback;
@@ -221,7 +178,6 @@ const WritePage = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <ProtectedPage>
@@ -248,81 +204,23 @@ const WritePage = () => {
                         <span className="loading loading-spinner loading-lg"></span>
                     </div>
                 )}
-
-                {/* form */}
-                <div className="max-w-screen-lg mx-auto bg-white shadow-md rounded-lg p-6">
-                    {/* Title Input */}
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold text-gray-700 mb-2">Title</label>
-                        <input
-                            type="text"
-                            className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
-                            placeholder="Enter title here..."
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                    </div>
-
-                    {/* Description Input */}
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold text-gray-700 mb-2">Description</label>
-                        <textarea
-                            className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
-                            placeholder="Write a short description..."
-                            value={description}
-                            onChange={(e) => setDesciption(e.target.value)}
-                            rows={4}
-                        />
-                    </div>
-
-                    {/* Category Selection / Creation */}
-                    <SelectInput
-                        label="Category"
-                        options={categories.map(cat => ({ label: cat.name, value: cat.id }))}
-                        selectedValue={selectedCategory}
-                        onChange={setSelectedCategory}
-                        enableCreate={true}
-                        onCreateNew={handleCreateCategory}
-                    />
-
-                    {/* Select Page type */}
-                    <SelectInput
-                        label="Page Type"
-                        options={pageTypeOptions}
-                        selectedValue={pageType}
-                        onChange={(val) => setPageType(val as PageType)}
-
-                    />
-
-
-                    {/* </div> */}
-                    <button
-                        className='btn btn-outline bg-gray-100'
-                        onClick={() => {
-                            const url = window.prompt('Enter Image URL', image);
-                            if (url) setImage(url);
-                        }}>
-                        Add Image from URL
-                    </button>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-lg font-semibold text-gray-700 mb-2 mt-4">Cover Image</label>
-
-                    <div className="relative w-full aspect-[3/1] border rounded-md overflow-hidden">
-                        <Image
-                            src={image}
-                            alt="Article cover image"
-                            fill
-                            className="object-cover cursor-pointer block"
-                            onClick={() => {
-                                const url = window.prompt("Enter Image URL", image);
-                                if (url) setImage(url);
-                            }}
-                            priority
-                        />
-                    </div>
-
-                </div>
+                <WriteForm
+                    title={title}
+                    description={description}
+                    image={image}
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    pageType={pageType}
+                    pageTypeOptions={pageTypeOptions}
+                    onChange={{
+                        title: setTitle,
+                        description: setDescription,
+                        image: setImage,
+                        category: setSelectedCategory,
+                        type: setPageType,
+                    }}
+                    onCreateCategory={handleCreateCategory}
+                />
 
                 {isClient && (
                     <>
