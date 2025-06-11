@@ -12,7 +12,6 @@ import Image from 'next/image'
 import { PageType, PostStatus } from '@prisma/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AlertMessage from '../components/AlertMessage'
-import SelectInput from '../components/SelectInput'
 import { extensions } from '../lip/tiptapExtensions'
 import WriteForm from './components/WriteForm'
 
@@ -41,7 +40,6 @@ const WritePage = () => {
         label: type,
         value: type
     }))
-
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
