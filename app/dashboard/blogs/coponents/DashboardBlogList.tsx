@@ -18,7 +18,10 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
     return (
         <div>
             {loading ? (
-                <div className="text-center py-10"><span className="loading loading-spinner loading-xl mr-4"></span>Loading...</div>
+                <div className="text-center py-10">
+                    <span className="loading loading-spinner loading-xl mr-4" role="status"></span>
+                    Loading...
+                </div>
             ) : posts.map(post => (
                 <div key={post.slug} className="flex flex-col md:flex-row overflow-hidden rounded shadow-lg mb-8">
                     <div className="md:w-1/3 w-full h-48 md:h-auto">
