@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import DashboardFilters from '@/app/dashboard/blogs/coponents/BlogFilter'
+import DashboardFilters from '@/app/dashboard/blogs/components/BlogFilter'
 
 const mockStatusOptions = [
     { label: 'Draft', value: 'draft' },

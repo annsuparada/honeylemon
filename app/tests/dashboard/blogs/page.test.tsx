@@ -15,14 +15,14 @@ import * as postActions from '@/utils/postActions'
 jest.mock('@/app/components/ProtectedPage', () => ({ children }: any) => <div>{children}</div>)
 jest.mock('@/app/components/AlertMessage', () => ({ message }: any) => <div>{message.text}</div>)
 jest.mock('@/app/components/PaginationClient', () => () => <div>Pagination</div>)
-jest.mock('@/app/dashboard/blogs/coponents/DashboardBlogList', () => (props: any) => (
+jest.mock('@/app/dashboard/blogs/components/DashboardBlogList', () => (props: any) => (
     <div>
         {props.loading ? 'Loading...' : `Blog list with ${props.posts.length} posts`}
         <button onClick={() => props.handleArchive(mockPost)}>Archive</button>
         <button onClick={() => props.handleDelete(mockPost.id)}>Delete</button>
     </div>
 ))
-jest.mock('@/app/dashboard/blogs/coponents/BlogFilter', () => (props: any) => (
+jest.mock('@/app/dashboard/blogs/components/BlogFilter', () => (props: any) => (
     <div>
         <select onChange={(e) => props.onStatusChange(e.target.value)} data-testid="status-select">
             <option value="ALL">All</option>

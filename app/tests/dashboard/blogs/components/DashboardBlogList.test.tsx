@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { BlogPost } from '@/app/types'
-import DashboardBlogList from '@/app/dashboard/blogs/coponents/DashboardBlogList'
+import DashboardBlogList from '@/app/dashboard/blogs/components/DashboardBlogList'
 
 // Mock dynamic components
 jest.mock('next/image', () => (props: any) => <img {...props} alt={props.alt || 'mock-image'} />)
