@@ -27,10 +27,10 @@ Dashboard Featurs
 update write page
     - [x] redirect save darft on write page to dashboard/blogs
     - [x] limit description to max at 300 char   
-    - [] write all tests
+    - [x] write all tests
 
 
-- [] remove expried login token
+- [x] remove expried login token
 
 - [] create admin profile
     Write page features

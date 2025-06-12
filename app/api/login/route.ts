@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         const token = jwt.sign(
             { id: user.id, email: user.email, role: user.role },
             SECRET_KEY as string,
-            { expiresIn: "3h" }
+            { expiresIn: "7d" }
         );
 
         return NextResponse.json({ message: "Login successful", token, user }, { status: 200 });
