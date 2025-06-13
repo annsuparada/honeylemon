@@ -75,6 +75,49 @@ describe('getPublishedPosts', () => {
             })
         );
     });
+
+    it('excludes post by slug when excludeSlug is provided', async () => {
+        mockedFindMany.mockResolvedValue([
+            {
+                id: 'post2',
+                title: 'Another Post',
+                slug: 'another-post',
+                content: 'Another content',
+                description: 'Another desc',
+                image: 'img2.png',
+                status: PostStatus.PUBLISHED,
+                createdAt: new Date('2023-02-01'),
+                updatedAt: new Date('2023-02-02'),
+                type: PageType.ARTICLE,
+                category: {
+                    id: 'cat2',
+                    name: 'Business',
+                    slug: 'business',
+                },
+                author: {
+                    id: 'user2',
+                    name: 'Jane',
+                    lastName: 'Smith',
+                    username: 'janesmith',
+                    profilePicture: 'pfp2.png',
+                },
+            },
+        ]);
+
+        const excludedSlug = 'exclude-this';
+        await getPublishedPosts(undefined, excludedSlug);
+
+        expect(mockedFindMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    status: PostStatus.PUBLISHED,
+                    NOT: { slug: excludedSlug },
+                },
+                orderBy: { createdAt: 'desc' },
+            })
+        );
+    });
+
 });
 
 describe('getPostBySlug', () => {

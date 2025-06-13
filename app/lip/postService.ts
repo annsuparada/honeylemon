@@ -2,9 +2,12 @@ import prisma from "@/prisma/client";
 import { PostStatus } from "@prisma/client";
 import { BlogPost } from "../types";
 
-export async function getPublishedPosts(limit?: number | undefined) {
+export async function getPublishedPosts(limit?: number, excludeSlug?: string) {
     const rawPosts = await prisma.post.findMany({
-        where: { status: PostStatus.PUBLISHED },
+        where: {
+            status: PostStatus.PUBLISHED,
+            NOT: excludeSlug ? { slug: excludeSlug } : undefined,
+        },
         orderBy: { createdAt: 'desc' },
         take: limit,
         include: {
@@ -27,7 +30,6 @@ export async function getPublishedPosts(limit?: number | undefined) {
         },
     });
 
-    // Normalize Prisma data to match BlogPost type
     const posts: BlogPost[] = rawPosts.map((post) => ({
         id: post.id,
         title: post.title,
@@ -50,7 +52,7 @@ export async function getPublishedPosts(limit?: number | undefined) {
             username: post.author.username,
             profilePicture: post.author.profilePicture ?? undefined,
         },
-        type: post.type
+        type: post.type,
     }));
 
     return posts;

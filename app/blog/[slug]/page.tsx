@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function SingleBlogPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const post = await getPostBySlug(slug);
-  const blogPosts = await getPublishedPosts();
+  const blogPosts = await getPublishedPosts(6, slug);
 
   if (!post) {
     return <div className="text-center py-10 text-red-500">Post not found</div>;
