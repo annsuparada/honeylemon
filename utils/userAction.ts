@@ -6,14 +6,26 @@ const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/user`;
 export async function fetchUser(userId?: string) {
     try {
         const url = userId ? `${API_URL}?id=${userId}` : API_URL;
-        const response = await fetch(url);
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
         if (!response.ok) throw new Error("Failed to fetch user(s)");
-        return await response.json();
+        const data = await response.json();
+        if (userId) {
+            return data.users?.[0] || null;
+        }
+        return data.users
     } catch (error) {
         console.error("Error fetching user(s):", error);
         return null;
     }
 }
+
 
 /**
  * Create a new user
@@ -29,11 +41,16 @@ export async function createUser(data: {
     role?: string;
 }) {
     try {
+        const token = localStorage.getItem("token");
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify(data),
         });
+
         if (!response.ok) throw new Error("Failed to create user");
         return await response.json();
     } catch (error) {
@@ -41,6 +58,7 @@ export async function createUser(data: {
         return null;
     }
 }
+
 
 /**
  * Update a user by ID
@@ -56,11 +74,16 @@ export async function updateUser(id: string, data: {
     role?: string;
 }) {
     try {
+        const token = localStorage.getItem("token");
         const response = await fetch(API_URL, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ id, ...data }),
         });
+
         if (!response.ok) throw new Error("Failed to update user");
         return await response.json();
     } catch (error) {
@@ -68,3 +91,25 @@ export async function updateUser(id: string, data: {
         return null;
     }
 }
+
+export async function deleteUser(email: string) {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(API_URL, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) throw new Error("Failed to delete user");
+        return await response.json();
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        return null;
+    }
+}
+
+
