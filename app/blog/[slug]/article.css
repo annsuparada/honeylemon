@@ -40,6 +40,13 @@
 /* Paragraphs */
 .post-content p {
     font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+}
+
+.post-content br {
+    display: block;
+    content: "";
+    margin-bottom: 1rem;
 }
 
 /* Blockquotes */
