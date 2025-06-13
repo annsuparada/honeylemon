@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import { Metadata } from 'next';
 import Image from 'next/image'
 import BlogSection from '@/app/components/BlogSection'
