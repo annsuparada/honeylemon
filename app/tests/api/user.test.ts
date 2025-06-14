@@ -7,6 +7,7 @@ import prisma from '@/prisma/client';
 
 jest.mock('@/prisma/client', () => ({
     user: {
+        findFirst: jest.fn(),
         findMany: jest.fn(),
         findUnique: jest.fn(),
         create: jest.fn(),
@@ -55,8 +56,8 @@ describe('User API', () => {
     });
 
     it('POST: should create a user', async () => {
-        (prisma.user.findUnique as jest.Mock).mockResolvedValueOnce(null); // email check
-        (prisma.user.findUnique as jest.Mock).mockResolvedValueOnce(null); // username check
+        (prisma.user.findFirst as jest.Mock).mockResolvedValue(null); // email check
+        (prisma.user.findFirst as jest.Mock).mockResolvedValue(null); // username check
         (prisma.user.create as jest.Mock).mockResolvedValue(validUser);
 
         const req = new Request('http://localhost/api/user', {
@@ -72,6 +73,7 @@ describe('User API', () => {
         const res = await POST(req as any);
         const json = await res.json();
 
+        console.log('json-----', json)
         expect(res.status).toBe(201);
         expect(json.success).toBe(true);
         expect(json.user.email).toBe('ann@example.com');
@@ -79,8 +81,8 @@ describe('User API', () => {
 
     it('POST: should fail to create user if email already exists', async () => {
         // Mock existing email
-        (prisma.user.findUnique as jest.Mock)
-            .mockResolvedValueOnce({ id: 'existing-id' }); // email check
+        (prisma.user.findFirst as jest.Mock)
+            .mockResolvedValue({ id: 'existing-id' }); // email check
 
         const req = new Request('http://localhost/api/user', {
             method: 'POST',
