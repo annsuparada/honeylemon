@@ -25,7 +25,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
   loading = false,
   threeColumns = false,
   showDescription = true,
-  showAuthor = true,
+  showAuthor = false,
 }) => {
   return (
     <div className="bg-white pt-24 sm:pt-32 pb-10">
@@ -57,7 +57,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                   allowedAttributes: {},
                 })
 
-                return (
+                return (<Link href={`/blog/${post.slug}`}>
                   <article
                     key={post.slug}
                     className={`relative isolate rounded-md shadow-lg ${threeColumns ? 'flex flex-col gap-6' : 'flex flex-col gap-8 lg:flex-row'
@@ -97,14 +97,12 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                       </div>
                       <div className="group relative max-w-xl">
                         <h3 className="mt-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
-                          <Link href={`/blog/${post.slug}`}>
-                            <span className="absolute inset-0" />
-                            {post.title}
-                          </Link>
+                          <span className="absolute inset-0" />
+                          {post.title}
                         </h3>
                         {showDescription && (
                           <p
-                            className="mt-5 text-sm/6 text-gray-600"
+                            className="mt-5 text-sm/6 text-gray-600 pb-3"
                             dangerouslySetInnerHTML={{
                               __html:
                                 sanitizedDescription.length > 200
@@ -115,7 +113,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                         )}
                       </div>
                       {showAuthor && (
-                        <div className="flex border-t border-gray-900/5 py-3">
+                        <div className="flex border-t border-gray-900/5 py-1">
                           <div className="relative flex items-center gap-x-4">
                             {post.author?.profilePicture && (
                               <Image
@@ -140,6 +138,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                       )}
                     </div>
                   </article>
+                </Link>
                 )
               })}
             </div>

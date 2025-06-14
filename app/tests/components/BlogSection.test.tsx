@@ -68,6 +68,7 @@ describe('BlogSection Component', () => {
                 title="Test"
                 subTitle="Sub"
                 posts={mockPosts}
+                showAuthor={true}
             />
         );
 
