@@ -46,13 +46,13 @@ export async function POST(req: Request) {
         const validatedData = userSchema.parse(body);
 
         //  Check if email already exists
-        const existingEmail = await prisma.user.findUnique({ where: { email: validatedData.email } });
+        const existingEmail = await prisma.user.findFirst({ where: { email: validatedData.email } });
         if (existingEmail) {
             return NextResponse.json({ error: "Email already exists" }, { status: 400 });
         }
 
         //  Check if username already exists
-        const existingUsername = await prisma.user.findUnique({ where: { username: validatedData.username } });
+        const existingUsername = await prisma.user.findFirst({ where: { username: validatedData.username } });
         if (existingUsername) {
             return NextResponse.json({ error: "Username already exists" }, { status: 400 });
         }
@@ -104,14 +104,14 @@ export async function PATCH(req: Request) {
         const validatedData = editUserSchema.parse(body);
 
         // Check if user exists using the old email
-        const user = await prisma.user.findUnique({ where: { email: validatedData.email } });
+        const user = await prisma.user.findFirst({ where: { email: validatedData.email } });
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
         // Check if a new email is provided and if it is already taken
         if (validatedData.newEmail) {
-            const emailExists = await prisma.user.findUnique({ where: { email: validatedData.newEmail } });
+            const emailExists = await prisma.user.findFirst({ where: { email: validatedData.newEmail } });
             if (emailExists) {
                 return NextResponse.json({ error: "Email already in use" }, { status: 400 });
             }
@@ -156,7 +156,7 @@ export async function DELETE(req: Request) {
         const validatedData = deleteUserSchema.parse(body);
 
         // Check if user exists
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: { email: validatedData.email },
         });
 

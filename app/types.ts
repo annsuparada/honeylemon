@@ -12,6 +12,12 @@ export interface Author {
     role?: string;
 }
 
+export interface AuthorUpdateData extends Partial<Author> {
+    newPassword?: string;
+    confirmPassword?: string;
+}
+
+
 export interface Category {
     id: string;
     name: string;

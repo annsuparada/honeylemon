@@ -1,0 +1,107 @@
+import Alert from '@/app/components/AlertMessage';
+import FormInput from '@/app/components/FormInput';
+import { Author } from '@/app/types';
+import Image from 'next/image';
+
+interface Props {
+    formData: Partial<Author>;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onSubmit: (e: React.FormEvent) => void;
+    saving: boolean;
+    alert?: { type: 'success' | 'error'; text: string } | null;
+    onClearAlert?: () => void;
+}
+
+export default function UserProfileForm({ formData, onChange, onSubmit, saving, onClearAlert, alert }: Props) {
+    const handleChange = (field: keyof Author) => (value: string) => {
+        const syntheticEvent = {
+            target: {
+                name: field,
+                value,
+            },
+        } as unknown as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+        onChange(syntheticEvent);
+    };
+
+    return (
+        <>
+            <form onSubmit={onSubmit} className="space-y-6">
+                <div className="col-span-full">
+                    <label htmlFor="photo" className="block text-lg font-semibold text-gray-700 mb-2">
+                        Photo
+                    </label>
+                    <div className="mt-2 flex items-center gap-x-3">
+                        <div className="avatar">
+                            <div className="w-24 rounded-full">
+                                <Image
+                                    src={formData.profilePicture || ""}
+                                    alt={formData.username || "User Profile"}
+                                    height={100}
+                                    width={100}
+                                />
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+                            onClick={() => {
+                                const url = window.prompt('Enter Image URL', formData.profilePicture || '');
+                                if (url) handleChange('profilePicture')(url);
+                            }}
+                        >
+                            Change
+                        </button>
+                    </div>
+                </div>
+                <FormInput
+                    id="username"
+                    label="Username"
+                    value={formData.username || ''}
+                    onChange={handleChange('username')}
+                    disabled={true}
+                />
+
+                <FormInput
+                    id="email"
+                    label="Email"
+                    type="text"
+                    value={formData.email || ''}
+                    onChange={handleChange('email')}
+                    disabled={true}
+                />
+
+                <FormInput
+                    id="name"
+                    label="First Name"
+                    value={formData.name || ''}
+                    onChange={handleChange('name')}
+                />
+
+                <FormInput
+                    id="lastName"
+                    label="Last Name"
+                    value={formData.lastName || ''}
+                    onChange={handleChange('lastName')}
+                />
+
+                <FormInput
+                    id="bio"
+                    label="Bio"
+                    value={formData.bio || ''}
+                    onChange={handleChange('bio')}
+                    type="textarea"
+                    rows={3}
+                />
+
+                {alert && <Alert message={alert} onClose={onClearAlert || (() => { })} />}
+                <button
+                    type="submit"
+                    disabled={saving}
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-500"
+                >
+                    {saving ? 'Saving...' : 'Save'}
+                </button>
+            </form>
+        </>
+    );
+}
