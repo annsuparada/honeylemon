@@ -112,3 +112,31 @@ export async function deleteUser(email: string) {
 }
 
 
+export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${API_URL}/password`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                userId,
+                currentPassword,
+                newPassword,
+            }),
+        });
+        console.log('reponse.json')
+
+        if (!response.ok) {
+            const err = await response.json();
+            return err
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error changing password:", error);
+        return null;
+    }
+}
+

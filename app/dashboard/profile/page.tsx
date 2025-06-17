@@ -3,12 +3,16 @@
 import { useEffect, useState } from 'react'
 import ProtectedPage from '@/app/components/ProtectedPage'
 import { Author } from '@/app/types'
-import { fetchUser, updateUser } from '@/utils/userAction'
+import { changePassword, fetchUser, updateUser } from '@/utils/userAction'
 import UserProfileForm from './component/UserProfileForm'
+import ChangePasswordForm from './component/ChangePasswordForm'
 
 export default function ProfilePage() {
     const [user, setUser] = useState<Author | null>(null)
     const [formData, setFormData] = useState<Partial<Author>>({})
+    const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '' });
+    const [savingPassword, setSavingPassword] = useState(false);
+    const [passwordAlert, setPasswordAlert] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [saving, setSaving] = useState(false)
     const [loading, setLoading] = useState(true)
     const [alert, setAlert] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -58,6 +62,25 @@ export default function ProfilePage() {
         }
     }
 
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setPasswordData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handlePasswordSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSavingPassword(true);
+        if (!user) return;
+        const res = await changePassword(user.id, passwordData.oldPassword, passwordData.newPassword);
+        console.log('res', res)
+        if (res?.success) {
+            setPasswordAlert({ type: 'success', text: 'Password updated successfully.' });
+            setPasswordData({ oldPassword: '', newPassword: '' });
+        } else {
+            setPasswordAlert({ type: 'error', text: res?.message || 'Failed to update password.' });
+        }
+        setSavingPassword(false);
+    };
 
     return (
         <ProtectedPage>
@@ -65,14 +88,26 @@ export default function ProfilePage() {
                 {loading ? (
                     <p>Loading...</p>
                 ) : user ? (
-                    <UserProfileForm
-                        formData={formData}
-                        onChange={handleChange}
-                        onSubmit={handleSubmit}
-                        saving={saving}
-                        alert={alert}
-                        onClearAlert={() => setAlert(null)}
-                    />
+                    <>
+                        <UserProfileForm
+                            formData={formData}
+                            onChange={handleChange}
+                            onSubmit={handleSubmit}
+                            saving={saving}
+                            alert={alert}
+                            onClearAlert={() => setAlert(null)}
+                        />
+                        <ChangePasswordForm
+                            oldPassword={passwordData.oldPassword}
+                            newPassword={passwordData.newPassword}
+                            onChange={handlePasswordChange}
+                            onSubmit={handlePasswordSubmit}
+                            alert={passwordAlert}
+                            onClearAlert={() => setPasswordAlert(null)}
+                            saving={savingPassword}
+                        />
+
+                    </>
 
                 ) : (
                     <p className="text-red-500">User not found.</p>

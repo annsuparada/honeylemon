@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 
 interface Props {
     id: string;
@@ -6,9 +7,10 @@ interface Props {
     placeholder?: string;
     value: string;
     onChange: (value: string) => void;
-    type?: 'text' | 'textarea' | 'password';
+    type?: 'text' | 'textarea' | 'password' | 'email';
     rows?: number;
-    disabled?: boolean
+    disabled?: boolean;
+    error?: string; // Optional manual error override
 }
 
 export default function FormInput({
@@ -19,36 +21,73 @@ export default function FormInput({
     onChange,
     type = 'text',
     rows = 4,
-    disabled = false
+    disabled = false,
+    error,
 }: Props) {
-    const commonClass =
-        'border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white disabled:bg-gray-100 disabled:cursor-not-allowed';
+    const [internalError, setInternalError] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        if (type === 'email') {
+            if (value && !value.includes('@')) {
+                setInternalError('Not a valid email address.');
+            } else {
+                setInternalError(undefined);
+            }
+        }
+    }, [type, value]);
+
+    const finalError = error || internalError;
+
+    const baseClass = `block w-full rounded-md py-1.5 px-3 text-base focus:outline-none focus:ring focus:ring-blue-200 disabled:bg-gray-100 disabled:cursor-not-allowed ${finalError
+            ? 'border border-red-500 text-red-900 placeholder:text-red-300 bg-white outline-1 -outline-offset-1 outline-red-300 focus:outline-red-600'
+            : 'border border-gray-300 bg-white'
+        }`;
 
     return (
         <div className="mb-4">
             <label htmlFor={id} className="block text-lg font-semibold text-gray-700 mb-2">
                 {label}
             </label>
-            {type === 'textarea' ? (
-                <textarea
-                    id={id}
-                    rows={rows}
-                    className={commonClass}
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    disabled={disabled}
-                />
-            ) : (
-                <input
-                    id={id}
-                    type="text"
-                    className={commonClass}
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    disabled={disabled}
-                />
+
+            <div className="relative">
+                {type === 'textarea' ? (
+                    <textarea
+                        id={id}
+                        rows={rows}
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        disabled={disabled}
+                        className={baseClass}
+                        aria-invalid={!!finalError}
+                        aria-describedby={finalError ? `${id}-error` : undefined}
+                    />
+                ) : (
+                    <input
+                        id={id}
+                        type={type}
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        disabled={disabled}
+                        className={`${baseClass} pr-10`}
+                        aria-invalid={!!finalError}
+                        aria-describedby={finalError ? `${id}-error` : undefined}
+                    />
+                )}
+
+                {finalError && (
+                    <ExclamationCircleIcon
+                        aria-hidden="true"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 size-5 text-red-500 pointer-events-none"
+                    />
+                )}
+            </div>
+
+            {finalError && (
+                <p id={`${id}-error`} className="mt-2 text-sm text-red-600">
+                    {finalError}
+                </p>
             )}
         </div>
     );

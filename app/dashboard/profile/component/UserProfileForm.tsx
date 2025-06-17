@@ -25,6 +25,9 @@ export default function UserProfileForm({ formData, onChange, onSubmit, saving, 
 
     return (
         <>
+            {alert && <Alert message={alert} onClose={onClearAlert || (() => { })} />}
+
+
             <form onSubmit={onSubmit} className="space-y-6">
                 <div className="col-span-full">
                     <label htmlFor="photo" className="block text-lg font-semibold text-gray-700 mb-2">
@@ -38,6 +41,7 @@ export default function UserProfileForm({ formData, onChange, onSubmit, saving, 
                                     alt={formData.username || "User Profile"}
                                     height={100}
                                     width={100}
+                                    priority
                                 />
                             </div>
                         </div>
@@ -64,7 +68,7 @@ export default function UserProfileForm({ formData, onChange, onSubmit, saving, 
                 <FormInput
                     id="email"
                     label="Email"
-                    type="text"
+                    type="email"
                     value={formData.email || ''}
                     onChange={handleChange('email')}
                     disabled={true}
