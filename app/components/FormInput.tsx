@@ -24,19 +24,18 @@ export default function FormInput({
     disabled = false,
     error,
 }: Props) {
-    const [internalError, setInternalError] = useState<string | undefined>(undefined);
+    const [internalError, setInternalError] = useState<string | undefined>();
 
     useEffect(() => {
         if (type === 'email') {
-            if (value && !value.includes('@')) {
-                setInternalError('Not a valid email address.');
-            } else {
-                setInternalError(undefined);
-            }
+            const isValidEmail = value.trim() === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            setInternalError(isValidEmail ? undefined : 'Not a valid email address.');
+        } else {
+            setInternalError(undefined);
         }
     }, [type, value]);
 
-    const finalError = error || internalError;
+    const finalError = error ?? internalError;
 
     const baseClass = `block w-full rounded-md py-1.5 px-3 text-base focus:outline-none focus:ring focus:ring-blue-200 disabled:bg-gray-100 disabled:cursor-not-allowed ${finalError
             ? 'border border-red-500 text-red-900 placeholder:text-red-300 bg-white outline-1 -outline-offset-1 outline-red-300 focus:outline-red-600'
