@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import ProtectedPage from '@/app/components/ProtectedPage'
 import { Author } from '@/app/types'
 import { changePassword, fetchUser, updateUser } from '@/utils/userAction'
-import UserProfileForm from './component/UserProfileForm'
-import ChangePasswordForm from './component/ChangePasswordForm'
+import UserProfileForm from './components/UserProfileForm'
+import ChangePasswordForm from './components/ChangePasswordForm'
 
 export default function ProfilePage() {
     const [user, setUser] = useState<Author | null>(null)
