@@ -7,6 +7,7 @@ import {
     createUser,
     updateUser,
     deleteUser,
+    changePassword,
 } from '@/utils/userAction';
 
 import fetchMock from 'jest-fetch-mock';
@@ -179,5 +180,84 @@ describe('invalid or missing token', () => {
         fetchMock.mockRejectOnce(new Error('Unauthorized'));
         const res = await updateUser('u1', { name: 'Test' });
         expect(res).toBeNull();
+    });
+});
+
+describe('changePassword', () => {
+    const userId = 'u1';
+    const currentPassword = 'oldpass123';
+    const newPassword = 'newpass456';
+
+    beforeEach(() => {
+        fetchMock.resetMocks();
+        localStorage.setItem('token', 'mock-token');
+    });
+
+    it('successfully changes password', async () => {
+        const mockResponse = { success: true, message: 'Password updated successfully' };
+        fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+        const result = await changePassword(userId, currentPassword, newPassword);
+
+        expect(result).toEqual(mockResponse);
+        expect(fetchMock).toHaveBeenCalledWith(
+            expect.stringContaining('/password'),
+            expect.objectContaining({
+                method: 'PATCH',
+                headers: expect.objectContaining({
+                    Authorization: 'Bearer mock-token',
+                    'Content-Type': 'application/json',
+                }),
+                body: JSON.stringify({
+                    userId,
+                    currentPassword,
+                    newPassword,
+                }),
+            })
+        );
+    });
+
+    it('returns error message from server response', async () => {
+        const mockError = { message: 'Current password is incorrect' };
+        fetchMock.mockResponseOnce(JSON.stringify(mockError), { status: 401 });
+
+        const result = await changePassword(userId, currentPassword, newPassword);
+
+        expect(result).toEqual(mockError);
+    });
+
+    it('returns null if fetch throws error', async () => {
+        fetchMock.mockRejectOnce(new Error('Network error'));
+
+        const result = await changePassword(userId, currentPassword, newPassword);
+
+        expect(result).toBeNull();
+    });
+
+    it('returns null if token is missing', async () => {
+        localStorage.removeItem('token');
+        fetchMock.mockRejectOnce(new Error('Unauthorized'));
+
+        const result = await changePassword(userId, currentPassword, newPassword);
+
+        expect(result).toBeNull();
+    });
+
+    it('sends correct headers and body', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ success: true }));
+
+        await changePassword(userId, currentPassword, newPassword);
+
+        const [url, options] = fetchMock.mock.calls[0];
+
+        expect(url).toMatch('/password');
+        expect(options?.method).toBe('PATCH');
+        expect(options?.headers).toMatchObject({
+            Authorization: 'Bearer mock-token',
+            'Content-Type': 'application/json',
+        });
+        expect(options?.body).toBe(
+            JSON.stringify({ userId, currentPassword, newPassword })
+        );
     });
 });
