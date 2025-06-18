@@ -1,33 +1,45 @@
-import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import prisma from "@/prisma/client";
+import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
+import crypto from 'crypto'
+import { add } from 'date-fns'
+import prisma from '@/prisma/client'
 
-const SECRET_KEY = process.env.SECRET_KEY;
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+const resend = new Resend(process.env.RESEND_API_KEY)
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
 export async function POST(req: Request) {
     try {
-        const { email } = await req.json();
+        const { email } = await req.json()
 
-        const user = await prisma.user.findUnique({ where: { email } });
-
+        const user = await prisma.user.findUnique({ where: { email } })
         if (!user) {
-            return NextResponse.json({ message: "If that email is registered, a reset link has been sent." }, { status: 200 });
+            // Return success to avoid email discovery
+            return NextResponse.json({ success: true })
         }
 
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            SECRET_KEY as string,
-            { expiresIn: "1h" }
-        );
+        const token = crypto.randomBytes(32).toString('hex')
+        const expiresAt = add(new Date(), { minutes: 15 })
 
-        const resetUrl = `${APP_URL}/reset-password?token=${token}`;
+        await prisma.passwordResetToken.create({
+            data: {
+                userId: user.id,
+                token,
+                expiresAt,
+            },
+        })
 
-        // TODO: Send email here using nodemailer, Resend, or another service
-        console.log("🔗 Reset URL:", resetUrl); // Log for development
+        const resetLink = `${baseUrl}/reset-password?token=${token}`
 
-        return NextResponse.json({ message: "Reset link sent if email is registered." }, { status: 200 });
+        await resend.emails.send({
+            from: 'onboarding@resend.dev',
+            to: email,
+            subject: 'Reset your password',
+            html: `<p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 15 minutes.</p>`,
+        })
+
+        return NextResponse.json({ success: true })
     } catch (error) {
-        return NextResponse.json({ message: "Failed to send reset link" }, { status: 500 });
+        console.error('Email sending failed:', error)
+        return NextResponse.json({ success: false, error: 'Email failed' }, { status: 500 })
     }
 }

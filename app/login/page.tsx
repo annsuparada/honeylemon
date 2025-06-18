@@ -66,12 +66,12 @@ const LoginPage = () => {
                 </button>
               </form>
 
-              {/* <div className="mt-6 text-sm text-center">
-                Don't have an account?{' '}
-                <Link href="/register" className="text-blue-600 hover:underline">
-                  Register here
+              <div className="mt-6 text-sm text-center">
+                Forgot your password?{' '}
+                <Link href="/forgot-password" className="text-blue-600 hover:underline">
+                  Reset password
                 </Link>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
