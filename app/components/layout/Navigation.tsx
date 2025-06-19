@@ -61,7 +61,7 @@ const Navigation = () => {
     <nav className="absolute top-0 left-0 w-full z-50 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
-        <div className="text-xl text-white font-bold" style={{ textShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}>
+        <div className="text-xl text-white font-bold">
           <Link href="/">
             <Image
               src={"https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"}

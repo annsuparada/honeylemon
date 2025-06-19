@@ -55,7 +55,7 @@ const HeroSection = ({
                 <div className="relative z-10 hero-content text-neutral-content w-full justify-start px-8">
                     <div className="flex flex-col gap-10 lg:flex-row lg:items-center w-full">
                         <div className="w-full lg:max-w-xl">
-                            <h1 className={`mb-5 text-3xl lg:text-5xl font-bold text-white text-shadow-lg/30 ${!isHomepage && 'mt-12'}`}>
+                            <h1 className={`mb-5 mt-20 text-3xl lg:text-5xl font-bold text-white text-shadow-lg/30 ${!isHomepage && 'mt-12'}`}>
                                 {title}
                             </h1>
                             <p className="mb-5 text-white text-shadow-lg/30">{description}</p>
