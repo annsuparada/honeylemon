@@ -33,11 +33,15 @@ update write page
 - [x] remove expried login token
 
 - [x] create admin profile
-- [] password recovery, update pasword
+- [x] update pasword
+
+- [] render blog by page/category
+- [] update post not found page
+- [] deploy travomad.com on vercel
+- [] password recovery, 
 - [] create newsletters feature
 - [] Scheduled publishing
 
 
 - [] Search — full-text search (title/description)
-- [] render blog by page/category
 - [] add color to category bage

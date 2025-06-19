@@ -2,7 +2,6 @@ export const revalidate = 60;
 
 import { Metadata } from 'next';
 import Image from 'next/image'
-import BlogSection from '@/app/components/BlogSection'
 import sanitizeHtml from 'sanitize-html';
 import './article.css'
 import dynamic from "next/dynamic";
@@ -15,6 +14,8 @@ export async function generateStaticParams() {
   return posts.map((post: { slug: string; }) => ({ slug: post.slug }));
 }
 const ShareButton = dynamic(() => import("../../components/ShareButton"), { ssr: false });
+const CTA = dynamic(() => import("../../components/CTA"), { ssr: false });
+const BlogSection = dynamic(() => import("../../components/BlogSection"), { ssr: false });
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
@@ -66,7 +67,7 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
         description={post.description}
         category={post.category.name}
         author={
-          post.author?.name && post.author?.lastName
+          post.author?.name
             ? `${post.author.name} ${post.author.lastName}`
             : post.author?.username || "Unknown"
         }
@@ -104,6 +105,12 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
           </div>
         </article>
       </div>
+      <CTA
+        title="Ready to Book?"
+        subtitle="Find flights, hotels, and tours on Trip.com"
+        buttonText="Get started"
+        buttonUrl="https://trip.tp.st/yQI9sIWC"
+      />
 
       <div className="max-w-screen-lg mx-auto py-10 px-4">
         {/* Blog Section */}
