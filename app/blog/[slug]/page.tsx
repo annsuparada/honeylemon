@@ -114,7 +114,13 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
 
       <div className="max-w-screen-lg mx-auto py-10 px-4">
         {/* Blog Section */}
-        <BlogSection posts={blogPosts} title={''} subTitle={''} />
+        <BlogSection posts={blogPosts} title={'Latest Travel Guides'} subTitle={''} />
+        <BlogSection
+          posts={blogPosts}
+          title="Latest Travel Guides"
+          subTitle="Fresh tips, itineraries, and destination insights"
+          threeColumns={true}
+        />
       </div>
     </>
   );

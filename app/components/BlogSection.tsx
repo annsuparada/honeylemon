@@ -60,8 +60,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                 return (<Link href={`/blog/${post.slug}`}>
                   <article
                     key={post.slug}
-                    className={`relative isolate rounded-md shadow-lg ${threeColumns ? 'flex flex-col gap-6' : 'flex flex-col gap-8 lg:flex-row'
-                      }`}
+                    className={`relative isolate rounded-md shadow-lg mb-6 h-full flex flex-col justify-between ${threeColumns ? 'gap-6' : 'gap-8 lg:flex-row'}`}
                   >
                     <div
                       className={`relative overflow-hidden ${threeColumns ? 'h-52 w-full' : 'h-48 w-full lg:h-auto lg:w-64 lg:shrink-0'
