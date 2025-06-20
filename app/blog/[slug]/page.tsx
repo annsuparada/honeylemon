@@ -112,7 +112,7 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
         buttonUrl="https://trip.tp.st/yQI9sIWC"
       />
 
-      <div className="max-w-screen-lg mx-auto py-10 px-4">
+      <div className="mx-auto py-10 px-4">
         {/* Blog Section */}
         <BlogSection
           posts={blogPosts}

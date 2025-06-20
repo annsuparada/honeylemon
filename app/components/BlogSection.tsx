@@ -47,7 +47,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
           ) : (
             <div
               className={`mt-16 ${threeColumns
-                ? 'grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3'
+                ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
                 : 'space-y-20 lg:mt-20 lg:space-y-20'
                 }`}
             >
