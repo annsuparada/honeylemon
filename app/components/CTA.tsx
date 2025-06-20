@@ -6,6 +6,7 @@ interface CTAProps {
     buttonText: string;
     buttonUrl: string;
     gradientBg?: string;
+    openInNewTab?: boolean;
 }
 
 const CTA: React.FC<CTAProps> = ({
@@ -14,6 +15,7 @@ const CTA: React.FC<CTAProps> = ({
     buttonText,
     buttonUrl,
     gradientBg = "from-blue-600 via-sky-500 to-cyan-400",
+    openInNewTab = true
 }) => {
     return (
         <div className={`bg-gradient-to-r ${gradientBg} py-24 sm:py-32`}>
@@ -26,6 +28,7 @@ const CTA: React.FC<CTAProps> = ({
                 <div className="mt-10 flex items-center gap-x-6 lg:mt-0 lg:shrink-0">
                     <a
                         href={buttonUrl}
+                        target={openInNewTab ? "_blank" : undefined}
                         className="rounded-lg bg-white px-6 py-3 text-base font-bold text-indigo-700 shadow-lg transition-all duration-300 hover:bg-yellow-300 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                     >
                         {buttonText}
