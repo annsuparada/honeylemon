@@ -17,7 +17,7 @@ const Home = () => {
 
     async function loadPosts() {
       setLoading(true)
-      const loadedPosts = await fetchPosts("PUBLISHED", 5)
+      const loadedPosts = await fetchPosts("PUBLISHED", 6)
       setPosts(loadedPosts)
       setLoading(false)
     }

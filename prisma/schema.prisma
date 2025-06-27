@@ -23,6 +23,7 @@ enum PageType {
   DEAL
   ARTICLE
   DESTINATION
+  ITINERARY
 }
 
 model Category {
