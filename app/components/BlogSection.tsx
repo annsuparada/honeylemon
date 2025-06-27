@@ -57,10 +57,9 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                   allowedAttributes: {},
                 })
 
-                return (<Link href={`/blog/${post.slug}`}>
+                return (<Link href={`/blog/${post.slug}`} key={post.slug}>
                   <article
-                    key={post.slug}
-                    className={`relative isolate rounded-md shadow-lg mb-6 h-full flex flex-col justify-between ${threeColumns ? 'gap-6' : 'gap-8 lg:flex-row'}`}
+                    className={`relative isolate rounded-md shadow-lg mb-6 h-full flex flex-col justify-between ${threeColumns ? 'gap-2' : 'gap-4 lg:flex-row'}`}
                   >
                     <div
                       className={`relative overflow-hidden ${threeColumns ? 'h-52 w-full' : 'h-48 w-full lg:h-auto lg:w-64 lg:shrink-0'
@@ -86,12 +85,11 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                           <FormattedDate dateString={post.createdAt} />
                         </time>
                         {post.category?.name && (
-                          <Link
-                            href={post.category.name}
-                            className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+                          <span
+                            className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600"
                           >
                             {post.category.name}
-                          </Link>
+                          </span>
                         )}
                       </div>
                       <div className="group relative max-w-xl">
@@ -114,7 +112,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                       {showAuthor && (
                         <div className="flex border-t border-gray-900/5 py-1">
                           <div className="relative flex items-center gap-x-4">
-                            {post.author?.profilePicture && (
+                            {post.author?.profilePicture && post.author?.name && (
                               <Image
                                 alt={post.author.name}
                                 src={post.author.profilePicture}
@@ -123,6 +121,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                                 className="rounded-full bg-gray-50"
                               />
                             )}
+
                             <div className="text-sm/6">
                               <p className="font-semibold text-gray-900">
                                 <span className="absolute inset-0" />

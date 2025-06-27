@@ -34,7 +34,7 @@ update write page
 
 - [x] create admin profile
 - [x] update pasword
-- [] fix  Forgot your password request. check email before send reset password
+- [x] fix  Forgot your password request. check email before send reset password
 
 - [] render blog by page/category
 - [] update post not found page

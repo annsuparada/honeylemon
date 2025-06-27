@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 const navLinks = [
-  { href: '/deals', label: 'Deals' },
+  { href: '/itinerary', label: 'Itinerary' },
   { href: '/destinations', label: 'Destinations' },
   { href: '/blog', label: 'Blog' },
 ]
