@@ -1,12 +1,23 @@
 import prisma from "@/prisma/client";
-import { PostStatus } from "@prisma/client";
+import { PageType, PostStatus } from "@prisma/client";
 import { BlogPost } from "../types";
 
-export async function getPublishedPosts(limit?: number, excludeSlug?: string) {
+export async function getPublishedPosts(
+    limit?: number,
+    excludeSlug?: string,
+    pageType?: PageType,
+    categorySlug?: string
+) {
     const rawPosts = await prisma.post.findMany({
         where: {
             status: PostStatus.PUBLISHED,
-            NOT: excludeSlug ? { slug: excludeSlug } : undefined,
+            ...(excludeSlug && { NOT: { slug: excludeSlug } }),
+            ...(pageType && { type: pageType }),
+            ...(categorySlug && {
+                category: {
+                    slug: categorySlug,
+                },
+            }),
         },
         orderBy: { createdAt: 'desc' },
         take: limit,
@@ -59,6 +70,7 @@ export async function getPublishedPosts(limit?: number, excludeSlug?: string) {
 }
 
 
+
 export async function getPostBySlug(slug: string) {
     const post = await prisma.post.findUnique({
         where: { slug },
@@ -109,3 +121,4 @@ export async function getPostBySlug(slug: string) {
         type: post.type
     } satisfies BlogPost;
 }
+

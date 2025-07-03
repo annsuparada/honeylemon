@@ -59,7 +59,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
 
                 return (<Link href={`/blog/${post.slug}`} key={post.slug}>
                   <article
-                    className={`relative isolate rounded-md shadow-lg mb-6 h-full flex flex-col justify-between ${threeColumns ? 'gap-2' : 'gap-4 lg:flex-row'}`}
+                    className={`relative isolate rounded-md shadow-lg h-full flex flex-col justify-between ${threeColumns ? 'gap-2' : 'gap-4 lg:flex-row'}`}
                   >
                     <div
                       className={`relative overflow-hidden ${threeColumns ? 'h-52 w-full' : 'h-48 w-full lg:h-auto lg:w-64 lg:shrink-0'
@@ -93,13 +93,13 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                         )}
                       </div>
                       <div className="group relative max-w-xl">
-                        <h3 className="mt-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
+                        <h3 className="my-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
                           <span className="absolute inset-0" />
                           {post.title}
                         </h3>
                         {showDescription && (
                           <p
-                            className="mt-5 text-sm/6 text-gray-600 pb-3"
+                            className="text-sm/6 text-gray-600 pb-3"
                             dangerouslySetInnerHTML={{
                               __html:
                                 sanitizedDescription.length > 200

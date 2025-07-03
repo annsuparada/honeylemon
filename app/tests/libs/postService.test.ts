@@ -118,6 +118,90 @@ describe('getPublishedPosts', () => {
         );
     });
 
+    it('filters posts by pageType when provided', async () => {
+        mockedFindMany.mockResolvedValue([
+            {
+                id: 'post3',
+                title: 'Article Post',
+                slug: 'article-post',
+                content: 'Content',
+                description: null,
+                image: null,
+                status: PostStatus.PUBLISHED,
+                createdAt: new Date('2023-03-01'),
+                updatedAt: new Date('2023-03-02'),
+                type: PageType.ARTICLE,
+                category: {
+                    id: 'cat3',
+                    name: 'Lifestyle',
+                    slug: 'lifestyle',
+                },
+                author: {
+                    id: 'user3',
+                    name: 'Alice',
+                    lastName: null,
+                    username: 'alice',
+                    profilePicture: null,
+                },
+            },
+        ]);
+
+        const posts = await getPublishedPosts(undefined, undefined, PageType.ARTICLE);
+
+        expect(posts).toHaveLength(1);
+        expect(mockedFindMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    status: PostStatus.PUBLISHED,
+                    type: PageType.ARTICLE,
+                },
+            })
+        );
+    });
+
+    it('filters posts by categorySlug when provided', async () => {
+        mockedFindMany.mockResolvedValue([
+            {
+                id: 'post4',
+                title: 'Travel Post',
+                slug: 'travel-post',
+                content: 'Content',
+                description: null,
+                image: null,
+                status: PostStatus.PUBLISHED,
+                createdAt: new Date('2023-04-01'),
+                updatedAt: new Date('2023-04-02'),
+                type: PageType.DESTINATION,
+                category: {
+                    id: 'cat4',
+                    name: 'Travel',
+                    slug: 'travel',
+                },
+                author: {
+                    id: 'user4',
+                    name: 'Bob',
+                    lastName: null,
+                    username: 'bob',
+                    profilePicture: null,
+                },
+            },
+        ]);
+
+        const posts = await getPublishedPosts(undefined, undefined, undefined, 'travel');
+
+        expect(posts).toHaveLength(1);
+        expect(mockedFindMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    status: PostStatus.PUBLISHED,
+                    category: {
+                        slug: 'travel',
+                    },
+                },
+            })
+        );
+    });
+
 });
 
 describe('getPostBySlug', () => {

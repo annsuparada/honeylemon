@@ -3,6 +3,7 @@ import CTA from "../components/CTA"
 import HeroSection from "../components/HeroSection"
 import { Metadata } from "next"
 import { getPublishedPosts } from "../lip/postService"
+import { PageType } from "@prisma/client"
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -29,7 +30,7 @@ const BlogSection = dynamic(() => import("../components/BlogSection"), { ssr: fa
 
 
 const Itinerary = async () => {
-    const blogPosts = await getPublishedPosts(6);
+    const blogPosts = await getPublishedPosts(6, undefined, PageType.ITINERARY, 'budget-travel');
     return (
         <div>
             <HeroSection
@@ -37,7 +38,7 @@ const Itinerary = async () => {
                 description={"Plan your perfect trip with our handpicked itineraries — from weekend getaways to epic adventures."}
                 imageUrl="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             />
-            <BlogSection posts={blogPosts} title="Budget Travel Deals" subTitle="Big adventures. Tiny prices." threeColumns={true} showAuthor={false} />
+            <BlogSection posts={blogPosts} title="Budget Travel Deals" subTitle="Big adventures. Tiny prices." threeColumns={true} showAuthor={false} showDescription={false} />
             {/* <BlogSection posts={midRangePosts} title="Mid-Range Deals" subTitle="Great stays. Better prices. No sacrifices." threeColumns={true} showAuthor={false} showDescription={false} /> */}
             <CTA
                 title="Ready to Book?"

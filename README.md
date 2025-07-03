@@ -38,6 +38,9 @@ update write page
 
 - [] render blog by page/category
 - [] update post not found page
+- [] update something went wrong
+- [] update homepage
+    - [] top hotel pick 
 - [] deploy travomad.com on vercel
 - [] password recovery, 
 - [] create newsletters feature
