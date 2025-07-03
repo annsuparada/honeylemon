@@ -6,11 +6,11 @@ import { getPublishedPosts } from "../lip/postService"
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
-        title: "Curated Travel Itineraries for Every Explorer",
+        title: "Travel Itineraries for Every Explorer",
         description:
             "Plan your perfect trip with our handpicked itineraries — from weekend getaways to epic adventures.",
         openGraph: {
-            title: "Curated Travel Itineraries for Every Explorer",
+            title: "Travel Itineraries for Every Explorer",
             description:
                 "Plan your perfect trip with our handpicked itineraries — from weekend getaways to epic adventures.",
             url: "https://travomad.com/itinerary",
@@ -33,8 +33,8 @@ const Itinerary = async () => {
     return (
         <div>
             <HeroSection
-                title={"Travel Deals for Every Budget"}
-                description={"From backpacker steals to luxury escapes — your next trip starts here."}
+                title={"Travel Itineraries for Every Explorer"}
+                description={"Plan your perfect trip with our handpicked itineraries — from weekend getaways to epic adventures."}
                 imageUrl="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             />
             <BlogSection posts={blogPosts} title="Budget Travel Deals" subTitle="Big adventures. Tiny prices." threeColumns={true} showAuthor={false} />

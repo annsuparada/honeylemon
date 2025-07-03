@@ -4,7 +4,7 @@ import { FaFacebook, FaLinkedin, FaInstagram } from 'react-icons/fa'
 import { BsThreadsFill } from "react-icons/bs"
 
 const navLinks = [
-  { href: '/itinerary', label: 'Itinerary' },
+  { href: '/itineraries', label: 'Itineraries' },
   { href: '/destinations', label: 'Destinations' },
   { href: '/blog', label: 'Blog' },
   { href: '/login', label: 'Login' },
