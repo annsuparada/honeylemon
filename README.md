@@ -36,9 +36,9 @@ update write page
 - [x] update pasword
 - [x] fix  Forgot your password request. check email before send reset password
 
-- [] render blog by page/category
-- [] update post not found page
-- [] update something went wrong
+- [x] render blog by page/category
+- [x] update post not found page
+- [x] update something went wrong
 - [] update homepage
     - [] top hotel pick 
 - [] deploy travomad.com on vercel

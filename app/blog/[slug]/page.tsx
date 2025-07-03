@@ -7,6 +7,7 @@ import './article.css'
 import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';
 import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
+import { VscError } from "react-icons/vsc";
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
@@ -50,7 +51,10 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
   const blogPosts = await getPublishedPosts(6, slug);
 
   if (!post) {
-    return <div className="text-center py-10 text-red-500">Post not found</div>;
+    return <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white">
+      <VscError size={48} />
+      <h1 className="text-2xl font-semibold mt-6">Post Not Found</h1>
+    </div>
   }
 
   const sanitizedContent = sanitizeHtml(post.content, {
