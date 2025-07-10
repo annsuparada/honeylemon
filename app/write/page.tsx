@@ -134,6 +134,7 @@ const WritePage = () => {
             setLoading
         });
     };
+    console.log('content---', content)
 
     return (
         <ProtectedPage>

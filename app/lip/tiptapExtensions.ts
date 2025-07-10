@@ -7,6 +7,12 @@ import ListItem from '@tiptap/extension-list-item'
 import LinkExtension from "@tiptap/extension-link";
 import BulletList from '@tiptap/extension-bullet-list'
 import { ImageWithAlt } from '../components/tiptap/ImageWithAlt'
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableHeader from '@tiptap/extension-table-header'
+import { TableCell as DefaultTableCell } from '@tiptap/extension-table-cell'
+
+
 
 export const extensions = [
     Color,
@@ -48,5 +54,8 @@ export const extensions = [
             class: "tiptap-link",
         },
     }),
-
+    Table,
+    TableRow,
+    TableHeader,
+    DefaultTableCell
 ]

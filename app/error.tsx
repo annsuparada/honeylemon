@@ -1,6 +1,7 @@
 "use client";
 import { VscError } from "react-icons/vsc";
-export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+
+export default function Error() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white">
             <VscError size={48} />

@@ -24,7 +24,6 @@ const MenuBar = () => {
             .run();
     };
 
-
     const addLink = () => {
         if (!editor) return;
 
@@ -276,6 +275,149 @@ const MenuBar = () => {
                     <button onClick={removeLink} style={menuBarStyles.button}>
                         ❌ Remove Link
                     </button>
+                    <button
+                        onClick={() => {
+                            if (editor.isActive('table')) {
+                                alert("You cannot insert a table inside another table.");
+                                return;
+                            }
+
+                            editor.chain().focus().insertContent({
+                                type: 'table',
+                                content: [
+                                    {
+                                        type: 'tableRow',
+                                        content: [
+                                            {
+                                                type: 'tableHeader',
+                                                content: [
+                                                    {
+                                                        type: 'paragraph',
+                                                        content: [{ type: 'text', text: 'Resort Name' }],
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: 'tableHeader',
+                                                content: [
+                                                    {
+                                                        type: 'paragraph',
+                                                        content: [{ type: 'text', text: 'Type' }],
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: 'tableHeader',
+                                                content: [
+                                                    {
+                                                        type: 'paragraph',
+                                                        content: [{ type: 'text', text: 'Starting Rate' }],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'tableRow',
+                                        content: [
+                                            {
+                                                type: 'tableCell',
+                                                content: [
+                                                    {
+                                                        type: 'paragraph',
+                                                        content: [{ type: 'text', text: 'Grand Velas' }],
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: 'tableCell',
+                                                content: [
+                                                    {
+                                                        type: 'paragraph',
+                                                        content: [{ type: 'text', text: 'Luxury' }],
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: 'tableCell',
+                                                content: [
+                                                    {
+                                                        type: 'paragraph',
+                                                        content: [{ type: 'text', text: '$900/night' }],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            }).run();
+                        }}
+                        style={menuBarStyles.button}
+                    >
+                        ➕ Insert Sample Table
+                    </button>
+
+
+                    <button onClick={() => editor.chain().focus().addColumnBefore().run()} style={menuBarStyles.button} disabled={!editor.can().addColumnBefore()}>
+                        ⬅️ Add Column Before
+                    </button>
+                    <button onClick={() => editor.chain().focus().addColumnAfter().run()} style={menuBarStyles.button} disabled={!editor.can().addColumnAfter()}>
+                        ➡️ Add Column After
+                    </button>
+                    <button onClick={() => editor.chain().focus().deleteColumn().run()} style={menuBarStyles.button} disabled={!editor.can().deleteColumn()}>
+                        🗑️ Delete Column
+                    </button>
+                    <button onClick={() => editor.chain().focus().addRowBefore().run()} style={menuBarStyles.button} disabled={!editor.can().addRowBefore()}>
+                        ⬆️ Add Row Before
+                    </button>
+                    <button onClick={() => editor.chain().focus().addRowAfter().run()} style={menuBarStyles.button} disabled={!editor.can().addRowAfter()}>
+                        ⬇️ Add Row After
+                    </button>
+                    <button onClick={() => editor.chain().focus().deleteRow().run()} style={menuBarStyles.button} disabled={!editor.can().deleteRow()}>
+                        🗑️ Delete Row
+                    </button>
+                    <button onClick={() => editor.chain().focus().deleteTable().run()} style={menuBarStyles.button} disabled={!editor.can().deleteTable()}>
+                        ❌ Delete Table
+                    </button>
+                    <button
+                        onClick={() => {
+                            const { state, view } = editor;
+                            const { $from } = state.selection;
+
+                            // Traverse up the node tree to find the top-level `table` node and its position
+                            let tablePos = null;
+                            for (let depth = $from.depth; depth >= 0; depth--) {
+                                const node = $from.node(depth);
+                                if (node.type.name === 'table') {
+                                    tablePos = $from.before(depth);
+                                    break;
+                                }
+                            }
+
+                            if (tablePos !== null) {
+                                // Insert a paragraph AFTER the table node
+                                editor
+                                    .chain()
+                                    .insertContentAt(tablePos + editor.state.doc.nodeAt(tablePos)!.nodeSize, {
+                                        type: 'paragraph',
+                                        content: [{ type: 'text', text: '' }],
+                                    })
+                                    .setTextSelection(tablePos + editor.state.doc.nodeAt(tablePos)!.nodeSize + 1)
+                                    .focus()
+                                    .run();
+                            } else {
+                                alert('No table node found in selection context.');
+                            }
+                        }}
+                        style={menuBarStyles.button}
+                    >
+                        ⬇️ Exit Table
+                    </button>
+
+
+
+
+
                 </div>
             </div>
         </div>

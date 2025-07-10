@@ -16,6 +16,53 @@
         }
     }
 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 2rem 0;
+        font-size: 1rem;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+        border: 1px solid #d1d5db;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        background-color: #f3f4f6;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    td {
+        color: #1f2937;
+    }
+
+    tr:nth-child(even) td {
+        background-color: #f9fafb;
+    }
+
+    tr:hover td {
+        background-color: #f3f4f6;
+    }
+
+    table,
+    th:first-child,
+    td:first-child {
+        border-left: 1px solid #d1d5db;
+    }
+
+    th:last-child,
+    td:last-child {
+        border-right: 1px solid #d1d5db;
+    }
+
+
     /* Heading styles */
     h1 {
         font-size: 1.8rem;
