@@ -187,7 +187,12 @@ const WritePage = () => {
                                 extensions={extensions}
                                 content={content} // Ensure content is set before rendering
                                 onUpdate={({ editor }) => setContent(editor.getHTML())}
-                                editorProps={{ editable: () => true }}
+                                editorProps={{
+                                    editable: () => true,
+                                    attributes: {
+                                        class: "tiptap-editor-content",
+                                    },
+                                }}
                             />}</>
 
                             : <EditorProvider
@@ -195,7 +200,12 @@ const WritePage = () => {
                                 extensions={extensions}
                                 content={content} // Ensure content is set before rendering
                                 onUpdate={({ editor }) => setContent(editor.getHTML())}
-                                editorProps={{ editable: () => true }}
+                                editorProps={{
+                                    editable: () => true,
+                                    attributes: {
+                                        class: "tiptap-editor-content",
+                                    },
+                                }}
                             />}
                     </>
                 )}

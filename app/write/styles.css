@@ -195,3 +195,15 @@ img {
         padding: 5px 10px;
     }
 }
+
+.tiptap-editor-content {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.tiptap-editor-content table {
+    min-width: 600px;
+    /* force horizontal scroll if table is wide */
+    width: 100%;
+    border-collapse: collapse;
+}
