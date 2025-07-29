@@ -95,19 +95,26 @@ const WriteForm: React.FC<WriteFormProps> = ({
             {/* Cover Image Preview */}
             <div className="mb-4">
                 <label className="block text-lg font-semibold text-gray-700 mb-2 mt-4">Cover Image</label>
-                <div className="relative w-full aspect-[3/1] border rounded-md overflow-hidden">
+                <div
+                    className="relative w-full overflow-hidden rounded-md border-none"
+                    style={{ aspectRatio: "3 / 1" }}
+                >
                     <Image
                         src={image}
                         alt="Article cover image"
                         fill
-                        className="object-cover cursor-pointer block"
+                        sizes="100vw"
+                        className="object-cover"
                         onClick={() => {
-                            const url = window.prompt('Enter Image URL', image)
-                            if (url) onChange.image(url)
+                            const url = window.prompt("Enter Image URL", image);
+                            if (url) onChange.image(url);
                         }}
                         priority
                     />
                 </div>
+
+
+
             </div>
         </>
     )
