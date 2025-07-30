@@ -42,7 +42,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     <input
                         id="title-input"
                         type="text"
-                        className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
+                        className="input input-bordered w-full"
                         placeholder="Enter title here..."
                         value={title}
                         onChange={(e) => onChange.title(e.target.value)}
@@ -54,7 +54,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     <label htmlFor="description-textarea" className="block text-lg font-semibold text-gray-700 mb-2">Description</label>
                     <textarea
                         id="description-textarea"
-                        className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
+                        className="textarea textarea-bordered w-full"
                         placeholder="Write a short description... (300 characters max)"
                         value={description}
                         onChange={(e) => onChange.description(e.target.value)}

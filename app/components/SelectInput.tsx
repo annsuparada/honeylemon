@@ -47,7 +47,7 @@ const SelectInput = ({
                 <select
                     onChange={(e) => onChange(e.target.value)}
                     value={selectedValue}
-                    className="border border-gray-300 p-3 w-full rounded-md focus:ring focus:ring-blue-200 focus:outline-none bg-white"
+                    className="select select-bordered w-full"
                 >
                     <option value="">{`Select ${label}`}</option>
                     {options.map(opt => (
@@ -70,7 +70,7 @@ const SelectInput = ({
                         <div className="flex gap-2 mt-2">
                             <input
                                 type="text"
-                                className="border border-gray-300 p-2 rounded-md w-full bg-white"
+                                className="input input-bordered"
                                 value={newValue}
                                 onChange={(e) => setNewValue(e.target.value)}
                                 placeholder={`New ${label} name`}

@@ -47,7 +47,7 @@ export default function UserProfileForm({ formData, onChange, onSubmit, saving, 
                         </div>
                         <button
                             type="button"
-                            className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+                            className="btn btn-sm"
                             onClick={() => {
                                 const url = window.prompt('Enter Image URL', formData.profilePicture || '');
                                 if (url) handleChange('profilePicture')(url);
@@ -101,7 +101,7 @@ export default function UserProfileForm({ formData, onChange, onSubmit, saving, 
                 <button
                     type="submit"
                     disabled={saving}
-                    className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-500"
+                    className="btn btn-primary"
                 >
                     {saving ? 'Saving...' : 'Save'}
                 </button>

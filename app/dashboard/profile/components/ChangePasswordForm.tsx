@@ -54,7 +54,7 @@ export default function ChangePasswordForm({
             <button
                 type="submit"
                 disabled={saving}
-                className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-500"
+                className="btn btn-primary"
             >
                 {saving ? 'Updating...' : 'Update Password'}
             </button>
