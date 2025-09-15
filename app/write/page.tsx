@@ -139,7 +139,7 @@ const WritePage = () => {
     return (
         <ProtectedPage>
             <div className='bg-primary py-16'>
-                <h1 className="text-4xl font-bold mb-3 text-center text-white mt-20 mb-10">Write Your Blog</h1>
+                <h1 className="text-4xl font-bold text-center text-white mt-20 mb-10">Write Your Blog</h1>
             </div>
             <div className="min-h-screen py-16 px-2 max-w-screen-lg mx-auto">
                 <div className="flex justify-end">

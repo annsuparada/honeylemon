@@ -1,6 +1,5 @@
 import { ApiResponse } from '@/app/types';
 import { postSchema, updatePostSchema } from '@/schemas/postSchema';
-import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 const POST_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/post` || 'http://localhost:3000/api/post';
@@ -56,6 +55,16 @@ export async function createPost(input: z.infer<typeof postSchema>): Promise<Api
     if (!token) return { success: false, error: 'Unauthorized' };
 
     const validated = postSchema.parse(input);
+
+    // Check for duplicate title
+    const isDuplicate = await checkDuplicateTitle(validated.title);
+    if (isDuplicate) {
+      return {
+        success: false,
+        error: 'A post with this title already exists. Please choose a different title.'
+      };
+    }
+
     const slug = generateSlug(validated.title);
 
     const res = await fetch(POST_API_URL, {
@@ -154,13 +163,22 @@ export async function deletePost(id: string) {
   }
 }
 
-// Utility: generate unique slug
+// Utility: generate clean slug from title
 function generateSlug(title: string): string {
-  const baseSlug = title
+  return title
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
 
-  return `${baseSlug}-${uuidv4().slice(0, 8)}`;
+// Check if a post with the same title already exists
+async function checkDuplicateTitle(title: string): Promise<boolean> {
+  try {
+    const posts = await fetchPosts();
+    return posts.some((post: any) => post.title.toLowerCase().trim() === title.toLowerCase().trim());
+  } catch (error) {
+    console.error('Error checking duplicate title:', error);
+    return false;
+  }
 }

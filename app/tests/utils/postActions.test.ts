@@ -106,6 +106,9 @@ describe('postActions', () => {
 
         it('creates a post successfully', async () => {
             localStorage.setItem('token', 'fake-token');
+            // Mock fetchPosts to return empty array (no duplicates)
+            fetchMock.mockResponseOnce(JSON.stringify({ posts: [] }));
+            // Mock the actual POST request
             fetchMock.mockResponseOnce(JSON.stringify({ success: true, post: { slug: 'my-post' } }));
 
             const res = await createPost(validPost);
@@ -138,6 +141,20 @@ describe('postActions', () => {
             expect(res.success).toBe(false);
             if (!res.success) {
                 expect(res.error).toContain('Unexpected error');
+            }
+        });
+
+        it('returns error for duplicate title', async () => {
+            localStorage.setItem('token', 'fake-token');
+            // Mock fetchPosts to return a post with the same title
+            fetchMock.mockResponseOnce(JSON.stringify({
+                posts: [{ id: '1', title: 'My Post', status: 'DRAFT' }]
+            }));
+
+            const res = await createPost(validPost);
+            expect(res.success).toBe(false);
+            if (!res.success) {
+                expect(res.error).toBe('A post with this title already exists. Please choose a different title.');
             }
         });
     });
