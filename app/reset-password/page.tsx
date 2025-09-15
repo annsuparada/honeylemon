@@ -12,12 +12,14 @@ export default function ResetPasswordPage() {
 
     const [password, setPassword] = useState('')
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+    const [errorMessage, setErrorMessage] = useState('')
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         if (!token) return
 
         setStatus('submitting')
+        setErrorMessage('')
 
         const res = await fetch('/api/user/reset-password', {
             method: 'POST',
@@ -29,6 +31,8 @@ export default function ResetPasswordPage() {
             setStatus('success')
             setTimeout(() => router.push('/login'), 2000)
         } else {
+            const errorData = await res.json()
+            setErrorMessage(errorData.error || 'Reset failed. Try again.')
             setStatus('error')
         }
     }
@@ -54,7 +58,7 @@ export default function ResetPasswordPage() {
                     </button>
 
                     {status === 'success' && <p className="mt-4 text-green-600">Password reset! Redirecting…</p>}
-                    {status === 'error' && <p className="mt-4 text-red-600">Reset failed. Try again.</p>}
+                    {status === 'error' && <p className="mt-4 text-red-600">{errorMessage}</p>}
                 </form>
             </div>
         </>

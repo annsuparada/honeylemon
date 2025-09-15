@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
 import crypto from 'crypto'
 import { add } from 'date-fns'
 import prisma from '@/prisma/client'
+import { sendEmail, createPasswordResetEmail } from '@/utils/emailService'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
 export async function POST(req: Request) {
@@ -13,9 +12,11 @@ export async function POST(req: Request) {
 
         const user = await prisma.user.findUnique({ where: { email } })
         if (!user) {
-            // Return success to avoid email discovery
-            return NextResponse.json({ success: true })
+            console.log(`No user found for email: ${email}`)
+            return NextResponse.json({ success: false, error: 'No account found with this email address' }, { status: 404 })
         }
+
+        console.log(`User found: ${user.email} (ID: ${user.id})`)
 
         const token = crypto.randomBytes(32).toString('hex')
         const expiresAt = add(new Date(), { minutes: 15 })
@@ -30,12 +31,15 @@ export async function POST(req: Request) {
 
         const resetLink = `${baseUrl}/reset-password?token=${token}`
 
-        await resend.emails.send({
-            from: 'onboarding@resend.dev',
+        const emailSent = await sendEmail({
             to: email,
-            subject: 'Reset your password',
-            html: `<p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 15 minutes.</p>`,
+            subject: 'Reset your password - Travomad',
+            html: createPasswordResetEmail(resetLink),
         })
+
+        if (!emailSent) {
+            return NextResponse.json({ success: false, error: 'Email failed to send' }, { status: 500 })
+        }
 
         return NextResponse.json({ success: true })
     } catch (error) {

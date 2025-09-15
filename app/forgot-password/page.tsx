@@ -6,10 +6,12 @@ import FormInput from '../components/FormInput'
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('')
     const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+    const [errorMessage, setErrorMessage] = useState('')
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         setStatus('sending')
+        setErrorMessage('')
 
         const res = await fetch('/api/user/forgot-password', {
             method: 'POST',
@@ -20,6 +22,8 @@ export default function ForgotPasswordPage() {
         if (res.ok) {
             setStatus('sent')
         } else {
+            const errorData = await res.json()
+            setErrorMessage(errorData.error || 'Something went wrong.')
             setStatus('error')
         }
     }
@@ -49,7 +53,7 @@ export default function ForgotPasswordPage() {
                     </button>
 
                     {status === 'sent' && <p className="mt-4 text-green-600">Email sent! Check your inbox.</p>}
-                    {status === 'error' && <p className="mt-4 text-red-600">Something went wrong.</p>}
+                    {status === 'error' && <p className="mt-4 text-red-600">{errorMessage}</p>}
                 </form>
             </div>
         </>
