@@ -1,6 +1,59 @@
+'use client'
+
 import { CalendarDaysIcon, HandRaisedIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+
+interface NewsletterResponse {
+    success: boolean
+    message: string
+    error?: string
+}
 
 export default function NewsLetterSection() {
+    const [email, setEmail] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const [message, setMessage] = useState('')
+    const [isSuccess, setIsSuccess] = useState(false)
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!email) {
+            setMessage('Please enter your email address')
+            setIsSuccess(false)
+            return
+        }
+
+        setIsLoading(true)
+        setMessage('')
+
+        try {
+            const response = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            })
+
+            const data: NewsletterResponse = await response.json()
+
+            if (data.success) {
+                setMessage(data.message)
+                setIsSuccess(true)
+                setEmail('') // Clear the form
+            } else {
+                setMessage(data.error || 'Something went wrong. Please try again.')
+                setIsSuccess(false)
+            }
+        } catch (error) {
+            setMessage('Network error. Please check your connection and try again.')
+            setIsSuccess(false)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div className="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24 lg:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -10,7 +63,7 @@ export default function NewsLetterSection() {
                         <p className="mt-4 text-lg text-gray-300">
                             Get travel tips, guides, deals, and discounts — delivered weekly.
                         </p>
-                        <div className="mt-6 flex max-w-md gap-x-4">
+                        <form onSubmit={handleSubmit} className="mt-6 flex max-w-md gap-x-4">
                             <label htmlFor="email-address" className="sr-only">
                                 Email address
                             </label>
@@ -19,17 +72,31 @@ export default function NewsLetterSection() {
                                 name="email"
                                 type="email"
                                 required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 autoComplete="email"
-                                className="min-w-0 flex-auto rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                disabled={isLoading}
+                                className="min-w-0 flex-auto rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50"
                             />
                             <button
                                 type="submit"
-                                className='btn btn-accent'
+                                disabled={isLoading}
+                                className='btn btn-accent disabled:opacity-50'
                             >
-                                Subscribe
+                                {isLoading ? 'Subscribing...' : 'Subscribe'}
                             </button>
-                        </div>
+                        </form>
+
+                        {/* Message display */}
+                        {message && (
+                            <div className={`mt-4 p-3 rounded-md ${isSuccess
+                                ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                                : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                }`}>
+                                {message}
+                            </div>
+                        )}
                     </div>
                     <dl className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:pt-2">
                         <div className="flex flex-col items-start">

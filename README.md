@@ -43,7 +43,7 @@ update write page
     - [] top hotel pick 
 - [] deploy travomad.com on vercel
 - [] password recovery, 
-- [] create newsletters feature
+- [x] create newsletters feature
 - [] Scheduled publishing
 
 
