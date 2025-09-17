@@ -203,7 +203,7 @@ export async function DELETE(req: Request) {
 // Email templates
 function createWelcomeEmail(email: string): string {
     const unsubscribeToken = generateUnsubscribeToken(email);
-    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/unsubscribe?email=${encodeURIComponent(email)}&token=${unsubscribeToken}`;
+    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/unsubscribe?email=${encodeURIComponent(email)}&token=${unsubscribeToken}`;
 
     return `
     <!DOCTYPE html>
@@ -293,7 +293,7 @@ function createWelcomeEmail(email: string): string {
 
 function createWelcomeBackEmail(email: string): string {
     const unsubscribeToken = generateUnsubscribeToken(email);
-    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/unsubscribe?email=${encodeURIComponent(email)}&token=${unsubscribeToken}`;
+    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/unsubscribe?email=${encodeURIComponent(email)}&token=${unsubscribeToken}`;
 
     return `
     <!DOCTYPE html>
