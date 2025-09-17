@@ -25,18 +25,60 @@ function verifyUnsubscribeToken(token: string, email: string): boolean {
     return crypto.timingSafeEqual(Buffer.from(token), Buffer.from(expectedToken));
 }
 
-// POST: Subscribe to newsletter
+// POST: Subscribe to newsletter or admin unsubscribe
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        const { email, action } = body;
 
+        // Handle admin unsubscribe
+        if (action === 'unsubscribe') {
+            if (!email) {
+                return NextResponse.json(
+                    { error: "Email is required" },
+                    { status: 400 }
+                );
+            }
+
+            // Find the subscription
+            const subscription = await prisma.newsletter.findUnique({
+                where: { email },
+            });
+
+            if (!subscription) {
+                return NextResponse.json(
+                    { error: "Email not found in our newsletter list" },
+                    { status: 404 }
+                );
+            }
+
+            if (!subscription.isActive) {
+                return NextResponse.json(
+                    { error: "Email is already unsubscribed" },
+                    { status: 400 }
+                );
+            }
+
+            // Deactivate subscription
+            await prisma.newsletter.update({
+                where: { email },
+                data: { isActive: false, updatedAt: new Date() },
+            });
+
+            return NextResponse.json(
+                { success: true, message: "Successfully unsubscribed from newsletter" },
+                { status: 200 }
+            );
+        }
+
+        // Handle subscription (existing logic)
         // Validate input
         const validatedData = newsletterSchema.parse(body);
-        const { email } = validatedData;
+        const { email: validatedEmail } = validatedData;
 
         // Check if email already exists
         const existingSubscription = await prisma.newsletter.findUnique({
-            where: { email },
+            where: { email: validatedEmail },
         });
 
         if (existingSubscription) {
@@ -48,15 +90,15 @@ export async function POST(req: Request) {
             } else {
                 // Reactivate subscription
                 const reactivatedSubscription = await prisma.newsletter.update({
-                    where: { email },
+                    where: { email: validatedEmail },
                     data: { isActive: true, updatedAt: new Date() },
                 });
 
                 // Send welcome back email
                 await sendEmail({
-                    to: email,
+                    to: validatedEmail,
                     subject: "Welcome back to Travomad Newsletter!",
-                    html: createWelcomeBackEmail(email),
+                    html: createWelcomeBackEmail(validatedEmail),
                 });
 
                 return NextResponse.json(
@@ -73,7 +115,7 @@ export async function POST(req: Request) {
         // Create new subscription
         const newSubscription = await prisma.newsletter.create({
             data: {
-                email,
+                email: validatedEmail,
                 isActive: true,
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -82,13 +124,13 @@ export async function POST(req: Request) {
 
         // Send welcome email
         const emailSent = await sendEmail({
-            to: email,
+            to: validatedEmail,
             subject: "Welcome to Travomad Newsletter!",
-            html: createWelcomeEmail(email),
+            html: createWelcomeEmail(validatedEmail),
         });
 
         if (!emailSent) {
-            console.error("Failed to send welcome email to:", email);
+            console.error("Failed to send welcome email to:", validatedEmail);
         }
 
         return NextResponse.json(
@@ -107,9 +149,9 @@ export async function POST(req: Request) {
             );
         }
 
-        console.error("Error subscribing to newsletter:", error);
+        console.error("Error with newsletter action:", error);
         return NextResponse.json(
-            { error: "Failed to subscribe to newsletter" },
+            { error: "Failed to process newsletter request" },
             { status: 500 }
         );
     }
@@ -120,7 +162,6 @@ export async function GET(req: Request) {
     try {
         // In a real app, you'd want to add admin authentication here
         const subscriptions = await prisma.newsletter.findMany({
-            where: { isActive: true },
             orderBy: { createdAt: "desc" },
         });
 
@@ -133,6 +174,7 @@ export async function GET(req: Request) {
         );
     }
 }
+
 
 // DELETE: Unsubscribe from newsletter
 export async function DELETE(req: Request) {

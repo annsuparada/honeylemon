@@ -19,7 +19,7 @@ import {
 import { FC } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowTrendingUpIcon } from '@heroicons/react/24/solid'
+import { ArrowTrendingUpIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
 
 // Type Definitions
@@ -35,6 +35,7 @@ const navigation: Omit<NavItem, 'current'>[] = [
     { name: 'Blogs', href: '/dashboard/blogs', icon: DocumentPlusIcon },
     { name: 'Scheduled Publishing', href: '/dashboard/scheduled', icon: CalendarIcon },
     { name: 'SEO Keywords', href: '/dashboard/seo', icon: ArrowTrendingUpIcon },
+    { name: 'Email', href: '/dashboard/email', icon: EnvelopeIcon },
     { name: 'Your Profile', href: '/dashboard/profile', icon: UserIcon },
 ]
 
