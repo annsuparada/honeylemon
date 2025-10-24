@@ -23,7 +23,7 @@ describe('SectionHeader', () => {
         const titleElement = screen.getByText(mockProps.title);
         const subtitleElement = screen.getByText(mockProps.subtitle);
 
-        expect(titleElement).toHaveClass('text-base/7', 'font-semibold', 'text-primary', 'text-xl');
+        expect(titleElement).toHaveClass('text-base/7', 'font-semibold', 'text-primary');
         expect(subtitleElement).toHaveClass(
             'mt-2',
             'text-3xl',

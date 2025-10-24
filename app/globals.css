@@ -24,3 +24,9 @@
   width: max-content;
   animation: scroll 30s linear infinite;
 }
+
+/* Tab content styling */
+.tab-content {
+  display: block;
+  width: 100%;
+}
