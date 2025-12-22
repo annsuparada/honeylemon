@@ -49,3 +49,11 @@ update write page
 
 - [] Search — full-text search (title/description)
 - [] add color to category bage
+
+
+
+✅ Your Current To-Do (Code First):
+
+✅ Add schema markup (Article + FAQ)
+⏳ Test with Google Rich Results
+⏳ Add tags UI to article page (optional but recommended)

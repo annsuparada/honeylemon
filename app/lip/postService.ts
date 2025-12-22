@@ -38,6 +38,17 @@ export async function getPublishedPosts(
                     slug: true,
                 },
             },
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
+                },
+            },
         },
     });
 
@@ -63,6 +74,11 @@ export async function getPublishedPosts(
             username: post.author.username,
             profilePicture: post.author.profilePicture ?? undefined,
         },
+        tags: post.tags.map(pt => ({
+            id: pt.tag.id,
+            name: pt.tag.name,
+            slug: pt.tag.slug,
+        })),
         type: post.type,
     }));
 
@@ -89,6 +105,18 @@ export async function getPostBySlug(slug: string) {
                     id: true,
                     name: true,
                     slug: true,
+                },
+            },
+            // 🔥 ADD THIS
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
                 },
             },
         },
@@ -118,6 +146,12 @@ export async function getPostBySlug(slug: string) {
             username: post.author.username,
             profilePicture: post.author.profilePicture ?? undefined,
         },
+        // 🔥 ADD THIS
+        tags: post.tags.map(pt => ({
+            id: pt.tag.id,
+            name: pt.tag.name,
+            slug: pt.tag.slug,
+        })),
         type: post.type
     } satisfies BlogPost;
 }

@@ -45,6 +45,7 @@ describe('getPublishedPosts', () => {
                     username: 'johndoe',
                     profilePicture: 'pfp.png',
                 },
+                tags: [],
             },
         ]);
 
@@ -101,6 +102,7 @@ describe('getPublishedPosts', () => {
                     username: 'janesmith',
                     profilePicture: 'pfp2.png',
                 },
+                tags: [],
             },
         ]);
 
@@ -143,6 +145,7 @@ describe('getPublishedPosts', () => {
                     username: 'alice',
                     profilePicture: null,
                 },
+                tags: [],
             },
         ]);
 
@@ -184,6 +187,7 @@ describe('getPublishedPosts', () => {
                     username: 'bob',
                     profilePicture: null,
                 },
+                tags: [],
             },
         ]);
 
@@ -229,6 +233,7 @@ describe('getPostBySlug', () => {
                 username: 'alice123',
                 profilePicture: null,
             },
+            tags: [],
         });
 
         const post = await getPostBySlug('slug-post');

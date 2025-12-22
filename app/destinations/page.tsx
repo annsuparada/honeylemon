@@ -8,22 +8,53 @@ import { getPublishedPosts } from "../lip/postService"
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
-        title: "Find Your Next Destination",
-        description:
-            "Explore cities, coasts, and hidden gems...",
+        title: "Find Your Next Destination | Travomad",
+        description: "Explore cities, coasts, and hidden gems. Discover the world's best travel destinations with comprehensive guides, tips, and insider advice for your next adventure.",
+        keywords: "travel destinations, vacation spots, travel guides, places to visit, best destinations, cities, beaches, hidden gems",
+
         openGraph: {
             title: "Find Your Next Destination",
-            description:
-                "Explore cities, coasts, and hidden gems...",
-            url: "https://travomad.com/destinations",
+            description: "Explore cities, coasts, and hidden gems. Discover the world's best travel destinations.",
+            url: `${process.env.NEXT_PUBLIC_API_URL}/destinations`,
+            siteName: "Travomad",
+            locale: "en_US",
+            type: "website",
             images: [
                 {
                     url: "https://images.pexels.com/photos/6965514/pexels-photo-6965514.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                     width: 1200,
                     height: 630,
-                    alt: "Travomad Travel Destinations Cover",
+                    alt: "Travomad Travel Destinations - Explore the World",
+                    type: "image/jpeg",
                 },
             ],
+        },
+
+        // Twitter Card
+        twitter: {
+            card: "summary_large_image",
+            title: "Find Your Next Destination",
+            description: "Explore cities, coasts, and hidden gems. Discover the world's best travel destinations.",
+            images: ["https://images.pexels.com/photos/6965514/pexels-photo-6965514.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"],
+            creator: "@travomad",
+            site: "@travomad",
+        },
+
+        // Canonical URL
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_API_URL}/destinations`,
+        },
+
+        // Robots
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
         },
     }
 }

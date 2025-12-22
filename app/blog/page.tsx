@@ -10,25 +10,55 @@ import { getPublishedPosts } from "../lip/postService"
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: "Travomad Blog — Real Travel Stories, Smart Tips & Hidden Deals",
-    description:
-      "From travel hacks and destination guides to the latest flight deals — the Travomad blog helps smart explorers plan better, travel cheaper, and experience more. No hype, just real-world insight.",
+    description: "From travel hacks and destination guides to the latest flight deals — the Travomad blog helps smart explorers plan better, travel cheaper, and experience more. No hype, just real-world insight.",
+    keywords: "travel blog, travel tips, destination guides, travel hacks, flight deals, vacation planning, travel advice, budget travel",
+
     openGraph: {
-      title: "Travomad Blog",
-      description:
-        "Explore expert travel guides, smart tips, and hidden deals. Stay inspired with real travel stories on the Travomad blog.",
-      url: "https://travomad.com/blog",
+      title: "Travomad Blog — Real Travel Stories, Smart Tips & Hidden Deals",
+      description: "Explore expert travel guides, smart tips, and hidden deals. Stay inspired with real travel stories on the Travomad blog.",
+      url: `${process.env.NEXT_PUBLIC_API_URL}/blog`,
+      siteName: "Travomad",
+      locale: "en_US",
+      type: "website",
       images: [
         {
           url: "https://images.pexels.com/photos/27855084/pexels-photo-27855084/free-photo-of-acropolis.png",
           width: 1200,
           height: 630,
-          alt: "Travomad Travel Blog Cover",
+          alt: "Travomad Travel Blog - Expert Travel Guides and Tips",
+          type: "image/jpeg",
         },
       ],
     },
+
+    // Twitter Card
+    twitter: {
+      card: "summary_large_image",
+      title: "Travomad Blog — Real Travel Stories, Smart Tips & Hidden Deals",
+      description: "Explore expert travel guides, smart tips, and hidden deals. Stay inspired with real travel stories.",
+      images: ["https://images.pexels.com/photos/27855084/pexels-photo-27855084/free-photo-of-acropolis.png"],
+      creator: "@travomad",
+      site: "@travomad",
+    },
+
+    // Canonical URL
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_API_URL}/blog`,
+    },
+
+    // Robots
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   }
 }
-
 
 export default async function BlogPage({ searchParams }: { searchParams?: { page?: string } }) {
   const itemsPerPage = 5
@@ -60,9 +90,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
           >
             <div className="w-full md:w-1/3 relative h-48 md:h-auto flex-shrink-0">
               <Image
-                src={
-                  post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'
-                }
+                src={post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
                 alt={post.title}
                 priority
                 style={{ objectFit: "cover" }}

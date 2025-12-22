@@ -25,8 +25,7 @@ export interface Category {
 }
 
 
-export type BlogPost = {
-    type: PageType;
+export interface BlogPost {
     id: string;
     title: string;
     slug: string;
@@ -36,17 +35,25 @@ export type BlogPost = {
     status: PostStatus;
     createdAt: string;
     updatedAt: string;
-    category: { name: string; slug: string };
+    category: {
+        name: string;
+        slug: string;
+    };
     categoryId: string;
     author: {
-        role?: string;
         id: string;
         name: string;
         lastName?: string;
         username: string;
         profilePicture?: string;
     };
-};
+    tags: Array<{
+        id: string;
+        name: string;
+        slug: string;
+    }>;
+    type: PageType;
+}
 
 
 export interface FeatureCard {

@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';
 import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
 import { VscError } from "react-icons/vsc";
+import { getBaseOpenGraph, getCanonicalUrl, getOpenGraphImages, getRobotsMetadata, getTwitterMetadata } from '@/app/lip/metadata-helpers';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
@@ -25,23 +26,44 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return { title: "Post Not Found", description: "This post does not exist." };
   }
 
+  const authorName = post.author.name
+    ? `${post.author.name}${post.author.lastName ? ' ' + post.author.lastName : ''}`
+    : post.author.username;
+
+  const tagNames = post.tags.map(tag => tag.name);
+  const keywords = [post.category.name, ...tagNames, "travel"].join(', ');
+  const url = `/blog/${post.slug}`;
+  const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${url}`;
+
   return {
-    title: `${post.title}`,
-    description: post.description || "Read this amazing blog post",
+    title: `${post.title} | Travomad`,
+    description: post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad",
+    keywords: keywords,
+    authors: [{ name: authorName }],
+    creator: authorName,
+    publisher: "Travomad",
+    category: post.category.name,
+
     openGraph: {
-      title: post.title,
-      description: post.description || "Read this amazing blog post",
-      url: `${process.env.NEXT_PUBLIC_API_URL}/blog/${post.slug}`,
+      ...getBaseOpenGraph(post.title, post.description || '', fullUrl),
       type: "article",
-      images: [
-        {
-          url: post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp',
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
+      publishedTime: post.createdAt,
+      modifiedTime: post.updatedAt,
+      authors: [authorName],
+      section: post.category.name,
+      tags: [post.category.name, ...tagNames],
+      images: getOpenGraphImages(post.image, post.title),
     },
+
+    twitter: getTwitterMetadata(
+      post.title,
+      post.description || "Discover travel tips and destination guides on Travomad",
+      post.image
+    ),
+
+    alternates: getCanonicalUrl(url),
+
+    robots: getRobotsMetadata(post.status === 'PUBLISHED'),
   };
 }
 
