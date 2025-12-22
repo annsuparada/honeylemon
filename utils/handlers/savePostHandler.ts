@@ -13,6 +13,7 @@ export interface SavePostParams {
     slug?: string | null;
     user: { id: string } | null;
     isPublish: boolean;
+    tagIds?: string[];
     createPost: (data: any) => Promise<any>;
     updatePost: (data: any) => Promise<any>;
     router: { push: (url: string) => void };
@@ -31,6 +32,7 @@ export const handleSavePost = async ({
     slug,
     user,
     isPublish,
+    tagIds,
     createPost,
     updatePost,
     router,
@@ -73,7 +75,8 @@ export const handleSavePost = async ({
         status: isPublish ? 'PUBLISHED' : 'DRAFT',
         authorId: user.id,
         categoryId: selectedCategory,
-        type: pageType ?? undefined
+        type: pageType ?? undefined,
+        tagIds: tagIds || []
     };
 
     try {

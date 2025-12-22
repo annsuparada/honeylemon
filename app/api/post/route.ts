@@ -104,6 +104,11 @@ export async function POST(req: Request) {
                 authorId: decoded.id, // ✅ Use ID from token
                 status: validatedData.status || "DRAFT",
                 type: validatedData.type,
+                tags: validatedData.tagIds && validatedData.tagIds.length > 0 ? {
+                    create: validatedData.tagIds.map((tagId: string) => ({
+                        tagId: tagId,
+                    })),
+                } : undefined,
             },
         });
 
@@ -143,6 +148,25 @@ export async function PATCH(req: Request) {
         const post = await prisma.post.findFirst({ where: { id: validatedData.id } });
         if (!post) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 });
+        }
+
+        // Handle tags if provided
+        if (validatedData.tagIds !== undefined) {
+            // Delete existing PostTag relationships
+            await prisma.postTag.deleteMany({
+                where: { postId: validatedData.id },
+            });
+
+            // Create new PostTag relationships if tagIds are provided
+            if (validatedData.tagIds.length > 0) {
+                // MongoDB doesn't support skipDuplicates, but we've already deleted existing relationships
+                await prisma.postTag.createMany({
+                    data: validatedData.tagIds.map((tagId: string) => ({
+                        postId: validatedData.id,
+                        tagId: tagId,
+                    })),
+                });
+            }
         }
 
         // Update post

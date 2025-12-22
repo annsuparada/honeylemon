@@ -32,7 +32,8 @@ const mockPosts: BlogPost[] = [
         id: '123',
         content: 'Short content',
         status: 'DRAFT',
-        type: 'DEAL'
+        type: 'DEAL',
+        tags: []
     },
 ];
 
@@ -75,7 +76,6 @@ describe('BlogSection Component', () => {
         expect(screen.getByText('Test Post Title')).toBeInTheDocument();
         expect(screen.getByText('Tech')).toBeInTheDocument();
         expect(screen.getByText('Jane Doe')).toBeInTheDocument();
-        expect(screen.getByText('ADMIN')).toBeInTheDocument();
         expect(screen.getByText('2024-01-01')).toBeInTheDocument();
     });
 

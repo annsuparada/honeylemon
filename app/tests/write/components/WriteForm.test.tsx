@@ -11,9 +11,11 @@ describe('WriteForm Component', () => {
         image: jest.fn(),
         category: jest.fn(),
         type: jest.fn(),
+        tags: jest.fn(),
     }
 
     const mockOnCreateCategory = jest.fn().mockResolvedValue({ label: 'New Category', value: 'new-cat' })
+    const mockOnCreateTag = jest.fn().mockResolvedValue({ id: 'tag1', name: 'New Tag', slug: 'new-tag' })
 
     const defaultProps = {
         title: 'Initial Title',
@@ -29,8 +31,14 @@ describe('WriteForm Component', () => {
             { label: 'Article', value: PageType.ARTICLE },
             { label: 'DESTINATION', value: PageType.DESTINATION },
         ],
+        tags: [
+            { id: 'tag1', name: 'JavaScript', slug: 'javascript' },
+            { id: 'tag2', name: 'React', slug: 'react' },
+        ],
+        selectedTagIds: [],
         onChange: mockOnChange,
         onCreateCategory: mockOnCreateCategory,
+        onCreateTag: mockOnCreateTag,
     }
 
     beforeEach(() => {

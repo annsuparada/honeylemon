@@ -104,8 +104,8 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
       <div className="max-w-screen-md mx-auto py-10 px-4">
         {/* Blog Header */}
         <header className="mb-8">
-          <div className="mt-8 w-full flex justify-between">
-            <div className="badge badge-soft badge-neutral rounded-sm mr-4 p-3">
+          <div className="mt-8 w-full flex justify-between items-center">
+            <div className="badge badge-soft badge-neutral rounded-sm p-3">
               {post.category?.name}
             </div>
             <ShareButton title={post.title} />
@@ -130,6 +130,34 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
             <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
           </div>
         </article>
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-gray-300">
+            <div className="mb-4">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Tags
+              </h3>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {post.tags.map((tag) => {
+                // Format tag name: capitalize, replace dashes with spaces
+                const formattedName = tag.name
+                  .split('-')
+                  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                  .join(' ');
+                return (
+                  <span
+                    key={tag.id}
+                    className="badge badge-primary badge-lg px-4 py-2 rounded-full font-medium hover:badge-secondary transition-colors cursor-default"
+                  >
+                    {formattedName}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
       <CTA
         title="Ready to Book?"

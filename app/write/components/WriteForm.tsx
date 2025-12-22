@@ -1,8 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
 import SelectInput from '@/app/components/SelectInput'
+import TagsInput from '@/app/components/TagsInput'
 import { Category } from '@/app/types'
 import { PageType } from '@prisma/client'
+
+type Tag = {
+    id: string
+    name: string
+    slug: string
+}
 
 interface WriteFormProps {
     title: string
@@ -12,14 +19,18 @@ interface WriteFormProps {
     selectedCategory: string
     pageType: PageType
     pageTypeOptions: { label: string; value: string }[]
+    tags: Tag[]
+    selectedTagIds: string[]
     onChange: {
         title: (val: string) => void
         description: (val: string) => void
         image: (val: string) => void
         category: (val: string) => void
         type: (val: PageType) => void
+        tags: (tagIds: string[]) => void
     }
     onCreateCategory: (name: string) => Promise<{ label: string; value: string } | null>
+    onCreateTag: (name: string) => Promise<Tag | null>
 }
 
 const WriteForm: React.FC<WriteFormProps> = ({
@@ -30,8 +41,11 @@ const WriteForm: React.FC<WriteFormProps> = ({
     selectedCategory,
     pageType,
     pageTypeOptions,
+    tags,
+    selectedTagIds,
     onChange,
     onCreateCategory,
+    onCreateTag,
 }) => {
     return (
         <>
@@ -78,6 +92,15 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     options={pageTypeOptions}
                     selectedValue={pageType}
                     onChange={(val) => onChange.type(val as PageType)}
+                />
+
+                {/* Tags */}
+                <TagsInput
+                    label="Tags"
+                    tags={tags}
+                    selectedTagIds={selectedTagIds}
+                    onChange={onChange.tags}
+                    onCreateTag={onCreateTag}
                 />
 
                 {/* Add Image from URL */}

@@ -127,9 +127,6 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                                 <span className="absolute inset-0" />
                                 {post.author.name} {post.author.lastName}
                               </p>
-                              {post.author.role && (
-                                <p className="text-gray-600">{post.author.role}</p>
-                              )}
                             </div>
                           </div>
                         </div>

@@ -10,7 +10,8 @@ const postSchema = z.object({
   categoryId: z.string().min(1, "Category ID is required"),
   authorId: z.string().min(1, "Author ID is required"),
   status: z.nativeEnum(PostStatus).optional(),
-  type: z.nativeEnum(PageType)
+  type: z.nativeEnum(PageType),
+  tagIds: z.array(z.string()).optional(), // Array of tag IDs
 });
 
 // ✅ Safe for PATCH — no authorId
@@ -24,6 +25,7 @@ export const updatePostSchema = z.object({
   categoryId: z.string().min(1, "Category ID is required"),
   status: z.nativeEnum(PostStatus).optional(),
   type: z.nativeEnum(PageType),
+  tagIds: z.array(z.string()).optional(), // Array of tag IDs
 });
 
 export { postSchema };

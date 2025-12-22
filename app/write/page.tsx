@@ -5,6 +5,7 @@ import { EditorProvider } from '@tiptap/react'
 import React, { useEffect, useState } from 'react'
 import { createPost, fetchPostBySlug, updatePost } from '@/utils/postActions'
 import { createCategory, fetchAllCategories } from '@/utils/categotyAction'
+import { createTag, fetchAllTags } from '@/utils/tagAction'
 import ProtectedPage from '../components/ProtectedPage'
 import MenuBar from '../components/tiptap/MenuBar'
 import { Author, Category } from '../types'
@@ -29,6 +30,8 @@ const WritePage = () => {
     const [user, setUser] = useState<Author | null>(null);
     const [categories, setCategories] = useState<Category[] | []>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
+    const [tags, setTags] = useState<Array<{ id: string; name: string; slug: string }>>([]);
+    const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -54,6 +57,11 @@ const WritePage = () => {
             setCategories(data);
         }
 
+        async function loadTags() {
+            const data = await fetchAllTags();
+            setTags(data);
+        }
+
         async function loadDraftPost() {
             if (!slug || postId) return;
 
@@ -66,7 +74,8 @@ const WritePage = () => {
                     setDescription(post.description);
                     setImage(post.image || placeholderImg);
                     setSelectedCategory(post.categoryId);
-                    setPageType(post.type)
+                    setPageType(post.type);
+                    setSelectedTagIds(post.tags?.map((tag: { id: string; name: string; slug: string }) => tag.id) || []);
                 }
             } catch (error) {
                 console.error("Error loading draft post:", error);
@@ -74,6 +83,7 @@ const WritePage = () => {
         }
 
         loadCategories();
+        loadTags();
 
         if (typeof window !== "undefined") {
             setToken(localStorage.getItem("token"));
@@ -89,7 +99,8 @@ const WritePage = () => {
             setDescription("");
             setImage(placeholderImg);
             setSelectedCategory("");
-            setPageType("ARTICLE")
+            setPageType("ARTICLE");
+            setSelectedTagIds([]);
         }
     }, [slug]);
 
@@ -115,6 +126,40 @@ const WritePage = () => {
         return null;
     }
 
+    async function handleCreateTag(name: string) {
+        if (!name.trim()) {
+            setMessage({ type: "error", text: "Please enter a tag name" });
+            return null;
+        }
+
+        if (!token) {
+            setMessage({ type: "error", text: "Authentication required" });
+            return null;
+        }
+
+        try {
+            const tag = await createTag(name, token);
+            if (tag) {
+                // Check if tag already exists in the tags list to avoid duplicates
+                setTags(prev => {
+                    const exists = prev.some(t => t.id === tag.id);
+                    if (exists) {
+                        return prev;
+                    }
+                    return [...prev, tag];
+                });
+                setMessage({ type: "success", text: "Tag added successfully!" });
+                return tag;
+            } else {
+                setMessage({ type: "error", text: "Failed to create tag. Try again!" });
+            }
+        } catch (error) {
+            setMessage({ type: "error", text: "An error occurred. Please try again!" });
+        }
+
+        return null;
+    }
+
     const handleSave = async (isPublish: boolean) => {
         await handleSavePost({
             title,
@@ -127,6 +172,7 @@ const WritePage = () => {
             slug,
             user,
             isPublish,
+            tagIds: selectedTagIds,
             createPost,
             updatePost,
             router,
@@ -169,14 +215,18 @@ const WritePage = () => {
                     selectedCategory={selectedCategory}
                     pageType={pageType}
                     pageTypeOptions={pageTypeOptions}
+                    tags={tags}
+                    selectedTagIds={selectedTagIds}
                     onChange={{
                         title: setTitle,
                         description: setDescription,
                         image: setImage,
                         category: setSelectedCategory,
                         type: setPageType,
+                        tags: setSelectedTagIds,
                     }}
                     onCreateCategory={handleCreateCategory}
+                    onCreateTag={handleCreateTag}
                 />
 
                 {isClient && (
