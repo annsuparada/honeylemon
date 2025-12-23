@@ -49,5 +49,5 @@ update write page
 - [x] fetch tags when edit blog on write page
 - [] Search — full-text search (title/description)
 - [] Make tags clickable
-- [] Add schema markup (Article + FAQ)
-- [] Test with Google Rich Results
+- [x] Add schema markup (Article + FAQ)
+- [x] Test with Google Rich Results
