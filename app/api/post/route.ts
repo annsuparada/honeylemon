@@ -46,15 +46,36 @@ export async function GET(req: Request) {
         }
 
         const limit = limitParam ? parseInt(limitParam) : undefined;
-        const posts = await prisma.post.findMany({
+        const rawPosts = await prisma.post.findMany({
             where: filter,
             include: {
                 author: { select: { username: true, profilePicture: true, name: true, lastName: true } },
                 category: { select: { name: true, slug: true } },
+                tags: {
+                    include: {
+                        tag: {
+                            select: {
+                                id: true,
+                                name: true,
+                                slug: true,
+                            },
+                        },
+                    },
+                },
             },
             orderBy: { createdAt: "desc" },
             take: limit && !isNaN(limit) ? limit : undefined,
         });
+
+        // Transform posts to normalize tags structure
+        const posts = rawPosts.map(post => ({
+            ...post,
+            tags: post.tags.map(pt => ({
+                id: pt.tag.id,
+                name: pt.tag.name,
+                slug: pt.tag.slug,
+            })),
+        }));
 
         return NextResponse.json({ success: true, posts }, { status: 200 });
     } catch (error) {

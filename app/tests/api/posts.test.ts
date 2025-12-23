@@ -102,8 +102,8 @@ describe('Post API', () => {
 
     it('GET: should return posts', async () => {
         (prisma.post.findMany as jest.Mock).mockResolvedValue([
-            { id: 'post1', title: 'Post 1' },
-            { id: 'post2', title: 'Post 2' },
+            { id: 'post1', title: 'Post 1', tags: [] },
+            { id: 'post2', title: 'Post 2', tags: [] },
         ]);
 
         const req = { url: 'http://localhost/api/posts' } as Request;
@@ -130,6 +130,7 @@ describe('Post API', () => {
                 name: 'Tech',
                 slug: 'tech'
             },
+            tags: [],
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -168,6 +169,7 @@ describe('Post API', () => {
                     name: 'Tech',
                     slug: 'tech',
                 },
+                tags: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -227,6 +229,7 @@ describe('Post API', () => {
                     name: 'General',
                     slug: 'general',
                 },
+                tags: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },

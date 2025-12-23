@@ -75,7 +75,19 @@ const WritePage = () => {
                     setImage(post.image || placeholderImg);
                     setSelectedCategory(post.categoryId);
                     setPageType(post.type);
-                    setSelectedTagIds(post.tags?.map((tag: { id: string; name: string; slug: string }) => tag.id) || []);
+                    const tagIds = post.tags?.map((tag: { id: string; name: string; slug: string }) => tag.id) || [];
+                    setSelectedTagIds(tagIds);
+
+                    // Merge post tags with existing tags to ensure all selected tags are available
+                    if (post.tags && post.tags.length > 0) {
+                        setTags(prevTags => {
+                            const existingTagIds = new Set(prevTags.map(t => t.id));
+                            const newTags = post.tags.filter((tag: { id: string; name: string; slug: string }) =>
+                                !existingTagIds.has(tag.id)
+                            );
+                            return [...prevTags, ...newTags];
+                        });
+                    }
                 }
             } catch (error) {
                 console.error("Error loading draft post:", error);

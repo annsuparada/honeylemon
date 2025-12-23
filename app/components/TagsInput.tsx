@@ -104,19 +104,22 @@ const TagsInput = ({
     return (
         <div className="mb-6">
             <label className="block text-lg font-semibold text-gray-700 mb-2">{label}</label>
-
             {/* Selected Tags Display */}
             {selectedTags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-3">
-                    {selectedTags.map(tag => (
-                        <span
-                            key={tag.id}
-                            className="badge badge-primary badge-lg cursor-pointer rounded-sm"
-                            onClick={() => handleRemoveTag(tag.id)}
-                        >
-                            {formatTagDisplay(tag.name)} ×
-                        </span>
-                    ))}
+                <div className="mb-4">
+                    <p className="text-sm text-gray-600 mb-2">Selected tags (click to remove):</p>
+                    <div className="flex flex-wrap gap-2">
+                        {selectedTags.map(tag => (
+                            <span
+                                key={tag.id}
+                                className="badge badge-primary badge-lg cursor-pointer rounded-full px-4 py-2 hover:badge-error transition-colors"
+                                onClick={() => handleRemoveTag(tag.id)}
+                                title="Click to remove tag"
+                            >
+                                {formatTagDisplay(tag.name)} ×
+                            </span>
+                        ))}
+                    </div>
                 </div>
             )}
 

@@ -46,14 +46,8 @@ update write page
 - [x] create newsletters feature
 - [] Scheduled publishing
 
-
+- [x] fetch tags when edit blog on write page
 - [] Search — full-text search (title/description)
-- [] add color to category bage
-
-
-
-✅ Your Current To-Do (Code First):
-
-✅ Add schema markup (Article + FAQ)
-⏳ Test with Google Rich Results
-⏳ Add tags UI to article page (optional but recommended)
+- [] Make tags clickable
+- [] Add schema markup (Article + FAQ)
+- [] Test with Google Rich Results

@@ -133,7 +133,7 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-gray-300">
+          <div className="mt-12 pt-8">
             <div className="mb-4">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
                 Tags
