@@ -99,8 +99,51 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
     }))
   } : null;
 
+  // Generate Article structured data for SEO
+  const authorName = post.author.name
+    ? `${post.author.name}${post.author.lastName ? ' ' + post.author.lastName : ''}`
+    : post.author.username;
+
+  // Format dates to YYYY-MM-DD format
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
+
+  const articleUrl = `${process.env.NEXT_PUBLIC_API_URL || 'https://travomad.vercel.app'}/blog/${post.slug}`;
+  const articleImage = post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp';
+
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad",
+    "image": articleImage,
+    "datePublished": formatDate(post.createdAt),
+    "dateModified": formatDate(post.updatedAt),
+    "author": {
+      "@type": "Organization",
+      "name": "Travomad"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Travomad",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"
+      }
+    }
+  };
+
   return (
     <>
+      {/* Article Structured Data for Rich Results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleStructuredData)
+        }}
+      />
       {/* FAQPage Structured Data for Rich Results */}
       {faqStructuredData && (
         <script
