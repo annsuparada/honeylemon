@@ -15,6 +15,7 @@ import AlertMessage from '../components/AlertMessage'
 import { extensions } from '../lip/tiptapExtensions'
 import WriteForm from './components/WriteForm'
 import { handleSavePost } from '@/utils/handlers/savePostHandler'
+import FAQSection from '../components/FAQSection'
 
 
 const placeholderImg = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
@@ -38,6 +39,7 @@ const WritePage = () => {
     const [image, setImage] = useState<string>(placeholderImg);
     const [postId, setPostId] = useState<string | null>(null);
     const [pageType, setPageType] = useState<PageType>('ARTICLE');
+    const [faqs, setFaqs] = useState<Array<{ question: string; answer: string }>>([]);
 
     const pageTypeOptions = Object.values(PageType).map(type => ({
         label: type,
@@ -78,6 +80,16 @@ const WritePage = () => {
                     const tagIds = post.tags?.map((tag: { id: string; name: string; slug: string }) => tag.id) || [];
                     setSelectedTagIds(tagIds);
 
+                    // Load FAQs
+                    if (post.faqs && post.faqs.length > 0) {
+                        setFaqs(post.faqs.map((faq: { question: string; answer: string }) => ({
+                            question: faq.question,
+                            answer: faq.answer
+                        })));
+                    } else {
+                        setFaqs([]);
+                    }
+
                     // Merge post tags with existing tags to ensure all selected tags are available
                     if (post.tags && post.tags.length > 0) {
                         setTags(prevTags => {
@@ -113,6 +125,7 @@ const WritePage = () => {
             setSelectedCategory("");
             setPageType("ARTICLE");
             setSelectedTagIds([]);
+            setFaqs([]);
         }
     }, [slug]);
 
@@ -185,6 +198,7 @@ const WritePage = () => {
             user,
             isPublish,
             tagIds: selectedTagIds,
+            faqs: faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
             createPost,
             updatePost,
             router,
@@ -239,6 +253,8 @@ const WritePage = () => {
                     }}
                     onCreateCategory={handleCreateCategory}
                     onCreateTag={handleCreateTag}
+                    faqs={faqs}
+                    onChangeFaqs={setFaqs}
                 />
 
                 {isClient && (

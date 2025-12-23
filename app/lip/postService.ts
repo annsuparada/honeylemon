@@ -107,7 +107,7 @@ export async function getPostBySlug(slug: string) {
                     slug: true,
                 },
             },
-            // 🔥 ADD THIS
+
             tags: {
                 include: {
                     tag: {
@@ -119,6 +119,7 @@ export async function getPostBySlug(slug: string) {
                     },
                 },
             },
+            faqs: true,
         },
     });
 
@@ -146,13 +147,13 @@ export async function getPostBySlug(slug: string) {
             username: post.author.username,
             profilePicture: post.author.profilePicture ?? undefined,
         },
-        // 🔥 ADD THIS
         tags: post.tags.map(pt => ({
             id: pt.tag.id,
             name: pt.tag.name,
             slug: pt.tag.slug,
         })),
-        type: post.type
+        type: post.type,
+        faqs: post.faqs || [],
     } satisfies BlogPost;
 }
 

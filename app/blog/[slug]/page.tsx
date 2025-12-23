@@ -18,6 +18,7 @@ export async function generateStaticParams() {
 const ShareButton = dynamic(() => import("../../components/ShareButton"), { ssr: false });
 const CTA = dynamic(() => import("../../components/CTA"), { ssr: false });
 const BlogSection = dynamic(() => import("../../components/BlogSection"), { ssr: false });
+const FAQSection = dynamic(() => import("../../components/FAQSection"), { ssr: false });
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
@@ -130,15 +131,25 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
             <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
           </div>
         </article>
-
+        {/* FAQs Section */}
+        {post.faqs && post.faqs.length > 0 && (
+          <FAQSection
+            faqs={post.faqs.map(faq => ({
+              question: faq.question,
+              answer: faq.answer
+            }))}
+          />
+        )}
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
-          <div className="mt-12 pt-8">
+          <div className="">
             <div className="mb-4">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
                 Tags
               </h3>
             </div>
+
+
             <div className="flex flex-wrap gap-3">
               {post.tags.map((tag) => {
                 // Format tag name: capitalize, replace dashes with spaces
@@ -159,6 +170,9 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
           </div>
         )}
       </div>
+
+
+
       <CTA
         title="Ready to Book?"
         subtitle="Find flights, hotels, and tours on Trip.com"

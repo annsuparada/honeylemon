@@ -69,6 +69,18 @@ model Post {
   tags        PostTag[]  @relation("PostToPostTags")
   updatedAt   DateTime   @updatedAt
   comments    Comment[]
+  faqs        FAQ[]      @relation("PostToFAQs")
+}
+
+model FAQ {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  question String
+  answer   String
+  order    Int    @default(0)
+  postId   String @db.ObjectId
+  post     Post   @relation("PostToFAQs", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
 }
 
 model TravelDeal {

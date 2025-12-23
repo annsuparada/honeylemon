@@ -16,6 +16,7 @@ describe('WriteForm Component', () => {
 
     const mockOnCreateCategory = jest.fn().mockResolvedValue({ label: 'New Category', value: 'new-cat' })
     const mockOnCreateTag = jest.fn().mockResolvedValue({ id: 'tag1', name: 'New Tag', slug: 'new-tag' })
+    const mockOnChangeFaqs = jest.fn()
 
     const defaultProps = {
         title: 'Initial Title',
@@ -36,9 +37,11 @@ describe('WriteForm Component', () => {
             { id: 'tag2', name: 'React', slug: 'react' },
         ],
         selectedTagIds: [],
+        faqs: [],
         onChange: mockOnChange,
         onCreateCategory: mockOnCreateCategory,
         onCreateTag: mockOnCreateTag,
+        onChangeFaqs: mockOnChangeFaqs,
     }
 
     beforeEach(() => {

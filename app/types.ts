@@ -53,6 +53,12 @@ export interface BlogPost {
         slug: string;
     }>;
     type: PageType;
+    faqs?: Array<{
+        id: string;
+        question: string;
+        answer: string;
+        order: number;
+    }>;
 }
 
 

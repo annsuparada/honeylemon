@@ -14,6 +14,7 @@ export interface SavePostParams {
     user: { id: string } | null;
     isPublish: boolean;
     tagIds?: string[];
+    faqs?: Array<{ question: string; answer: string }>;
     createPost: (data: any) => Promise<any>;
     updatePost: (data: any) => Promise<any>;
     router: { push: (url: string) => void };
@@ -33,6 +34,7 @@ export const handleSavePost = async ({
     user,
     isPublish,
     tagIds,
+    faqs,
     createPost,
     updatePost,
     router,
@@ -76,7 +78,8 @@ export const handleSavePost = async ({
         authorId: user.id,
         categoryId: selectedCategory,
         type: pageType ?? undefined,
-        tagIds: tagIds || []
+        tagIds: tagIds || [],
+        faqs: faqs && faqs.length > 0 ? faqs : undefined
     };
 
     try {

@@ -5,8 +5,6 @@ import { z } from "zod";
 import { postSchema, updatePostSchema } from "@/schemas/postSchema";
 import { verifyToken } from "@/utils/auth";
 
-
-
 // GET: Retrieve all posts, by slug, by category, by status (Public Access)
 export async function GET(req: Request) {
     try {
@@ -62,6 +60,17 @@ export async function GET(req: Request) {
                         },
                     },
                 },
+                faqs: {
+                    select: {
+                        id: true,
+                        question: true,
+                        answer: true,
+                        order: true,
+                    },
+                    orderBy: {
+                        order: 'asc',
+                    },
+                },
             },
             orderBy: { createdAt: "desc" },
             take: limit && !isNaN(limit) ? limit : undefined,
@@ -75,6 +84,7 @@ export async function GET(req: Request) {
                 name: pt.tag.name,
                 slug: pt.tag.slug,
             })),
+            faqs: post.faqs || [],
         }));
 
         return NextResponse.json({ success: true, posts }, { status: 200 });
@@ -122,12 +132,19 @@ export async function POST(req: Request) {
                 description: validatedData.description || "",
                 image: validatedData.image || "",
                 categoryId: validatedData.categoryId,
-                authorId: decoded.id, // ✅ Use ID from token
+                authorId: decoded.id,
                 status: validatedData.status || "DRAFT",
                 type: validatedData.type,
                 tags: validatedData.tagIds && validatedData.tagIds.length > 0 ? {
                     create: validatedData.tagIds.map((tagId: string) => ({
                         tagId: tagId,
+                    })),
+                } : undefined,
+                faqs: validatedData.faqs && validatedData.faqs.length > 0 ? {
+                    create: validatedData.faqs.map((faq: any, index: number) => ({
+                        question: faq.question,
+                        answer: faq.answer,
+                        order: index,
                     })),
                 } : undefined,
             },
@@ -144,7 +161,6 @@ export async function POST(req: Request) {
     }
 }
 
-
 // PATCH: Update a post (by ID) (Protected)
 export async function PATCH(req: Request) {
     const token = req.headers.get("authorization")?.split(" ")[1];
@@ -159,7 +175,6 @@ export async function PATCH(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     try {
-
         const body = await req.json();
 
         // Validate input
@@ -173,18 +188,34 @@ export async function PATCH(req: Request) {
 
         // Handle tags if provided
         if (validatedData.tagIds !== undefined) {
-            // Delete existing PostTag relationships
             await prisma.postTag.deleteMany({
                 where: { postId: validatedData.id },
             });
 
-            // Create new PostTag relationships if tagIds are provided
             if (validatedData.tagIds.length > 0) {
-                // MongoDB doesn't support skipDuplicates, but we've already deleted existing relationships
                 await prisma.postTag.createMany({
                     data: validatedData.tagIds.map((tagId: string) => ({
                         postId: validatedData.id,
                         tagId: tagId,
+                    })),
+                });
+            }
+        }
+
+        if (validatedData.faqs !== undefined) {
+            // Delete existing FAQs
+            await prisma.fAQ.deleteMany({
+                where: { postId: validatedData.id },
+            });
+
+            // Create new FAQs if provided
+            if (validatedData.faqs.length > 0) {
+                await prisma.fAQ.createMany({
+                    data: validatedData.faqs.map((faq: any, index: number) => ({
+                        postId: validatedData.id,
+                        question: faq.question,
+                        answer: faq.answer,
+                        order: index,
                     })),
                 });
             }
@@ -246,7 +277,7 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 });
         }
 
-        // Delete post
+        // Delete post (FAQs will be auto-deleted due to onDelete: Cascade)
         await prisma.post.delete({ where: { id: validatedData.id } });
 
         return NextResponse.json({ success: true, message: "Post deleted successfully" }, { status: 200 });
@@ -259,4 +290,3 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
     }
 }
-

@@ -68,7 +68,6 @@ const Navigation = () => {
               alt={'Travomad Logo'}
               width={150}
               height={30}
-              style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
         </div>

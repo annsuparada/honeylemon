@@ -12,9 +12,13 @@ const postSchema = z.object({
   status: z.nativeEnum(PostStatus).optional(),
   type: z.nativeEnum(PageType),
   tagIds: z.array(z.string()).optional(), // Array of tag IDs
+  faqs: z.array(z.object({
+    question: z.string().min(1, "Question is required"),
+    answer: z.string().min(1, "Answer is required"),
+  })).optional(),
 });
 
-// ✅ Safe for PATCH — no authorId
+
 export const updatePostSchema = z.object({
   id: z.string().min(1, "Post ID is required"),
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -26,6 +30,10 @@ export const updatePostSchema = z.object({
   status: z.nativeEnum(PostStatus).optional(),
   type: z.nativeEnum(PageType),
   tagIds: z.array(z.string()).optional(), // Array of tag IDs
+  faqs: z.array(z.object({
+    question: z.string().min(1, "Question is required"),
+    answer: z.string().min(1, "Answer is required"),
+  })).optional(),
 });
 
 export { postSchema };
