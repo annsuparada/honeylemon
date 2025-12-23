@@ -178,10 +178,10 @@ Add structured data to increase from **1 valid item → 4 valid items**
 - [x] Make sure no duplicate questions
 
 ### 5. Deploy & Test
-- [ ] Deploy to production
-- [ ] Run Google Rich Results Test on live URL
-- [ ] Confirm 4 valid items detected
-- [ ] Fix any errors
+- [x] Deploy to production
+- [x] Run Google Rich Results Test on live URL
+- [x] Confirm 4 valid items detected
+- [x] Fix any errors
 
 ---
 

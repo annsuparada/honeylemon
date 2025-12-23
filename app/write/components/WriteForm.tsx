@@ -72,15 +72,15 @@ const WriteForm: React.FC<WriteFormProps> = ({
     };
 
     const handleAddItemListItem = () => {
-        onChangeItemListItems([...itemListItems, { name: '', url: '' }]);
+        onChangeItemListItems([...(itemListItems || []), { name: '', url: '' }]);
     };
 
     const handleRemoveItemListItem = (index: number) => {
-        onChangeItemListItems(itemListItems.filter((_, i) => i !== index));
+        onChangeItemListItems((itemListItems || []).filter((_, i) => i !== index));
     };
 
     const handleItemListItemChange = (index: number, field: 'name' | 'url', value: string) => {
-        const updatedItems = [...itemListItems];
+        const updatedItems = [...(itemListItems || [])];
         updatedItems[index] = { ...updatedItems[index], [field]: value };
         onChangeItemListItems(updatedItems);
     };
@@ -231,7 +231,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
                 <div className="mt-6">
                     <label className="block text-lg font-semibold text-gray-700 mb-4">Item List (for SEO Schema)</label>
                     <p className="text-sm text-gray-500 mb-4">Add items to generate ItemList structured data. Useful for list posts (e.g., "Top 12 Resorts").</p>
-                    {itemListItems.map((item, index) => {
+                    {(itemListItems || []).map((item, index) => {
                         const displayName = item.name || `Item #${index + 1}`;
 
                         return (
@@ -298,7 +298,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
                             Add Item
                         </button>
                     </div>
-                    {itemListItems.length === 0 && (
+                    {(!itemListItems || itemListItems.length === 0) && (
                         <p className="text-sm text-gray-500 italic mt-2">No items added yet. Click "Add Item" to create one.</p>
                     )}
                 </div>
