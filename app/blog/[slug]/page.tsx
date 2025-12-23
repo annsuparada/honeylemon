@@ -85,8 +85,31 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
     allowedAttributes: { 'a': ['href', 'target'], 'img': ['src', 'alt'] } // Keep links & images safe
   });
 
+  // Generate FAQPage structured data for SEO
+  const faqStructuredData = post.faqs && post.faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": post.faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null;
+
   return (
     <>
+      {/* FAQPage Structured Data for Rich Results */}
+      {faqStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqStructuredData)
+          }}
+        />
+      )}
       <HeroSection
         isHomepage={false}
         isSingleBlogPage={true}
