@@ -129,12 +129,14 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
         imageUrl="https://images.unsplash.com/photo-1546437744-529610df132e?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       />
       {/* Breadcrumbs */}
-      <Breadcrumb
-        items={[
-          { name: 'Blog', href: '/blog', current: false },
-          { name: post.title, href: `/blog/${post.slug}`, current: true },
-        ]}
-      />
+      <div className="max-w-screen-md mx-auto">
+        <Breadcrumb
+          items={[
+            { name: 'Blog', href: '/blog', current: false },
+            { name: post.title, href: `/blog/${post.slug}`, current: true },
+          ]}
+        />
+      </div>
       <div className="max-w-screen-md mx-auto py-10 px-4">
         {/* Blog Header */}
         <header className="mb-8">
