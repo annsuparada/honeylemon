@@ -9,6 +9,7 @@ import HeroSection from '@/app/components/HeroSection';
 import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
 import { VscError } from "react-icons/vsc";
 import { getBaseOpenGraph, getCanonicalUrl, getOpenGraphImages, getRobotsMetadata, getTwitterMetadata } from '@/app/lip/metadata-helpers';
+import { generateArticleStructuredData, generateFAQStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
@@ -27,9 +28,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return { title: "Post Not Found", description: "This post does not exist." };
   }
 
-  const authorName = post.author.name
-    ? `${post.author.name}${post.author.lastName ? ' ' + post.author.lastName : ''}`
-    : post.author.username;
+  const authorName = formatAuthorName(post.author);
 
   const tagNames = post.tags.map(tag => tag.name);
   const keywords = [post.category.name, ...tagNames, "travel"].join(', ');
@@ -85,104 +84,9 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
     allowedAttributes: { 'a': ['href', 'target'], 'img': ['src', 'alt'] } // Keep links & images safe
   });
 
-  // Generate FAQPage structured data for SEO
-  const faqStructuredData = post.faqs && post.faqs.length > 0 ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": post.faqs.map(faq => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer
-      }
-    }))
-  } : null;
-
-  // Generate Article structured data for SEO
-  const authorName = post.author.name
-    ? `${post.author.name}${post.author.lastName ? ' ' + post.author.lastName : ''}`
-    : post.author.username;
-
-  // Format dates to ISO 8601 format (full format with time)
-  const formatDateISO = (dateString: string) => {
-    return new Date(dateString).toISOString();
-  };
-
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://travomad.vercel.app';
-  const articleUrl = `${baseUrl}/blog/${post.slug}`;
-  const authorUrl = `${baseUrl}/author/${post.author.username || post.author.id}`;
-
-  // Get base image URL
-  const baseImage = post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp';
-
-  // Generate multiple images in different aspect ratios (16:9, 4:3, 1:1)
-  // For Cloudinary images, we can add transformations. For other sources, use the same image.
-  // Minimum 1200px wide requirement, at least 50K pixels (1200x675 = 810K pixels ✓)
-  const generateImageVariants = (imageUrl: string) => {
-    // If it's a Cloudinary URL, add transformations for different aspect ratios
-    if (imageUrl.includes('cloudinary.com')) {
-      return [
-        {
-          url: `${imageUrl.replace(/\/upload\//, '/upload/w_1200,h_675,c_fill,g_auto/')}`,
-          width: 1200,
-          height: 675 // 16:9 aspect ratio
-        },
-        {
-          url: `${imageUrl.replace(/\/upload\//, '/upload/w_1200,h_900,c_fill,g_auto/')}`,
-          width: 1200,
-          height: 900 // 4:3 aspect ratio
-        },
-        {
-          url: `${imageUrl.replace(/\/upload\//, '/upload/w_1200,h_1200,c_fill,g_auto/')}`,
-          width: 1200,
-          height: 1200 // 1:1 aspect ratio
-        }
-      ];
-    }
-    // For non-Cloudinary images, return the same image 3 times with proper dimensions
-    // Note: In production, you might want to generate actual variants using an image service
-    return [
-      { url: imageUrl, width: 1200, height: 675 }, // 16:9
-      { url: imageUrl, width: 1200, height: 900 }, // 4:3
-      { url: imageUrl, width: 1200, height: 1200 } // 1:1
-    ];
-  };
-
-  const articleImages = generateImageVariants(baseImage);
-
-  // Author image URL (profile picture or fallback)
-  const authorImage = post.author.profilePicture ||
-    'https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png';
-
-  const articleStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": post.title,
-    "description": post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad",
-    "image": articleImages.map(img => ({
-      "@type": "ImageObject",
-      "url": img.url,
-      "width": img.width,
-      "height": img.height
-    })),
-    "datePublished": formatDateISO(post.createdAt),
-    "dateModified": formatDateISO(post.updatedAt),
-    "author": {
-      "@type": "Person",
-      "name": authorName,
-      "url": authorUrl,
-      "image": authorImage
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Travomad",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png"
-      }
-    }
-  };
+  // Generate structured data for SEO
+  const articleStructuredData = generateArticleStructuredData(post);
+  const faqStructuredData = generateFAQStructuredData(post.faqs);
 
   return (
     <>
@@ -208,11 +112,7 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
         title={post.title}
         description={post.description}
         category={post.category.name}
-        author={
-          post.author?.name
-            ? `${post.author.name} ${post.author.lastName}`
-            : post.author?.username || "Unknown"
-        }
+        author={formatAuthorName(post.author)}
 
         date={post.updatedAt}
         imageUrl="https://images.unsplash.com/photo-1546437744-529610df132e?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
