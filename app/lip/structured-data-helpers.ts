@@ -81,6 +81,39 @@ export function generateFAQStructuredData(faqs?: BlogPost['faqs']) {
 }
 
 /**
+ * Generate BreadcrumbList structured data
+ */
+export function generateBreadcrumbListStructuredData(post: BlogPost) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
+  const articleUrl = `${baseUrl}/blog/${post.slug}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${baseUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": `${baseUrl}/blog`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": articleUrl
+      }
+    ]
+  };
+}
+
+/**
  * Generate Article structured data
  */
 export function generateArticleStructuredData(post: BlogPost) {

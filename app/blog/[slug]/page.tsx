@@ -6,10 +6,11 @@ import sanitizeHtml from 'sanitize-html';
 import './article.css'
 import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';
+import Breadcrumb from '@/app/components/Breadcrumb';
 import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
 import { VscError } from "react-icons/vsc";
 import { getBaseOpenGraph, getCanonicalUrl, getOpenGraphImages, getRobotsMetadata, getTwitterMetadata } from '@/app/lip/metadata-helpers';
-import { generateArticleStructuredData, generateFAQStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
+import { generateArticleStructuredData, generateFAQStructuredData, generateBreadcrumbListStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
@@ -87,6 +88,9 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
   // Generate structured data for SEO
   const articleStructuredData = generateArticleStructuredData(post);
   const faqStructuredData = generateFAQStructuredData(post.faqs);
+  const breadcrumbStructuredData = generateBreadcrumbListStructuredData(post);
+
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://travomad.vercel.app';
 
   return (
     <>
@@ -95,6 +99,13 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(articleStructuredData)
+        }}
+      />
+      {/* BreadcrumbList Structured Data for Rich Results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbStructuredData)
         }}
       />
       {/* FAQPage Structured Data for Rich Results */}
@@ -116,6 +127,13 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
 
         date={post.updatedAt}
         imageUrl="https://images.unsplash.com/photo-1546437744-529610df132e?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      />
+      {/* Breadcrumbs */}
+      <Breadcrumb
+        items={[
+          { name: 'Blog', href: '/blog', current: false },
+          { name: post.title, href: `/blog/${post.slug}`, current: true },
+        ]}
       />
       <div className="max-w-screen-md mx-auto py-10 px-4">
         {/* Blog Header */}
