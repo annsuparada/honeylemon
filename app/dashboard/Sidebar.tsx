@@ -82,6 +82,7 @@ const Sidebar: FC = () => {
                                             className="h-8 w-auto"
                                             width={150}
                                             height={100}
+                                            style={{ width: 'auto', height: 'auto' }}
                                         />
                                     </Link>
                                 </div>
@@ -150,6 +151,7 @@ const Sidebar: FC = () => {
                                     className="h-8 w-auto"
                                     width={150}
                                     height={100}
+                                    style={{ width: 'auto', height: 'auto' }}
                                 />
                             </Link>
                         </div>
