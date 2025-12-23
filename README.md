@@ -1,211 +1,291 @@
-# travomad
+# Travomad
 
-## Table of Contents
+> A modern, SEO-optimized travel blog and content management system built with Next.js 14, featuring comprehensive structured data, rich text editing, and a powerful admin dashboard.
 
-- [Todo](#todo)
-  - [Dashboard Features](#dashboard-featurs)
-  - [Update Write Page](#update-write-page)
-- [SingleBlogPage Tasks](#singleblogpage-tasks)
-  - [SEO & Metadata](#seo--metadata)
-  - [Structured Data](#structured-data)
-  - [UI Components](#ui-components)
-  - [Content Display](#content-display)
-  - [Table of Contents](#table-of-contents)
-  - [Error Handling](#error-handling)
-- [Structured Data Implementation](#structured-data-implementation---quick-todo)
-  - [Goal](#goal)
-  - [Tasks](#tasks)
-  - [Success Criteria](#success-criteria)
-  - [Test URL](#test-url)
-  - [Timeline](#timeline)
-  - [Need Help?](#need-help)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.7-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.19.1-2D3748)](https://www.prisma.io/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.8.0-47A248)](https://www.mongodb.com/)
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Environment Variables](#environment-variables)
+- [Contributing](#contributing)
+
+## 🎯 Overview
+
+Travomad is a full-featured travel blog platform designed for content creators and travel enthusiasts. It combines a beautiful, responsive frontend with a powerful content management system, ensuring optimal SEO performance and excellent user experience.
+
+### Key Highlights
+
+- **SEO-First Architecture**: Comprehensive structured data (Article, BreadcrumbList, FAQPage, ItemList schemas)
+- **Rich Content Creation**: Advanced WYSIWYG editor with TipTap
+- **Performance Optimized**: Server-side rendering, static page generation, and image optimization
+- **Type-Safe**: Full TypeScript implementation with Zod validation
+- **Well-Tested**: 366+ tests covering components, APIs, and utilities
+
+## ✨ Features
+
+### Content Management
+- 📝 **Rich Text Editor**: TipTap-powered editor with formatting, tables, images, and more
+- 🏷️ **Category & Tag System**: Organize content with flexible categorization
+- 📊 **Content Types**: Support for Articles, Destinations, Deals, and Itineraries
+- 💾 **Draft System**: Save and manage drafts before publishing
+- 🔍 **Advanced Filtering**: Filter posts by status, category, type, and date
+
+### SEO & Performance
+- 🎯 **Structured Data**: Automatic generation of Article, BreadcrumbList, FAQPage, and ItemList schemas
+- 📱 **Open Graph & Twitter Cards**: Rich social media previews
+- 🔗 **Canonical URLs**: Proper URL canonicalization
+- 🤖 **Robots Meta**: Dynamic robots directives based on post status
+- 📑 **Table of Contents**: Auto-generated TOC with scroll tracking
+- ⚡ **Static Generation**: Pre-rendered pages for optimal performance
+
+### User Experience
+- 📱 **Fully Responsive**: Mobile-first design with Tailwind CSS
+- 🎨 **Modern UI**: DaisyUI component library with custom theming
+- 🔐 **Authentication**: Secure JWT-based authentication system
+- 👤 **User Profiles**: User management with profile customization
+- 📧 **Newsletter**: Email subscription and management system
+- 🔔 **Email Campaigns**: Create and send email campaigns to subscribers
+
+### Developer Experience
+- 🧪 **Comprehensive Testing**: Jest and React Testing Library
+- 🔧 **Type Safety**: Full TypeScript coverage
+- 📦 **Modular Architecture**: Well-organized, maintainable codebase
+- 🚀 **Fast Development**: Hot reload and optimized build process
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [DaisyUI](https://daisyui.com/)
+- **Rich Text Editor**: [TipTap](https://tiptap.dev/)
+- **Icons**: [Heroicons](https://heroicons.com/) + [React Icons](https://react-icons.github.io/react-icons/)
+
+### Backend
+- **Database**: [MongoDB](https://www.mongodb.com/)
+- **ORM**: [Prisma](https://www.prisma.io/)
+- **Authentication**: JWT (jsonwebtoken)
+- **Email**: [Nodemailer](https://nodemailer.com/)
+
+### Development & Testing
+- **Testing**: [Jest](https://jestjs.io/) + [React Testing Library](https://testing-library.com/)
+- **Validation**: [Zod](https://zod.dev/)
+- **Linting**: ESLint + Next.js ESLint Config
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- MongoDB database (local or cloud)
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/travomad.git
+   cd travomad
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in your environment variables (see [Environment Variables](#environment-variables))
+
+4. **Set up the database**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
+
+```
+travomad/
+├── app/
+│   ├── api/              # API routes
+│   │   ├── campaign/     # Email campaign endpoints
+│   │   ├── category/     # Category management
+│   │   ├── post/         # Blog post CRUD operations
+│   │   ├── user/         # User authentication & management
+│   │   └── newsletter/   # Newsletter subscription
+│   ├── blog/             # Blog pages
+│   │   └── [slug]/       # Individual blog post pages
+│   ├── components/       # Reusable React components
+│   │   ├── layout/       # Layout components
+│   │   └── tiptap/       # TipTap editor components
+│   ├── dashboard/        # Admin dashboard
+│   │   ├── blogs/        # Blog management
+│   │   ├── email/        # Email campaign management
+│   │   └── profile/        # User profile settings
+│   ├── lip/              # Library/utility functions
+│   │   ├── metadata-helpers.ts
+│   │   ├── structured-data-helpers.ts
+│   │   ├── postService.ts
+│   │   └── toc-helpers.ts
+│   ├── tests/            # Test files
+│   └── write/            # Content creation interface
+├── prisma/
+│   └── schema.prisma     # Database schema
+├── schemas/              # Zod validation schemas
+├── utils/                # Utility functions
+└── public/               # Static assets
+```
+
+## 💻 Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm test` - Run all tests
+- `npm run prisma:generate` - Generate Prisma client
+
+### Code Style
+
+- Follow TypeScript best practices
+- Use functional components with hooks
+- Implement proper error handling
+- Write descriptive commit messages
+
+## 🧪 Testing
+
+The project includes comprehensive test coverage:
+
+- **Unit Tests**: 366+ tests covering components, utilities, and API routes
+- **Test Framework**: Jest with React Testing Library
+- **Coverage**: Components, API routes, utilities, and helpers
+
+Run tests:
+```bash
+npm test
+```
+
+Run tests in watch mode:
+```bash
+npm test -- --watch
+```
+
+## 🚢 Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Configure environment variables
+4. Deploy!
+
+The project includes a `vercel-build` script that automatically generates the Prisma client before building.
+
+### Manual Deployment
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Start the production server:
+   ```bash
+   npm start
+   ```
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Database
+DATABASE_URL="mongodb://localhost:27017/travomad"
+
+# Next.js
+NEXT_PUBLIC_API_URL="http://localhost:3000"
+
+# JWT Secret
+JWT_SECRET="your-secret-key-here"
+
+# Email Configuration
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USER="your-email@gmail.com"
+EMAIL_PASS="your-app-password"
+
+# Optional: Cloudinary (for image optimization)
+CLOUDINARY_URL="your-cloudinary-url"
+```
+
+## 📊 SEO Features
+
+Travomad implements comprehensive SEO best practices:
+
+- ✅ **Structured Data**: Article, BreadcrumbList, FAQPage, ItemList schemas
+- ✅ **Meta Tags**: Dynamic title, description, keywords
+- ✅ **Open Graph**: Rich social media previews
+- ✅ **Twitter Cards**: Optimized Twitter sharing
+- ✅ **Canonical URLs**: Prevents duplicate content issues
+- ✅ **Sitemap**: Auto-generated sitemap (if implemented)
+- ✅ **Robots.txt**: Proper search engine directives
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Write tests for new features
+- Follow existing code style
+- Update documentation as needed
+- Ensure all tests pass before submitting
+
+## 📝 License
+
+This project is private and proprietary.
+
+## 👥 Authors
+
+- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
+
+## 🙏 Acknowledgments
+
+- Next.js team for the amazing framework
+- Prisma for the excellent ORM
+- TipTap for the rich text editor
+- All contributors and open-source libraries used
 
 ---
 
-## Todo
-- [x] Write tests for all api
-    - [x] `api/categoty`
-    - [x] `api/login`
-    - [x] `api/post`
-    - [x] `api/user` 
-- [x] write tests for front end
-    - [x] test for components
-    - [x] test for all pages
-- [x] update UI on sigle blog page 
-- [x] update share buttons, display all the buttons, remove dropdown
-- [x] add dropdow to seclect pageType on write page
-- [x] add pagination to blog section
-- [x] add loading when fetching blogs (client side)
-- [x] update logo
-- [x] Write tests for api actions
-- [x] Write test for libs SSR
+**Built with ❤️ using Next.js and TypeScript**
 
-### Dashboard Featurs
-    - [x] add filter by page on dashboard
-    - [x] Sorting — e.g. by date
-    - [x] Post counts by status — e.g. “Draft (3)”, “Published (12)”
-    - [x] write all tests
-
-### Update Write Page
-    - [x] redirect save darft on write page to dashboard/blogs
-    - [x] limit description to max at 300 char   
-    - [x] write all tests
-
-
-- [x] remove expried login token
-
-- [x] create admin profile
-- [x] update pasword
-- [x] fix  Forgot your password request. check email before send reset password
-
-- [x] render blog by page/category
-- [x] update post not found page
-- [x] update something went wrong
-- [] update homepage
-    - [] top hotel pick 
-- [] deploy travomad.com on vercel
-- [] password recovery, 
-- [x] create newsletters feature
-- [] Scheduled publishing
-
-- [x] fetch tags when edit blog on write page
-- [] Search — full-text search (title/description)
-- [] Make tags clickable
-- [x] Add schema markup (Article + FAQ)
-- [x] Test with Google Rich Results
-
----
-
-# SingleBlogPage Tasks
-
-## SEO & Metadata
-- [x] Generate dynamic metadata (title, description, keywords)
-- [x] Open Graph tags for social sharing
-- [x] Twitter Card metadata
-- [x] Canonical URLs
-- [x] Robots metadata (based on post status)
-- [x] Author information in metadata
-
-## Structured Data
-- [x] Article Schema (JSON-LD)
-- [x] BreadcrumbList Schema (JSON-LD)
-- [x] BreadcrumbList Schema (JSON-LD)
-- [x] FAQPage Schema (JSON-LD) - conditional rendering
-- [x] ItemList Schema (JSON-LD) - conditional rendering
-
-## UI Components
-- [x] HeroSection with post title, description, category, author, date
-- [x] Breadcrumb navigation (Home > Blog > Article)
-- [x] ShareButton component for social sharing
-- [x] Category badge display
-- [x] Featured image with proper aspect ratio
-- [x] FAQSection component (conditional)
-- [x] Tags display with formatted names
-- [x] CTA section (Call-to-action)
-- [x] BlogSection for related posts
-
-## Content Display
-- [x] Sanitized HTML content rendering
-- [x] Prose styling for article content
-- [x] Related blog posts (6 posts, excluding current)
-- [x] Dynamic content loading
-
-## Table of Contents
-
-### Code Implementation
-
-#### 1. Extract headings from post content
-- [x] Parse HTML to find all H2 (and H3 if needed) tags
-- [x] Generate slug/ID for each heading (e.g., "grand-velas-riviera-maya")
-- [x] Build array of { id, text, level } objects
-
-#### 2. Add IDs to headings in content
-- [x] Modify sanitized content to inject id attributes into H2/H3 tags
-- [x] Ensure IDs are URL-safe (lowercase, no spaces, dashes only)
-
-#### 3. Create ToC component
-- [x] Build `<TableOfContents>` React component
-- [x] Accept headings array as prop
-- [x] Render nested list with anchor links
-- [x] Add smooth scroll behavior
-
-#### 4. Style the ToC
-- [x] Design box/card styling
-- [x] Add hover effects on links
-- [x] Make responsive (hidden on mobile, visible on desktop)
-- [x] Add "sticky" positioning for sidebar version
-
-#### 5. Add active state tracking
-- [x] Use Intersection Observer to track which section is visible
-- [x] Highlight current section in ToC
-
-## Error Handling
-- [x] Post Not Found page
-- [x] Error state with icon and message
-- [x] Static page generation for better performance
-
----
-
-# Structured Data Implementation - Quick Todo
-
-## Goal
-Add structured data to increase from **1 valid item → 4 valid items**
-
----
-
-## Tasks
-
-### 1. Add Article Schema
-- [x] Copy Article JSON-LD code
-- [x] Add to blog post template
-- [x] Update headline, dates, author, image URL
-- [x] Test with Google Rich Results Test
-
-### 2. Add BreadcrumbList Schema
-- [x] Copy BreadcrumbList JSON-LD code
-- [x] Add to blog post template
-- [x] Update URLs for Home > Blog > Article path
-- [x] Test with Google Rich Results Test
-
-### 3. Add ItemList Schema
-- [x] Copy ItemList JSON-LD code
-- [x] Add all 12 resort names and URLs
-- [x] Add to blog post template
-- [x] Test with Google Rich Results Test
-
-### 4. Keep Existing FAQ Schema
-- [x] Verify FAQ is still working
-- [x] Make sure no duplicate questions
-
-### 5. Deploy & Test
-- [x] Deploy to production
-- [x] Run Google Rich Results Test on live URL
-- [x] Confirm 4 valid items detected
-- [x] Fix any errors
-
----
-
-## Success Criteria
-✅ 4 valid items showing in Google Rich Results Test:
-1. Article
-2. BreadcrumbList  
-3. ItemList
-4. FAQ
-
----
-
-## Test URL
-https://search.google.com/test/rich-results
-
----
-
-## Timeline
-- **Implementation:** 30-60 minutes
-- **Google detection:** 1-7 days
-- **Visible in search:** 2-4 weeks
-
----
-
-## Need Help?
-- Test here: https://search.google.com/test/rich-results
-- Docs: https://developers.google.com/search/docs/appearance/structured-data
