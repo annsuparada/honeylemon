@@ -24,6 +24,7 @@ interface WriteFormProps {
     tags: Tag[]
     selectedTagIds: string[]
     faqs: Array<{ question: string; answer: string }>
+    itemListItems: Array<{ name: string; url: string }>
     onChange: {
         title: (val: string) => void
         description: (val: string) => void
@@ -35,6 +36,7 @@ interface WriteFormProps {
     onCreateCategory: (name: string) => Promise<{ label: string; value: string } | null>
     onCreateTag: (name: string) => Promise<Tag | null>
     onChangeFaqs: (faqs: Array<{ question: string; answer: string }>) => void
+    onChangeItemListItems: (items: Array<{ name: string; url: string }>) => void
 }
 
 const WriteForm: React.FC<WriteFormProps> = ({
@@ -48,10 +50,12 @@ const WriteForm: React.FC<WriteFormProps> = ({
     tags,
     selectedTagIds,
     faqs,
+    itemListItems,
     onChange,
     onCreateCategory,
     onCreateTag,
     onChangeFaqs,
+    onChangeItemListItems,
 }) => {
     const handleAddFaq = () => {
         onChangeFaqs([...faqs, { question: '', answer: '' }]);
@@ -65,6 +69,20 @@ const WriteForm: React.FC<WriteFormProps> = ({
         const updatedFaqs = [...faqs];
         updatedFaqs[index] = { ...updatedFaqs[index], [field]: value };
         onChangeFaqs(updatedFaqs);
+    };
+
+    const handleAddItemListItem = () => {
+        onChangeItemListItems([...itemListItems, { name: '', url: '' }]);
+    };
+
+    const handleRemoveItemListItem = (index: number) => {
+        onChangeItemListItems(itemListItems.filter((_, i) => i !== index));
+    };
+
+    const handleItemListItemChange = (index: number, field: 'name' | 'url', value: string) => {
+        const updatedItems = [...itemListItems];
+        updatedItems[index] = { ...updatedItems[index], [field]: value };
+        onChangeItemListItems(updatedItems);
     };
 
     return (
@@ -206,6 +224,82 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     </div>
                     {faqs.length === 0 && (
                         <p className="text-sm text-gray-500 italic mt-2">No FAQs added yet. Click "Add FAQ" to create one.</p>
+                    )}
+                </div>
+
+                {/* ItemList Items Section */}
+                <div className="mt-6">
+                    <label className="block text-lg font-semibold text-gray-700 mb-4">Item List (for SEO Schema)</label>
+                    <p className="text-sm text-gray-500 mb-4">Add items to generate ItemList structured data. Useful for list posts (e.g., "Top 12 Resorts").</p>
+                    {itemListItems.map((item, index) => {
+                        const displayName = item.name || `Item #${index + 1}`;
+
+                        return (
+                            <Disclosure key={index} as="div" className="mb-4">
+                                {({ open }) => (
+                                    <>
+                                        <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                            <DisclosureButton className="flex w-full items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                                <div className="flex items-center gap-3 flex-1">
+                                                    {open ? (
+                                                        <MinusSmallIcon className="size-5 text-gray-600" />
+                                                    ) : (
+                                                        <PlusSmallIcon className="size-5 text-gray-600" />
+                                                    )}
+                                                    <span className="text-sm font-medium text-gray-700 text-left">
+                                                        {displayName}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-sm btn-ghost text-error ml-2"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleRemoveItemListItem(index);
+                                                    }}
+                                                >
+                                                    Remove
+                                                </button>
+                                            </DisclosureButton>
+                                            <DisclosurePanel className="p-4">
+                                                <div className="mb-3">
+                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                                    <input
+                                                        type="text"
+                                                        className="input input-bordered w-full"
+                                                        placeholder="Enter item name (e.g., Grand Velas Riviera Maya)..."
+                                                        value={item.name}
+                                                        onChange={(e) => handleItemListItemChange(index, 'name', e.target.value)}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                                                    <input
+                                                        type="url"
+                                                        className="input input-bordered w-full"
+                                                        placeholder="Enter URL (e.g., https://trip.tp.st/k3xThnY1)..."
+                                                        value={item.url}
+                                                        onChange={(e) => handleItemListItemChange(index, 'url', e.target.value)}
+                                                    />
+                                                </div>
+                                            </DisclosurePanel>
+                                        </div>
+                                    </>
+                                )}
+                            </Disclosure>
+                        );
+                    })}
+                    <div className="flex justify-end mt-4">
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-primary"
+                            onClick={handleAddItemListItem}
+                        >
+                            Add Item
+                        </button>
+                    </div>
+                    {itemListItems.length === 0 && (
+                        <p className="text-sm text-gray-500 italic mt-2">No items added yet. Click "Add Item" to create one.</p>
                     )}
                 </div>
             </div>

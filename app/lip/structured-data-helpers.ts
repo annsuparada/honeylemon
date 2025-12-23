@@ -154,3 +154,23 @@ export function generateArticleStructuredData(post: BlogPost) {
   };
 }
 
+/**
+ * Generate ItemList structured data
+ */
+export function generateItemListStructuredData(itemListItems?: BlogPost['itemListItems']) {
+  if (!itemListItems || itemListItems.length === 0) {
+    return null;
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": itemListItems.map(item => ({
+      "@type": "ListItem",
+      "position": item.order + 1, // Position is 1-indexed
+      "name": item.name,
+      "url": item.url
+    }))
+  };
+}
+

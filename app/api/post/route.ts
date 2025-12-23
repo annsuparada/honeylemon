@@ -71,6 +71,17 @@ export async function GET(req: Request) {
                         order: 'asc',
                     },
                 },
+                itemListItems: {
+                    select: {
+                        id: true,
+                        name: true,
+                        url: true,
+                        order: true,
+                    },
+                    orderBy: {
+                        order: 'asc',
+                    },
+                },
             },
             orderBy: { createdAt: "desc" },
             take: limit && !isNaN(limit) ? limit : undefined,
@@ -85,6 +96,7 @@ export async function GET(req: Request) {
                 slug: pt.tag.slug,
             })),
             faqs: post.faqs || [],
+            itemListItems: post.itemListItems || [],
         }));
 
         return NextResponse.json({ success: true, posts }, { status: 200 });
@@ -144,6 +156,13 @@ export async function POST(req: Request) {
                     create: validatedData.faqs.map((faq: any, index: number) => ({
                         question: faq.question,
                         answer: faq.answer,
+                        order: index,
+                    })),
+                } : undefined,
+                itemListItems: validatedData.itemListItems && validatedData.itemListItems.length > 0 ? {
+                    create: validatedData.itemListItems.map((item: any, index: number) => ({
+                        name: item.name,
+                        url: item.url,
                         order: index,
                     })),
                 } : undefined,
@@ -215,6 +234,25 @@ export async function PATCH(req: Request) {
                         postId: validatedData.id,
                         question: faq.question,
                         answer: faq.answer,
+                        order: index,
+                    })),
+                });
+            }
+        }
+
+        if (validatedData.itemListItems !== undefined) {
+            // Delete existing ItemListItems
+            await prisma.itemListItem.deleteMany({
+                where: { postId: validatedData.id },
+            });
+
+            // Create new ItemListItems if provided
+            if (validatedData.itemListItems.length > 0) {
+                await prisma.itemListItem.createMany({
+                    data: validatedData.itemListItems.map((item: any, index: number) => ({
+                        postId: validatedData.id,
+                        name: item.name,
+                        url: item.url,
                         order: index,
                     })),
                 });

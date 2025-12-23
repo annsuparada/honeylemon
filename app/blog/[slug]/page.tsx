@@ -10,7 +10,7 @@ import Breadcrumb from '@/app/components/Breadcrumb';
 import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
 import { VscError } from "react-icons/vsc";
 import { getBaseOpenGraph, getCanonicalUrl, getOpenGraphImages, getRobotsMetadata, getTwitterMetadata } from '@/app/lip/metadata-helpers';
-import { generateArticleStructuredData, generateFAQStructuredData, generateBreadcrumbListStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
+import { generateArticleStructuredData, generateFAQStructuredData, generateBreadcrumbListStructuredData, generateItemListStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
@@ -89,6 +89,7 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
   const articleStructuredData = generateArticleStructuredData(post);
   const faqStructuredData = generateFAQStructuredData(post.faqs);
   const breadcrumbStructuredData = generateBreadcrumbListStructuredData(post);
+  const itemListStructuredData = generateItemListStructuredData(post.itemListItems);
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://travomad.vercel.app';
 
@@ -114,6 +115,15 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(faqStructuredData)
+          }}
+        />
+      )}
+      {/* ItemList Structured Data for Rich Results */}
+      {itemListStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(itemListStructuredData)
           }}
         />
       )}

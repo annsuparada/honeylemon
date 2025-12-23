@@ -40,6 +40,7 @@ const WritePage = () => {
     const [postId, setPostId] = useState<string | null>(null);
     const [pageType, setPageType] = useState<PageType>('ARTICLE');
     const [faqs, setFaqs] = useState<Array<{ question: string; answer: string }>>([]);
+    const [itemListItems, setItemListItems] = useState<Array<{ name: string; url: string }>>([]);
 
     const pageTypeOptions = Object.values(PageType).map(type => ({
         label: type,
@@ -90,6 +91,16 @@ const WritePage = () => {
                         setFaqs([]);
                     }
 
+                    // Load ItemListItems
+                    if (post.itemListItems && post.itemListItems.length > 0) {
+                        setItemListItems(post.itemListItems.map((item: { name: string; url: string }) => ({
+                            name: item.name,
+                            url: item.url
+                        })));
+                    } else {
+                        setItemListItems([]);
+                    }
+
                     // Merge post tags with existing tags to ensure all selected tags are available
                     if (post.tags && post.tags.length > 0) {
                         setTags(prevTags => {
@@ -126,6 +137,7 @@ const WritePage = () => {
             setPageType("ARTICLE");
             setSelectedTagIds([]);
             setFaqs([]);
+            setItemListItems([]);
         }
     }, [slug]);
 
@@ -199,6 +211,7 @@ const WritePage = () => {
             isPublish,
             tagIds: selectedTagIds,
             faqs: faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
+            itemListItems: itemListItems.filter(item => item.name.trim() && item.url.trim()),
             createPost,
             updatePost,
             router,
@@ -255,6 +268,8 @@ const WritePage = () => {
                     onCreateTag={handleCreateTag}
                     faqs={faqs}
                     onChangeFaqs={setFaqs}
+                    itemListItems={itemListItems}
+                    onChangeItemListItems={setItemListItems}
                 />
 
                 {isClient && (

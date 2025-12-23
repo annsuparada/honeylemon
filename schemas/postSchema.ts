@@ -16,6 +16,10 @@ const postSchema = z.object({
     question: z.string().min(1, "Question is required"),
     answer: z.string().min(1, "Answer is required"),
   })).optional(),
+  itemListItems: z.array(z.object({
+    name: z.string().min(1, "Name is required"),
+    url: z.string().url("Invalid URL"),
+  })).optional(),
 });
 
 
@@ -33,6 +37,10 @@ export const updatePostSchema = z.object({
   faqs: z.array(z.object({
     question: z.string().min(1, "Question is required"),
     answer: z.string().min(1, "Answer is required"),
+  })).optional(),
+  itemListItems: z.array(z.object({
+    name: z.string().min(1, "Name is required"),
+    url: z.string().url("Invalid URL"),
   })).optional(),
 });
 

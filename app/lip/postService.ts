@@ -119,7 +119,28 @@ export async function getPostBySlug(slug: string) {
                     },
                 },
             },
-            faqs: true,
+            faqs: {
+                select: {
+                    id: true,
+                    question: true,
+                    answer: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+            itemListItems: {
+                select: {
+                    id: true,
+                    name: true,
+                    url: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
         },
     });
 
@@ -154,6 +175,7 @@ export async function getPostBySlug(slug: string) {
         })),
         type: post.type,
         faqs: post.faqs || [],
+        itemListItems: post.itemListItems || [],
     } satisfies BlogPost;
 }
 

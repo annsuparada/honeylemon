@@ -59,6 +59,12 @@ export interface BlogPost {
         answer: string;
         order: number;
     }>;
+    itemListItems?: Array<{
+        id: string;
+        name: string;
+        url: string;
+        order: number;
+    }>;
 }
 
 
