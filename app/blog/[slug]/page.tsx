@@ -104,26 +104,75 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
     ? `${post.author.name}${post.author.lastName ? ' ' + post.author.lastName : ''}`
     : post.author.username;
 
-  // Format dates to YYYY-MM-DD format
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
+  // Format dates to ISO 8601 format (full format with time)
+  const formatDateISO = (dateString: string) => {
+    return new Date(dateString).toISOString();
   };
 
-  const articleUrl = `${process.env.NEXT_PUBLIC_API_URL || 'https://travomad.vercel.app'}/blog/${post.slug}`;
-  const articleImage = post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://travomad.vercel.app';
+  const articleUrl = `${baseUrl}/blog/${post.slug}`;
+  const authorUrl = `${baseUrl}/author/${post.author.username || post.author.id}`;
+
+  // Get base image URL
+  const baseImage = post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp';
+
+  // Generate multiple images in different aspect ratios (16:9, 4:3, 1:1)
+  // For Cloudinary images, we can add transformations. For other sources, use the same image.
+  // Minimum 1200px wide requirement, at least 50K pixels (1200x675 = 810K pixels ✓)
+  const generateImageVariants = (imageUrl: string) => {
+    // If it's a Cloudinary URL, add transformations for different aspect ratios
+    if (imageUrl.includes('cloudinary.com')) {
+      return [
+        {
+          url: `${imageUrl.replace(/\/upload\//, '/upload/w_1200,h_675,c_fill,g_auto/')}`,
+          width: 1200,
+          height: 675 // 16:9 aspect ratio
+        },
+        {
+          url: `${imageUrl.replace(/\/upload\//, '/upload/w_1200,h_900,c_fill,g_auto/')}`,
+          width: 1200,
+          height: 900 // 4:3 aspect ratio
+        },
+        {
+          url: `${imageUrl.replace(/\/upload\//, '/upload/w_1200,h_1200,c_fill,g_auto/')}`,
+          width: 1200,
+          height: 1200 // 1:1 aspect ratio
+        }
+      ];
+    }
+    // For non-Cloudinary images, return the same image 3 times with proper dimensions
+    // Note: In production, you might want to generate actual variants using an image service
+    return [
+      { url: imageUrl, width: 1200, height: 675 }, // 16:9
+      { url: imageUrl, width: 1200, height: 900 }, // 4:3
+      { url: imageUrl, width: 1200, height: 1200 } // 1:1
+    ];
+  };
+
+  const articleImages = generateImageVariants(baseImage);
+
+  // Author image URL (profile picture or fallback)
+  const authorImage = post.author.profilePicture ||
+    'https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png';
 
   const articleStructuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": post.title,
     "description": post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad",
-    "image": articleImage,
-    "datePublished": formatDate(post.createdAt),
-    "dateModified": formatDate(post.updatedAt),
+    "image": articleImages.map(img => ({
+      "@type": "ImageObject",
+      "url": img.url,
+      "width": img.width,
+      "height": img.height
+    })),
+    "datePublished": formatDateISO(post.createdAt),
+    "dateModified": formatDateISO(post.updatedAt),
     "author": {
-      "@type": "Organization",
-      "name": "Travomad"
+      "@type": "Person",
+      "name": authorName,
+      "url": authorUrl,
+      "image": authorImage
     },
     "publisher": {
       "@type": "Organization",
