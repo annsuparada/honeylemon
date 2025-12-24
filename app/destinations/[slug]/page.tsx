@@ -13,10 +13,11 @@ import { getBaseOpenGraph, getCanonicalUrl, getOpenGraphImages, getRobotsMetadat
 import { generateArticleStructuredData, generateFAQStructuredData, generateBreadcrumbListStructuredData, generateItemListStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
 import { extractHeadings, addIdsToHeadings } from '@/app/lip/toc-helpers';
 import TableOfContents from '@/app/components/TableOfContents';
+import { PageType } from '@prisma/client';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
-  const posts = await getPublishedPosts();
+  const posts = await getPublishedPosts(undefined, undefined, PageType.DESTINATION);
   return posts.map((post: { slug: string; }) => ({ slug: post.slug }));
 }
 const ShareButton = dynamic(() => import("../../components/ShareButton"), { ssr: false });
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   const tagNames = post.tags.map(tag => tag.name);
   const keywords = [post.category.name, ...tagNames, "travel"].join(', ');
-  const url = `/blog/${post.slug}`;
+  const url = `/destinations/${post.slug}`;
   const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${url}`;
 
   return {
@@ -70,10 +71,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function SingleBlogPage({ params }: { params: { slug: string } }) {
+export default async function SingleDestinationPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const post = await getPostBySlug(slug);
-  const blogPosts = await getPublishedPosts(6, slug);
+  const destinationPosts = await getPublishedPosts(6, slug, PageType.DESTINATION);
 
   if (!post) {
     return <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white">
@@ -155,8 +156,8 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
             <div className="mb-4">
               <Breadcrumb
                 items={[
-                  { name: 'Blog', href: '/blog', current: false },
-                  { name: post.title, href: `/blog/${post.slug}`, current: true },
+                  { name: 'Destinations', href: '/destinations', current: false },
+                  { name: post.title, href: `/destinations/${post.slug}`, current: true },
                 ]}
               />
             </div>
@@ -242,9 +243,9 @@ export default async function SingleBlogPage({ params }: { params: { slug: strin
       <div className="mx-auto py-10 px-4">
         {/* Blog Section */}
         <BlogSection
-          posts={blogPosts}
-          title="Latest Travel Guides"
-          subTitle="Fresh tips, itineraries, and destination insights"
+          posts={destinationPosts}
+          title="More Destinations"
+          subTitle="Discover more travel destinations and guides"
           threeColumns={true}
         />
       </div>

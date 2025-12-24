@@ -1,6 +1,7 @@
 // utils/postSaveHandler.ts
 
 import { Dispatch, SetStateAction } from "react";
+import { getPostRoute } from "../routeHelpers";
 
 export interface SavePostParams {
     title: string;
@@ -93,7 +94,12 @@ export const handleSavePost = async ({
         if (result.success) {
             setMessage({ type: 'success', text: 'Post saved successfully!' });
             const param = slug || result.post?.slug;
-            router.push(isPublish ? `/blog/${param}` : '/dashboard/blogs');
+            if (isPublish && param) {
+                const route = getPostRoute(pageType || result.post?.type, param);
+                router.push(route);
+            } else {
+                router.push('/dashboard/blogs');
+            }
         } else {
             const fallback = 'Failed to save post. Try again later.';
             const message = result.validationErrors?.[0]?.message || result.error || fallback;
