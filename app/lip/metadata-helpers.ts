@@ -1,4 +1,7 @@
 // /lib/metadata-helpers.ts
+import { Metadata } from 'next';
+import { BlogPost } from '@/app/types';
+import { formatAuthorName } from './structured-data-helpers';
 
 export interface BaseMetadataProps {
     title: string;
@@ -71,5 +74,57 @@ export function getBaseOpenGraph(title: string, description: string, url: string
         url: url,
         title: title,
         description: description,
+    };
+}
+
+/**
+ * Generate metadata for a post page
+ */
+export async function generatePostMetadata(
+    slug: string,
+    routePrefix: string,
+    getPost: (slug: string) => Promise<BlogPost | null>
+): Promise<Metadata> {
+    const post = await getPost(slug);
+
+    if (!post) {
+        return { title: "Post Not Found", description: "This post does not exist." };
+    }
+
+    const authorName = formatAuthorName(post.author);
+    const tagNames = post.tags.map(tag => tag.name);
+    const keywords = [post.category.name, ...tagNames, "travel"].join(', ');
+    const url = `${routePrefix}/${post.slug}`;
+    const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${url}`;
+
+    return {
+        title: `${post.title} | Travomad`,
+        description: post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad",
+        keywords: keywords,
+        authors: [{ name: authorName }],
+        creator: authorName,
+        publisher: "Travomad",
+        category: post.category.name,
+
+        openGraph: {
+            ...getBaseOpenGraph(post.title, post.description || '', fullUrl),
+            type: "article",
+            publishedTime: post.createdAt,
+            modifiedTime: post.updatedAt,
+            authors: [authorName],
+            section: post.category.name,
+            tags: [post.category.name, ...tagNames],
+            images: getOpenGraphImages(post.image, post.title),
+        },
+
+        twitter: getTwitterMetadata(
+            post.title,
+            post.description || "Discover travel tips and destination guides on Travomad",
+            post.image
+        ),
+
+        alternates: getCanonicalUrl(url),
+
+        robots: getRobotsMetadata(post.status === 'PUBLISHED'),
     };
 }
