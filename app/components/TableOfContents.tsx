@@ -81,10 +81,10 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
             setIsMobileOpen(false) // Close mobile menu after click
           }}
           className={`block text-sm py-1 px-2 rounded transition-colors ${heading.level === 2
-              ? 'font-medium'
-              : heading.level === 3
-                ? 'ml-4 text-gray-600'
-                : 'ml-8 text-gray-500 text-xs'
+            ? 'font-medium'
+            : heading.level === 3
+              ? 'ml-4 text-gray-600'
+              : 'ml-8 text-gray-500 text-xs'
             } ${activeId === heading.id
               ? 'bg-primary text-primary-content'
               : 'hover:bg-base-200 text-gray-700'
@@ -100,7 +100,7 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     <>
       {/* Desktop Sidebar Version */}
       <div className="sticky top-24 hidden lg:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto">
-        <div className="bg-base-100 border border-base-300 rounded-lg p-4 shadow-sm">
+        <div className="bg-base-100 border border-base-300 rounded-sm p-4 shadow-xl">
           <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
             Table of Contents
           </h3>
