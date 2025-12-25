@@ -72,7 +72,7 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                                 <FaEdit /> Edit
                             </Link>
                             <Link
-                                href={`/blog/${post.slug}`}
+                                href={post.status === 'DRAFT' ? `/blog/draft/${post.slug}` : `/blog/${post.slug}`}
                                 className="btn btn-outline btn-info btn-sm rounded"
                             >
                                 <FaRegEye /> View
