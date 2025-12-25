@@ -21,6 +21,7 @@ export async function generateStaticParams() {
   return posts.map((post: { slug: string; }) => ({ slug: post.slug }));
 }
 const ShareButton = dynamic(() => import("../../components/ShareButton"), { ssr: false });
+const EditPostButton = dynamic(() => import("../../components/EditPostButton"), { ssr: false });
 const CTA = dynamic(() => import("../../components/CTA"), { ssr: false });
 const BlogSection = dynamic(() => import("../../components/BlogSection"), { ssr: false });
 const FAQSection = dynamic(() => import("../../components/FAQSection"), { ssr: false });
@@ -167,7 +168,10 @@ export default async function SingleItineraryPage({ params }: { params: { slug: 
                 <div className="badge badge-soft badge-neutral rounded-sm p-3">
                   {post.category?.name}
                 </div>
-                <ShareButton title={post.title} />
+                <div className="flex items-center gap-3">
+                  <EditPostButton authorId={post.author.id} slug={post.slug} />
+                  <ShareButton title={post.title} />
+                </div>
               </div>
             </header>
 
