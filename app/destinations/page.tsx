@@ -70,7 +70,6 @@ export default async function DestinationPage() {
                 imageUrl="https://images.pexels.com/photos/6965514/pexels-photo-6965514.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             />
 
-            <CardSection cardData={regions} title="Browse by Region" subtitle="Browse by Region" />
             <CardSection cardData={destinations} title="Popular Destinations" subtitle="Top travel spots our readers love" />
             <CTA
                 title="Ready to Book?"
@@ -83,3 +82,56 @@ export default async function DestinationPage() {
         </div>
     )
 }
+
+// ┌─────────────────────────────────────────────────┐
+// │  HERO SECTION                                   │
+// │  Explore Our Destinations                       │
+// │  Expert guides to the world's best places      │
+// └─────────────────────────────────────────────────┘
+
+// ┌─────────────────────────────────────────────────┐
+// │  Quick intro paragraph (100 words):             │
+// │  "Whether you're dreaming of Mexico's beaches,  │
+// │   Japan's culture, or Italy's cuisine, we've   │
+// │   got you covered with expert guides..."       │
+// └─────────────────────────────────────────────────┘
+
+// BROWSE BY DESTINATION
+// ┌──────────┬──────────┬──────────┐
+// │ [MEXICO] │ [JAPAN]  │ [ITALY]  │
+// │ Image    │ Image    │ Image    │
+// │ 🇲🇽      │ 🇯🇵      │ 🇮🇹      │
+// │ Mexico   │ Japan    │ Italy    │
+// │ Beaches, │ Culture, │ Food,    │
+// │ ruins &  │ temples  │ art &    │
+// │ tacos    │ & tech   │ history  │
+// │          │          │          │
+// │ [Explore]│ [Explore]│ [Explore]│
+// └──────────┴──────────┴──────────┘
+
+// ┌──────────┬──────────┬──────────┐
+// │[THAILAND]│[PORTUGAL]│[VIETNAM] │
+// │ Image    │ Image    │ Image    │
+// │ 🇹🇭      │ 🇵🇹      │ 🇻🇳      │
+// │ Thailand │ Portugal │ Vietnam  │
+// │ Islands, │ Beaches, │ Food,    │
+// │ food &   │ wine &   │ culture  │
+// │ temples  │ culture  │ & history│
+// │          │          │          │
+// │ [Explore]│ [Explore]│ [Explore]│
+// └──────────┴──────────┴──────────┘
+
+// ┌─────────────────────────────────────────────────┐
+// │  WHY TRAVOMAD?                                  │
+// │  [Stats/Trust Indicators]                       │
+// └─────────────────────────────────────────────────┘
+
+// ┌─────────────────────────────────────────────────┐
+// │  POPULAR TRAVEL GUIDES                          │
+// │  [Cards linking to thematic pillars]            │
+// └─────────────────────────────────────────────────┘
+
+// ┌─────────────────────────────────────────────────┐
+// │  COMING SOON                                    │
+// │  🇬🇷 Greece  🇪🇸 Spain  🇫🇷 France            │
+// └─────────────────────────────────────────────────┘
