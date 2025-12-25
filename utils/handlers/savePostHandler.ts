@@ -15,6 +15,7 @@ export interface SavePostParams {
     user: { id: string } | null;
     isPublish: boolean;
     tagIds?: string[];
+    tagSlug?: string;
     faqs?: Array<{ question: string; answer: string }>;
     itemListItems?: Array<{ name: string; url: string }>;
     createPost: (data: any) => Promise<any>;
@@ -36,6 +37,7 @@ export const handleSavePost = async ({
     user,
     isPublish,
     tagIds,
+    tagSlug,
     faqs,
     itemListItems,
     createPost,
@@ -79,6 +81,11 @@ export const handleSavePost = async ({
             setMessage({ type: 'error', text: 'Destination pages can only have 1 tag. Please remove extra tags.' });
             return;
         }
+        // Validate tag slug is available when publishing
+        if (isPublish && !tagSlug) {
+            setMessage({ type: 'error', text: 'Tag slug is required for destination pages. Please ensure the tag is properly selected.' });
+            return;
+        }
     }
 
     setLoading(true);
@@ -111,9 +118,12 @@ export const handleSavePost = async ({
             if (isPublish && param) {
                 // For DESTINATION posts, use the tag slug instead of post slug
                 let route: string;
-                if (postType === 'DESTINATION' && result.post?.tags && result.post.tags.length > 0) {
-                    const tagSlug = result.post.tags[0].slug;
+                if (postType === 'DESTINATION' && tagSlug) {
                     route = getPostRoute(postType, param, tagSlug);
+                } else if (postType === 'DESTINATION' && result.post?.tags && result.post.tags.length > 0) {
+                    // Fallback: try to get tag slug from API response if available
+                    const fallbackTagSlug = result.post.tags[0].slug;
+                    route = getPostRoute(postType, param, fallbackTagSlug);
                 } else {
                     route = getPostRoute(postType, param);
                 }

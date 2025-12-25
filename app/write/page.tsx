@@ -198,6 +198,13 @@ const WritePage = () => {
     }
 
     const handleSave = async (isPublish: boolean) => {
+        // Get tag slug for DESTINATION posts
+        let tagSlug: string | undefined;
+        if (pageType === 'DESTINATION' && selectedTagIds.length > 0) {
+            const selectedTag = tags.find(tag => tag.id === selectedTagIds[0]);
+            tagSlug = selectedTag?.slug;
+        }
+
         await handleSavePost({
             title,
             content,
@@ -210,6 +217,7 @@ const WritePage = () => {
             user,
             isPublish,
             tagIds: selectedTagIds,
+            tagSlug,
             faqs: faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
             itemListItems: itemListItems.filter(item => item.name.trim() && item.url.trim()),
             createPost,
