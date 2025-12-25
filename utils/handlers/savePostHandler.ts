@@ -97,6 +97,9 @@ export const handleSavePost = async ({
             if (isPublish && param) {
                 const route = getPostRoute(pageType || result.post?.type, param);
                 router.push(route);
+            } else if (param) {
+                // Redirect to draft preview page
+                router.push(`/blog/draft/${param}`);
             } else {
                 router.push('/dashboard/blogs');
             }
