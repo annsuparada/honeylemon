@@ -85,7 +85,228 @@ export async function getPublishedPosts(
     return posts;
 }
 
+/**
+ * Get featured post for a specific country
+ * Looks for posts with a "featured-[country]" tag first, then falls back to latest post with country tag
+ */
+export async function getFeaturedPostByCountry(countrySlug: string): Promise<BlogPost | null> {
+    const countryName = countrySlug.toLowerCase();
+    
+    // First, try to find a post with "featured-[country]" tag
+    const featuredTagName = `featured-${countryName}`;
+    
+    const featuredPosts = await prisma.post.findMany({
+        where: {
+            status: PostStatus.PUBLISHED,
+            type: PageType.DESTINATION,
+            tags: {
+                some: {
+                    tag: {
+                        OR: [
+                            { slug: featuredTagName },
+                            { name: { equals: featuredTagName, mode: 'insensitive' } }
+                        ]
+                    }
+                }
+            }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                    profilePicture: true,
+                    name: true,
+                    lastName: true,
+                },
+            },
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                },
+            },
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
+                },
+            },
+            faqs: {
+                select: {
+                    id: true,
+                    question: true,
+                    answer: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+            itemListItems: {
+                select: {
+                    id: true,
+                    name: true,
+                    url: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+        },
+    });
 
+    // If found featured post, return it
+    if (featuredPosts.length > 0) {
+        const post = featuredPosts[0];
+        return {
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            content: post.content,
+            description: post.description ?? undefined,
+            image: post.image ?? undefined,
+            status: post.status as PostStatus,
+            createdAt: post.createdAt.toISOString(),
+            updatedAt: post.updatedAt.toISOString(),
+            category: {
+                name: post.category.name,
+                slug: post.category.slug,
+            },
+            categoryId: post.category.id,
+            author: {
+                id: post.author.id,
+                name: post.author.name ?? '',
+                lastName: post.author.lastName ?? undefined,
+                username: post.author.username,
+                profilePicture: post.author.profilePicture ?? undefined,
+            },
+            tags: post.tags.map(pt => ({
+                id: pt.tag.id,
+                name: pt.tag.name,
+                slug: pt.tag.slug,
+            })),
+            type: post.type,
+            faqs: post.faqs || [],
+            itemListItems: post.itemListItems || [],
+        };
+    }
+
+    // Fallback: Get latest post with country tag
+    const countryPosts = await prisma.post.findMany({
+        where: {
+            status: PostStatus.PUBLISHED,
+            type: PageType.DESTINATION,
+            tags: {
+                some: {
+                    tag: {
+                        OR: [
+                            { slug: countryName },
+                            { name: { equals: countryName, mode: 'insensitive' } }
+                        ]
+                    }
+                }
+            }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                    profilePicture: true,
+                    name: true,
+                    lastName: true,
+                },
+            },
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                },
+            },
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
+                },
+            },
+            faqs: {
+                select: {
+                    id: true,
+                    question: true,
+                    answer: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+            itemListItems: {
+                select: {
+                    id: true,
+                    name: true,
+                    url: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+        },
+    });
+
+    if (countryPosts.length === 0) return null;
+
+    const post = countryPosts[0];
+    return {
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        description: post.description ?? undefined,
+        image: post.image ?? undefined,
+        status: post.status as PostStatus,
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+        category: {
+            name: post.category.name,
+            slug: post.category.slug,
+        },
+        categoryId: post.category.id,
+        author: {
+            id: post.author.id,
+            name: post.author.name ?? '',
+            lastName: post.author.lastName ?? undefined,
+            username: post.author.username,
+            profilePicture: post.author.profilePicture ?? undefined,
+        },
+        tags: post.tags.map(pt => ({
+            id: pt.tag.id,
+            name: pt.tag.name,
+            slug: pt.tag.slug,
+        })),
+        type: post.type,
+        faqs: post.faqs || [],
+        itemListItems: post.itemListItems || [],
+    };
+}
 
 export async function getPostBySlug(slug: string) {
     const post = await prisma.post.findUnique({

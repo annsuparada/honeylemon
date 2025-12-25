@@ -83,33 +83,61 @@ export function generateFAQStructuredData(faqs?: BlogPost['faqs']) {
 /**
  * Generate BreadcrumbList structured data
  */
-export function generateBreadcrumbListStructuredData(post: BlogPost) {
+export function generateBreadcrumbListStructuredData(
+  post: BlogPost,
+  routePrefix: string = '/blog',
+  countryName?: string,
+  countrySlug?: string
+) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
-  const articleUrl = `${baseUrl}/blog/${post.slug}`;
+  
+  // Determine breadcrumb label based on route prefix
+  const breadcrumbLabel = routePrefix === '/destinations' ? 'Destinations' : 
+                          routePrefix === '/itineraries' ? 'Itineraries' : 
+                          'Blog';
+  
+  // Determine article URL - use /post/ for destinations to avoid conflicts
+  const articleUrl = routePrefix === '/destinations' 
+    ? `${baseUrl}${routePrefix}/post/${post.slug}`
+    : `${baseUrl}${routePrefix}/${post.slug}`;
+
+  const items = [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": `${baseUrl}/`
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": breadcrumbLabel,
+      "item": `${baseUrl}${routePrefix}`
+    }
+  ];
+
+  // Add country if provided
+  if (countryName && countrySlug) {
+    items.push({
+      "@type": "ListItem",
+      "position": items.length + 1,
+      "name": countryName,
+      "item": `${baseUrl}${routePrefix}/${countrySlug}`
+    });
+  }
+
+  // Add post title
+  items.push({
+    "@type": "ListItem",
+    "position": items.length + 1,
+    "name": post.title,
+    "item": articleUrl
+  });
 
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": `${baseUrl}/`
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Blog",
-        "item": `${baseUrl}/blog`
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": post.title,
-        "item": articleUrl
-      }
-    ]
+    "itemListElement": items
   };
 }
 

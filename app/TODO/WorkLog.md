@@ -5,6 +5,7 @@
 ## 📋 Table of Contents
 
 - [Project Overview](#project-overview)
+- [Pending Features](#pending-features)
 - [Completed Features](#completed-features)
   - [Core Functionality](#core-functionality)
   - [Dashboard Features](#dashboard-features)
@@ -19,7 +20,6 @@
   - [Table of Contents](#table-of-contents)
   - [Error Handling](#error-handling)
 - [Structured Data Implementation](#structured-data-implementation)
-- [Pending Features](#pending-features)
 - [Testing Status](#testing-status)
 
 ---
@@ -27,6 +27,38 @@
 ## 🎯 Project Overview
 
 This work log documents the development progress, feature implementations, and technical achievements of the Travomad platform. The project follows a systematic approach to building a modern, SEO-optimized travel blog with comprehensive content management capabilities.
+
+---
+
+## 📝 Pending Features
+
+### High Priority
+- [ ] **Destinations page**: 6 contries
+  - [ ] Mexico
+  - [ ] Japan
+  - [ ] Italy
+  - [ ] Thailand
+  - [ ] Portugal
+  - [ ] Vietnam
+- [ ] **Homepage Enhancement**: Top hotel picks section
+- [ ] **Itineraries page**: Create more contents
+- [ ] **Blog page**: Create category and call to action
+- [ ] **Relate post feature**: show relate posts for each single blog page
+- [ ] **Tag Navigation**: Make tags clickable for filtering
+- [ ] **Production Deployment**: Deploy to travomad.com on Vercel
+
+### Medium Priority
+- [ ] **Search Functionality**: Full-text search (title/description)
+- [ ] **Main dashboard display**: Display important data
+- [ ] **Scheduled Publishing**: Content scheduling system
+- [ ] **SEO keywords on dashboard**: I don't know what to to yet
+- [ ] **Password Recovery**: Enhanced password recovery workflow
+
+### Future Enhancements
+- [ ] **Internal Linking**: Automatic internal link suggestions
+- [ ] **Analytics Integration**: User behavior tracking
+- [ ] **Performance Optimization**: Further Core Web Vitals improvements
+- [ ] **Dynamic route feature**: Admin can create dynamic routes on dashboard
 
 ---
 
@@ -243,25 +275,6 @@ Increase structured data validation from **1 valid item → 4 valid items** in G
 - **Implementation**: 30-60 minutes
 - **Google Detection**: 1-7 days
 - **Visible in Search**: 2-4 weeks
-
----
-
-## 📝 Pending Features
-
-### High Priority
-- [ ] **Homepage Enhancement**: Top hotel picks section
-- [ ] **Production Deployment**: Deploy to travomad.com on Vercel
-- [ ] **Search Functionality**: Full-text search (title/description)
-- [ ] **Tag Navigation**: Make tags clickable for filtering
-
-### Medium Priority
-- [ ] **Scheduled Publishing**: Content scheduling system
-- [ ] **Password Recovery**: Enhanced password recovery workflow
-
-### Future Enhancements
-- [ ] **Internal Linking**: Automatic internal link suggestions
-- [ ] **Analytics Integration**: User behavior tracking
-- [ ] **Performance Optimization**: Further Core Web Vitals improvements
 
 ---
 

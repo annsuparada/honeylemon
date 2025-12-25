@@ -23,6 +23,8 @@ interface SinglePostPageProps {
     breadcrumbLabel: string;
     blogSectionTitle: string;
     blogSectionSubtitle: string;
+    countryName?: string;
+    countrySlug?: string;
 }
 
 export default function SinglePostPage({
@@ -32,6 +34,8 @@ export default function SinglePostPage({
     breadcrumbLabel,
     blogSectionTitle,
     blogSectionSubtitle,
+    countryName,
+    countrySlug,
 }: SinglePostPageProps) {
     if (!post) {
         return (
@@ -62,7 +66,12 @@ export default function SinglePostPage({
     // Generate structured data for SEO
     const articleStructuredData = generateArticleStructuredData(post);
     const faqStructuredData = generateFAQStructuredData(post.faqs);
-    const breadcrumbStructuredData = generateBreadcrumbListStructuredData(post);
+    const breadcrumbStructuredData = generateBreadcrumbListStructuredData(
+        post,
+        routePrefix,
+        countryName,
+        countrySlug
+    );
     const itemListStructuredData = generateItemListStructuredData(post.itemListItems);
 
     return (
@@ -121,7 +130,10 @@ export default function SinglePostPage({
                             <Breadcrumb
                                 items={[
                                     { name: breadcrumbLabel, href: routePrefix, current: false },
-                                    { name: post.title, href: `${routePrefix}/${post.slug}`, current: true },
+                                    ...(countryName && countrySlug
+                                        ? [{ name: countryName, href: `${routePrefix}/${countrySlug}`, current: false }]
+                                        : []),
+                                    { name: post.title, href: `${routePrefix}/post/${post.slug}`, current: true },
                                 ]}
                             />
                         </div>
