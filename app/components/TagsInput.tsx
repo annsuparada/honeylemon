@@ -14,6 +14,8 @@ type Props = {
     selectedTagIds: string[]
     onChange: (tagIds: string[]) => void
     onCreateTag?: (name: string) => Promise<Tag | null>
+    maxTags?: number
+    disabled?: boolean
 }
 
 const TagsInput = ({
@@ -22,6 +24,8 @@ const TagsInput = ({
     selectedTagIds,
     onChange,
     onCreateTag,
+    maxTags,
+    disabled = false,
 }: Props) => {
     const [creating, setCreating] = useState(false)
     const [newTagName, setNewTagName] = useState('')
@@ -40,7 +44,12 @@ const TagsInput = ({
     }, [searchTerm, availableTags.length])
 
     const handleAddTag = (tagId: string) => {
+        if (disabled) return;
         if (!selectedTagIds.includes(tagId)) {
+            // Check maxTags limit
+            if (maxTags && selectedTagIds.length >= maxTags) {
+                return;
+            }
             onChange([...selectedTagIds, tagId])
         }
         setSearchTerm('')
@@ -128,15 +137,18 @@ const TagsInput = ({
                 <input
                     type="text"
                     className="input input-bordered w-full"
-                    placeholder="Type to search or add tags..."
+                    placeholder={maxTags && selectedTagIds.length >= maxTags
+                        ? `Maximum ${maxTags} tag${maxTags === 1 ? '' : 's'} allowed`
+                        : "Type to search or add tags..."}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setCreating(false)}
                     onKeyDown={handleKeyDown}
+                    disabled={disabled || (maxTags !== undefined && selectedTagIds.length >= maxTags)}
                 />
 
                 {/* Dropdown with available tags */}
-                {searchTerm && availableTags.length > 0 && (
+                {searchTerm && availableTags.length > 0 && !disabled && (!maxTags || selectedTagIds.length < maxTags) && (
                     <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                         {availableTags.map((tag, index) => (
                             <div
@@ -156,7 +168,7 @@ const TagsInput = ({
             </div>
 
             {/* Create New Tag Option */}
-            {onCreateTag && (
+            {onCreateTag && !disabled && (!maxTags || selectedTagIds.length < maxTags) && (
                 <div className="mt-2">
                     {!creating ? (
                         <button
@@ -202,6 +214,12 @@ const TagsInput = ({
                         </div>
                     )}
                 </div>
+            )}
+            {/* Max tags warning */}
+            {maxTags && selectedTagIds.length >= maxTags && (
+                <p className="text-sm text-warning mt-2">
+                    Maximum {maxTags} tag{maxTags === 1 ? '' : 's'} allowed for this page type.
+                </p>
             )}
         </div>
     )

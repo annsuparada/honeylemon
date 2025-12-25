@@ -131,9 +131,8 @@ export default function SinglePostPage({
                                 items={[
                                     { name: breadcrumbLabel, href: routePrefix, current: false },
                                     ...(countryName && countrySlug
-                                        ? [{ name: countryName, href: `${routePrefix}/${countrySlug}`, current: false }]
-                                        : []),
-                                    { name: post.title, href: `${routePrefix}/post/${post.slug}`, current: true },
+                                        ? [{ name: countryName, href: `${routePrefix}/${countrySlug}`, current: true }]
+                                        : [{ name: post.title, href: `${routePrefix}/post/${post.slug}`, current: true }]),
                                 ]}
                             />
                         </div>

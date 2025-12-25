@@ -18,7 +18,9 @@ const Home = () => {
     async function loadPosts() {
       setLoading(true)
       const loadedPosts = await fetchPosts("PUBLISHED", 6)
-      setPosts(loadedPosts)
+      // Only show ARTICLE posts on the home page
+      const blogPosts = loadedPosts.filter((post: BlogPost) => post.type === 'ARTICLE')
+      setPosts(blogPosts)
       setLoading(false)
     }
 

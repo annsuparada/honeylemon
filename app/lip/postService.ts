@@ -400,3 +400,111 @@ export async function getPostBySlug(slug: string) {
     } satisfies BlogPost;
 }
 
+/**
+ * Get destination post by tag slug
+ * For DESTINATION page type, we use the tag slug (country name) as the route
+ */
+export async function getDestinationPostByTagSlug(tagSlug: string): Promise<BlogPost | null> {
+    const post = await prisma.post.findFirst({
+        where: {
+            type: PageType.DESTINATION,
+            status: PostStatus.PUBLISHED,
+            tags: {
+                some: {
+                    tag: {
+                        slug: tagSlug.toLowerCase(),
+                    },
+                },
+            },
+        },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    name: true,
+                    lastName: true,
+                    username: true,
+                    profilePicture: true,
+                },
+            },
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                },
+            },
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
+                },
+            },
+            faqs: {
+                select: {
+                    id: true,
+                    question: true,
+                    answer: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+            itemListItems: {
+                select: {
+                    id: true,
+                    name: true,
+                    url: true,
+                    order: true,
+                },
+                orderBy: {
+                    order: 'asc',
+                },
+            },
+        },
+        orderBy: {
+            updatedAt: 'desc', // Get the most recently updated destination post for this country
+        },
+    });
+
+    if (!post) return null;
+
+    return {
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        description: post.description ?? undefined,
+        image: post.image ?? undefined,
+        status: post.status as PostStatus,
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+        category: {
+            name: post.category.name,
+            slug: post.category.slug,
+        },
+        categoryId: post.category.id,
+        author: {
+            id: post.author.id,
+            name: post.author.name ?? '',
+            lastName: post.author.lastName ?? undefined,
+            username: post.author.username,
+            profilePicture: post.author.profilePicture ?? undefined,
+        },
+        tags: post.tags.map(pt => ({
+            id: pt.tag.id,
+            name: pt.tag.name,
+            slug: pt.tag.slug,
+        })),
+        type: post.type,
+        faqs: post.faqs || [],
+        itemListItems: post.itemListItems || [],
+    } satisfies BlogPost;
+}
+

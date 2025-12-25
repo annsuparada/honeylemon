@@ -69,6 +69,18 @@ export const handleSavePost = async ({
         return;
     }
 
+    // Validate DESTINATION page type requires exactly 1 tag
+    if (pageType === 'DESTINATION') {
+        if (!tagIds || tagIds.length === 0) {
+            setMessage({ type: 'error', text: 'Destination pages require exactly 1 tag (the country name).' });
+            return;
+        }
+        if (tagIds.length > 1) {
+            setMessage({ type: 'error', text: 'Destination pages can only have 1 tag. Please remove extra tags.' });
+            return;
+        }
+    }
+
     setLoading(true);
     setMessage(null);
 
@@ -93,9 +105,18 @@ export const handleSavePost = async ({
 
         if (result.success) {
             setMessage({ type: 'success', text: 'Post saved successfully!' });
+            const postType = pageType || result.post?.type;
             const param = slug || result.post?.slug;
+
             if (isPublish && param) {
-                const route = getPostRoute(pageType || result.post?.type, param);
+                // For DESTINATION posts, use the tag slug instead of post slug
+                let route: string;
+                if (postType === 'DESTINATION' && result.post?.tags && result.post.tags.length > 0) {
+                    const tagSlug = result.post.tags[0].slug;
+                    route = getPostRoute(postType, param, tagSlug);
+                } else {
+                    route = getPostRoute(postType, param);
+                }
                 router.push(route);
             } else if (param) {
                 // Redirect to draft preview page

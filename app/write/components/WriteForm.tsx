@@ -129,17 +129,48 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     label="Page Type"
                     options={pageTypeOptions}
                     selectedValue={pageType}
-                    onChange={(val) => onChange.type(val as PageType)}
+                    onChange={(val) => {
+                        const newType = val as PageType;
+                        // If switching to DESTINATION and multiple tags are selected, keep only the first one
+                        if (newType === 'DESTINATION' && selectedTagIds.length > 1) {
+                            onChange.tags([selectedTagIds[0]]);
+                        }
+                        onChange.type(newType);
+                    }}
                 />
 
                 {/* Tags */}
-                <TagsInput
-                    label="Tags"
-                    tags={tags}
-                    selectedTagIds={selectedTagIds}
-                    onChange={onChange.tags}
-                    onCreateTag={onCreateTag}
-                />
+                <div>
+                    <TagsInput
+                        label="Tags"
+                        tags={tags}
+                        selectedTagIds={selectedTagIds}
+                        onChange={(newTagIds) => {
+                            // Prevent removing the last tag for DESTINATION type
+                            if (pageType === 'DESTINATION' && newTagIds.length === 0 && selectedTagIds.length > 0) {
+                                return; // Don't allow removing the last tag
+                            }
+                            onChange.tags(newTagIds);
+                        }}
+                        onCreateTag={onCreateTag}
+                        maxTags={pageType === 'DESTINATION' ? 1 : undefined}
+                    />
+                    {pageType === 'DESTINATION' && (
+                        <div className="mt-2 p-3 bg-warning/10 border border-warning/30 rounded-lg">
+                            <p className="text-sm text-warning font-medium">
+                                ⚠️ Destination pages require exactly 1 tag (the country name).
+                            </p>
+                            <p className="text-xs text-gray-600 mt-1">
+                                Changing the tag will change the route to <code className="bg-gray-100 px-1 rounded">/destinations/[tag-slug]</code>
+                            </p>
+                            {selectedTagIds.length > 0 && (
+                                <p className="text-xs text-gray-500 mt-1 italic">
+                                    Current tag: {tags.find(t => t.id === selectedTagIds[0])?.name || 'N/A'}
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 {/* Add Image from URL */}
                 <button
