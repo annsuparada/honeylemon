@@ -23,7 +23,7 @@ describe('handleSavePost', () => {
         jest.clearAllMocks()
     })
 
-    it('successfully saves a draft and navigates to dashboard', async () => {
+    it('successfully saves a draft and navigates to draft preview page', async () => {
         baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'draft-slug' } })
 
         await handleSavePost(baseParams)
@@ -34,6 +34,15 @@ describe('handleSavePost', () => {
             status: 'DRAFT',
             authorId: 'user123'
         }))
+
+        expect(baseParams.router.push).toHaveBeenCalledWith('/blog/draft/draft-slug')
+        expect(baseParams.setMessage).toHaveBeenCalledWith({ type: 'success', text: 'Post saved successfully!' })
+    })
+
+    it('successfully saves a draft without slug and navigates to dashboard', async () => {
+        baseParams.createPost.mockResolvedValue({ success: true, post: {} })
+
+        await handleSavePost(baseParams)
 
         expect(baseParams.router.push).toHaveBeenCalledWith('/dashboard/blogs')
         expect(baseParams.setMessage).toHaveBeenCalledWith({ type: 'success', text: 'Post saved successfully!' })

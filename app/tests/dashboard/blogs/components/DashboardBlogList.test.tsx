@@ -25,11 +25,11 @@ const mockPost: BlogPost = {
         name: 'John',
         lastName: 'Doe',
         profilePicture: '',
-        role: 'ADMIN',
         username: 'johndoe'
     },
     status: 'DRAFT',
-    type: 'ARTICLE'
+    type: 'ARTICLE',
+    tags: []
 }
 
 describe('DashboardBlogList', () => {
@@ -75,7 +75,7 @@ describe('DashboardBlogList', () => {
         expect(screen.getByText('DRAFT')).toBeInTheDocument()
         expect(screen.getByAltText('Test Blog Title')).toHaveAttribute('src', mockPost.image)
         expect(screen.getByRole('link', { name: /edit/i })).toHaveAttribute('href', '/write?slug=test-post')
-        expect(screen.getByRole('link', { name: /view/i })).toHaveAttribute('href', '/blog/test-post')
+        expect(screen.getByRole('link', { name: /view/i })).toHaveAttribute('href', '/blog/draft/test-post')
     })
 
 
@@ -116,7 +116,7 @@ describe('DashboardBlogList', () => {
         expect(editLink).toHaveAttribute('href', `/write?slug=${mockPost.slug}`)
     })
 
-    it('navigates to the blog view page on View link click', () => {
+    it('navigates to the draft preview page on View link click for draft posts', () => {
         render(
             <DashboardBlogList
                 posts={[mockPost]}
@@ -127,6 +127,21 @@ describe('DashboardBlogList', () => {
         )
 
         const viewLink = screen.getByRole('link', { name: /view/i })
-        expect(viewLink).toHaveAttribute('href', `/blog/${mockPost.slug}`)
+        expect(viewLink).toHaveAttribute('href', `/blog/draft/${mockPost.slug}`)
+    })
+
+    it('navigates to the published blog page on View link click for published posts', () => {
+        const publishedPost = { ...mockPost, status: 'PUBLISHED' as const }
+        render(
+            <DashboardBlogList
+                posts={[publishedPost]}
+                loading={false}
+                handleArchive={jest.fn()}
+                handleDelete={jest.fn()}
+            />
+        )
+
+        const viewLink = screen.getByRole('link', { name: /view/i })
+        expect(viewLink).toHaveAttribute('href', `/blog/${publishedPost.slug}`)
     })
 })
