@@ -62,6 +62,18 @@ export default function SinglePostPage({
     // Add IDs to headings and extract them for TOC
     const contentWithIds = addIdsToHeadings(sanitizedContent);
     const headings = extractHeadings(contentWithIds);
+    
+    // Generate FAQ items for TOC
+    const faqItems = post.faqs && post.faqs.length > 0 
+      ? post.faqs.map((faq, index) => {
+          // Generate a slug-friendly ID from the question (matching FAQSection)
+          const faqId = `faq-${faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}-${index}`;
+          return {
+            id: faqId,
+            question: faq.question
+          };
+        })
+      : [];
 
     // Generate structured data for SEO
     const articleStructuredData = generateArticleStructuredData(post);
@@ -121,7 +133,9 @@ export default function SinglePostPage({
             <div className="max-w-screen-2xl mx-auto py-10 px-4">
                 <div className="flex gap-8">
                     {/* Table of Contents - Desktop Sidebar / Mobile Floating Button */}
-                    {headings.length > 0 && <TableOfContents headings={headings} />}
+                    {(headings.length > 0 || faqItems.length > 0) && (
+                      <TableOfContents headings={headings} faqs={faqItems} />
+                    )}
 
                     {/* Main Content Area */}
                     <div className="flex-1">

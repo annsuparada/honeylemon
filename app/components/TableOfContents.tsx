@@ -8,16 +8,23 @@ interface Heading {
   level: number
 }
 
-interface TableOfContentsProps {
-  headings: Heading[]
+interface FAQ {
+  id: string
+  question: string
 }
 
-export default function TableOfContents({ headings }: TableOfContentsProps) {
+interface TableOfContentsProps {
+  headings: Heading[]
+  faqs?: FAQ[]
+}
+
+export default function TableOfContents({ headings, faqs = [] }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    if (headings.length === 0) return
+    const allItems = [...headings, ...(faqs || [])]
+    if (allItems.length === 0) return
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -33,23 +40,23 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
       }
     )
 
-    // Observe all headings
-    headings.forEach((heading) => {
-      const element = document.getElementById(heading.id)
+    // Observe all headings and FAQs
+    allItems.forEach((item) => {
+      const element = document.getElementById(item.id)
       if (element) {
         observer.observe(element)
       }
     })
 
     return () => {
-      headings.forEach((heading) => {
-        const element = document.getElementById(heading.id)
+      allItems.forEach((item) => {
+        const element = document.getElementById(item.id)
         if (element) {
           observer.unobserve(element)
         }
       })
     }
-  }, [headings])
+  }, [headings, faqs])
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault()
@@ -66,12 +73,13 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     }
   }
 
-  if (headings.length === 0) {
+  if (headings.length === 0 && (!faqs || faqs.length === 0)) {
     return null
   }
 
   const tocContent = (
     <nav className="space-y-1">
+      {/* Headings */}
       {headings.map((heading) => (
         <a
           key={heading.id}
@@ -93,6 +101,37 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
           {heading.text}
         </a>
       ))}
+      
+      {/* FAQs Section Separator */}
+      {headings.length > 0 && faqs && faqs.length > 0 && (
+        <div className="my-2 border-t border-base-300"></div>
+      )}
+      
+      {/* FAQs */}
+      {faqs && faqs.length > 0 && (
+        <>
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide py-1 px-2">
+            FAQs
+          </div>
+          {faqs.map((faq) => (
+            <a
+              key={faq.id}
+              href={`#${faq.id}`}
+              onClick={(e) => {
+                handleClick(e, faq.id)
+                setIsMobileOpen(false) // Close mobile menu after click
+              }}
+              className={`block text-sm py-1 px-2 ml-4 rounded transition-colors text-gray-600 ${
+                activeId === faq.id
+                  ? 'bg-primary text-primary-content'
+                  : 'hover:bg-base-200 text-gray-700'
+              }`}
+            >
+              {faq.question}
+            </a>
+          ))}
+        </>
+      )}
     </nav>
   )
 

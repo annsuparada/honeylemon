@@ -48,12 +48,15 @@ export default function FAQSection({
                     )}
 
                     {/* FAQ List */}
-                    <dl className="mt-16 divide-y divide-gray-900/10">
-                        {faqs.map((faq, index) => (
-                            <Disclosure key={index} as="div" className="py-6 first:pt-0 last:pb-0">
-                                <dt>
-                                    <DisclosureButton className="group flex w-full items-start justify-between text-left text-gray-900 hover:text-gray-700 transition-colors">
-                                        <span className="text-base/7 font-semibold">{faq.question}</span>
+                    <dl id="faq-section" className="mt-16 divide-y divide-gray-900/10">
+                        {faqs.map((faq, index) => {
+                            // Generate a slug-friendly ID from the question
+                            const faqId = `faq-${faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}-${index}`;
+                            return (
+                                <Disclosure key={index} as="div" id={faqId} className="py-6 first:pt-0 last:pb-0 scroll-mt-24">
+                                    <dt>
+                                        <DisclosureButton className="group flex w-full items-start justify-between text-left text-gray-900 hover:text-gray-700 transition-colors">
+                                            <span className="text-base/7 font-semibold">{faq.question}</span>
                                         <span className="ml-6 flex h-7 items-center flex-shrink-0">
                                             <PlusSmallIcon aria-hidden="true" className="size-6 group-data-open:hidden" />
                                             <MinusSmallIcon aria-hidden="true" className="size-6 group-not-data-open:hidden" />
@@ -63,8 +66,9 @@ export default function FAQSection({
                                 <DisclosurePanel as="dd" className="mt-2 pr-12">
                                     <p className="text-base/7 text-gray-600">{faq.answer}</p>
                                 </DisclosurePanel>
-                            </Disclosure>
-                        ))}
+                                </Disclosure>
+                            );
+                        })}
                     </dl>
                 </div>
             </div>
