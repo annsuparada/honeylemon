@@ -16,14 +16,20 @@ enum Role {
 enum PostStatus {
   DRAFT
   PUBLISHED
+  SCHEDULED
   ARCHIVED
 }
 
 enum PageType {
-  DEAL
-  ARTICLE
-  DESTINATION
-  ITINERARY
+  PILLAR_ARTICLE    // Your 8000-word comprehensive guides
+  CLUSTER_ARTICLE   // Supporting articles (2000-3000 words)
+  BLOG_POST         // Personal stories, shorter posts
+  LISTICLE          // "Top 10..." posts
+  REVIEW            // Destination/hotel reviews
+  DEAL              // Travel deals (keep this)
+  DESTINATION       // Destination overview pages
+  ITINERARY         // Trip itineraries
+  GUIDE             // How-to guides
 }
 
 model Category {
@@ -53,24 +59,61 @@ model Tag {
 }
 
 model Post {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  authorId      String         @db.ObjectId
-  author        User           @relation(fields: [authorId], references: [id])
-  categoryId    String         @db.ObjectId
-  category      Category       @relation(fields: [categoryId], references: [id])
-  content       String
-  createdAt     DateTime       @default(now())
-  image         String?
-  slug          String         @unique
-  description   String?
-  status        PostStatus     @default(DRAFT)
-  title         String
-  type          PageType       @default(ARTICLE)
-  tags          PostTag[]      @relation("PostToPostTags")
-  updatedAt     DateTime       @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  // Core Content
+  title       String
+  slug        String   @unique
+  content     String   // Main content (Markdown/HTML)
+  excerpt     String?  // Short summary (auto-generate or manual)
+  
+  // Type & Status
+  type        PageType @default(BLOG_POST)
+  status      PostStatus @default(DRAFT)
+  
+  // SEO Fields
+  metaTitle       String?  // Custom SEO title (defaults to title if null)
+  metaDescription String?  // Custom meta description
+  description     String?  // Keep for backward compatibility
+  focusKeyword    String?  // Primary SEO keyword
+  
+  // Media
+  image       String?    // Keep for backward compatibility (use heroImage going forward)
+  heroImage   String?    // Main hero image (Cloudinary URL)
+  images      String[]   // Additional images array (Cloudinary URLs)
+  
+  // Organization & Relations
+  authorId    String     @db.ObjectId
+  author      User       @relation(fields: [authorId], references: [id])
+  categoryId  String     @db.ObjectId
+  category    Category   @relation(fields: [categoryId], references: [id])
+  tags        PostTag[]  @relation("PostToPostTags")
+  
+  // Special Flags
+  featured    Boolean    @default(false)  // Show on homepage
+  pillarPage  Boolean    @default(false)  // Is this pillar content?
+  trending    Boolean    @default(false)  // Trending post
+  
+  // Analytics & Metadata
+  views       Int        @default(0)      // View counter
+  readTime    Int?       // Estimated read time in minutes
+  wordCount   Int?       // Total word count
+  
+  // Dates
+  publishedAt DateTime?  // When it was published
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
   comments      Comment[]
   faqs          FAQ[]          @relation("PostToFAQs")
   itemListItems ItemListItem[] @relation("PostToItemListItems")
+  
+  // Indexes for performance
+  @@index([type, status])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@index([featured])
 }
 
 model FAQ {
