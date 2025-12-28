@@ -11,10 +11,10 @@ Complete checklist of coding tasks to optimize Google SEO for your blog. Priorit
 **Impact:** Immediate UX + SEO boost  
 **Effort:** 2-4 hours
 
-- [ ] Extract H2/H3 headings from content
-- [ ] Add IDs to all headings
-- [ ] Create ToC component with anchor links
-- [ ] Add smooth scroll behavior
+- [x] Extract H2/H3 headings from content
+- [x] Add IDs to all headings
+- [x] Create ToC component with anchor links
+- [x] Add smooth scroll behavior
 
 **Why:** Improves user experience, enables "Jump to" links in Google search results, better content structure.
 
