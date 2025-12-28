@@ -100,7 +100,7 @@ describe('WriteForm Component', () => {
         render(<WriteForm {...defaultProps} />)
 
         expect(screen.getByText('Tech')).toBeInTheDocument()
-        expect(screen.getByText('Article')).toBeInTheDocument()
+        expect(screen.getByText('Blog Post')).toBeInTheDocument()
     })
 
     // You could expand this once SelectInput is testable directly.
