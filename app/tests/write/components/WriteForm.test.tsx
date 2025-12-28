@@ -28,9 +28,9 @@ describe('WriteForm Component', () => {
             { id: 'cat2', name: 'Travel', slug: 'travel' },
         ] as Category[],
         selectedCategory: 'cat1',
-        pageType: PageType.ARTICLE,
+        pageType: PageType.BLOG_POST,
         pageTypeOptions: [
-            { label: 'Article', value: PageType.ARTICLE },
+            { label: 'Blog Post', value: PageType.BLOG_POST },
             { label: 'DESTINATION', value: PageType.DESTINATION },
         ],
         tags: [

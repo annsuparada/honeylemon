@@ -32,7 +32,7 @@ describe('getPublishedPosts', () => {
                 status: PostStatus.PUBLISHED,
                 createdAt: new Date('2023-01-01'),
                 updatedAt: new Date('2023-01-02'),
-                type: PageType.ARTICLE,
+                type: PageType.BLOG_POST,
                 category: {
                     id: 'cat1',
                     name: 'Tech',
@@ -89,7 +89,7 @@ describe('getPublishedPosts', () => {
                 status: PostStatus.PUBLISHED,
                 createdAt: new Date('2023-02-01'),
                 updatedAt: new Date('2023-02-02'),
-                type: PageType.ARTICLE,
+                type: PageType.BLOG_POST,
                 category: {
                     id: 'cat2',
                     name: 'Business',
@@ -132,7 +132,7 @@ describe('getPublishedPosts', () => {
                 status: PostStatus.PUBLISHED,
                 createdAt: new Date('2023-03-01'),
                 updatedAt: new Date('2023-03-02'),
-                type: PageType.ARTICLE,
+                type: PageType.BLOG_POST,
                 category: {
                     id: 'cat3',
                     name: 'Lifestyle',
@@ -149,14 +149,14 @@ describe('getPublishedPosts', () => {
             },
         ]);
 
-        const posts = await getPublishedPosts(undefined, undefined, PageType.ARTICLE);
+        const posts = await getPublishedPosts(undefined, undefined, PageType.BLOG_POST);
 
         expect(posts).toHaveLength(1);
         expect(mockedFindMany).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: {
                     status: PostStatus.PUBLISHED,
-                    type: PageType.ARTICLE,
+                    type: PageType.BLOG_POST,
                 },
             })
         );

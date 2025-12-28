@@ -101,7 +101,7 @@ describe('postActions', () => {
             categoryId: 'cat1',
             authorId: 'auth1',
             status: PostStatus.DRAFT,
-            type: PageType.ARTICLE,
+            type: PageType.BLOG_POST,
         };
 
         it('creates a post successfully', async () => {
@@ -169,7 +169,7 @@ describe('postActions', () => {
             image: 'https://img.com/photo.png',
             categoryId: 'cat2',
             status: PostStatus.PUBLISHED,
-            type: PageType.ARTICLE,
+            type: PageType.BLOG_POST,
         };
 
         it('updates a post successfully', async () => {

@@ -65,8 +65,8 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
   const page = parseInt(searchParams?.page || "1", 10)
 
   const allPosts: BlogPost[] = await getPublishedPosts()
-  // Only show ARTICLE posts on the blog page
-  const blogPosts = allPosts.filter(post => post.type === 'ARTICLE')
+  // Only show BLOG_POST posts on the blog page
+  const blogPosts = allPosts.filter(post => post.type === 'BLOG_POST')
   const totalPages = Math.ceil(blogPosts.length / itemsPerPage)
   const start = (page - 1) * itemsPerPage
   const currentItems = blogPosts.slice(start, start + itemsPerPage)

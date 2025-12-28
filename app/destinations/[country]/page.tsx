@@ -108,7 +108,7 @@ export default async function CountryDestinationPage({ params }: { params: { cou
     const relatedPosts = await getPublishedPosts(
         6,
         post.slug,
-        PageType.ARTICLE, // Get ARTICLE posts, not DESTINATION posts
+        PageType.BLOG_POST, // Get BLOG_POST posts, not DESTINATION posts
         undefined
     );
 
