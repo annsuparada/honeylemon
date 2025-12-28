@@ -41,6 +41,7 @@ const WritePage = () => {
     const [pageType, setPageType] = useState<PageType>('ARTICLE');
     const [faqs, setFaqs] = useState<Array<{ question: string; answer: string }>>([]);
     const [itemListItems, setItemListItems] = useState<Array<{ name: string; url: string }>>([]);
+    const [showBackToTop, setShowBackToTop] = useState(false);
 
     const pageTypeOptions = Object.values(PageType).map(type => ({
         label: type,
@@ -141,6 +142,16 @@ const WritePage = () => {
         }
     }, [slug]);
 
+    // Handle scroll for back to top button
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowBackToTop(window.scrollY > 300);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     async function handleCreateCategory(name: string) {
         if (!name.trim()) {
             setMessage({ type: "error", text: "Please enter a category" });
@@ -228,6 +239,10 @@ const WritePage = () => {
         });
     };
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
 
     return (
         <ProtectedPage>
@@ -235,14 +250,6 @@ const WritePage = () => {
                 <h1 className="text-4xl font-bold text-center text-white mt-20 mb-10">Write Your Blog</h1>
             </div>
             <div className="min-h-screen py-16 px-2 max-w-screen-lg mx-auto">
-                <div className="flex justify-end">
-                    <button className="btn btn-soft mb-6 mr-3" onClick={() => handleSave(false)}>
-                        Save Draft
-                    </button>
-                    <button className="btn btn-accent mb-6" onClick={() => handleSave(true)}>
-                        Publish
-                    </button>
-                </div>
                 {/* Alert Message */}
                 {message && (
                     <AlertMessage message={message} onClose={() => setMessage(null)} />
@@ -310,6 +317,44 @@ const WritePage = () => {
                             />}
                     </>
                 )}
+            </div>
+
+            {/* Sticky Action Buttons - Bottom Right */}
+            <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col gap-2 md:gap-3">
+                {showBackToTop && (
+                    <button
+                        className="btn btn-circle btn-primary shadow-lg btn-sm md:btn-md"
+                        onClick={scrollToTop}
+                        aria-label="Back to top"
+                        title="Back to top"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                    </button>
+                )}
+                <button
+                    className="btn btn-primary shadow-lg btn-sm md:btn-md text-xs md:text-base"
+                    onClick={() => handleSave(false)}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <span className="loading loading-spinner loading-sm"></span>
+                    ) : (
+                        'Save Draft'
+                    )}
+                </button>
+                <button
+                    className="btn btn-accent shadow-lg btn-sm md:btn-md text-xs md:text-base"
+                    onClick={() => handleSave(true)}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <span className="loading loading-spinner loading-sm"></span>
+                    ) : (
+                        'Publish'
+                    )}
+                </button>
             </div>
         </ProtectedPage>
     );
