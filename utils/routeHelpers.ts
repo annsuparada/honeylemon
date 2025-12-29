@@ -4,10 +4,11 @@ import { PageType } from '@prisma/client';
  * Maps PageType to route prefix
  */
 export const PAGE_TYPE_ROUTES: Record<PageType, string> = {
-    ARTICLE: '/blog',
+    BLOG_POST: '/blog',
     DESTINATION: '/destinations',
     ITINERARY: '/itineraries',
     DEAL: '/deal',
+    GUIDE: '/guides',
 };
 
 /**
@@ -15,18 +16,18 @@ export const PAGE_TYPE_ROUTES: Record<PageType, string> = {
  * For DESTINATION posts, uses the tag slug (country name) instead of post slug
  */
 export function getPostRoute(
-    pageType: PageType | string | undefined, 
-    slug: string, 
+    pageType: PageType | string | undefined,
+    slug: string,
     tagSlug?: string
 ): string {
     const type = pageType as PageType;
-    const routePrefix = PAGE_TYPE_ROUTES[type] || PAGE_TYPE_ROUTES.ARTICLE;
-    
+    const routePrefix = PAGE_TYPE_ROUTES[type] || PAGE_TYPE_ROUTES.BLOG_POST;
+
     // For DESTINATION posts, use the tag slug (country name) instead of post slug
     if (type === PageType.DESTINATION && tagSlug) {
         return `${routePrefix}/${tagSlug}`;
     }
-    
+
     return `${routePrefix}/${slug}`;
 }
 
@@ -35,6 +36,6 @@ export function getPostRoute(
  */
 export function getRoutePrefix(pageType: PageType | string | undefined): string {
     const type = pageType as PageType;
-    return PAGE_TYPE_ROUTES[type] || PAGE_TYPE_ROUTES.ARTICLE;
+    return PAGE_TYPE_ROUTES[type] || PAGE_TYPE_ROUTES.BLOG_POST;
 }
 

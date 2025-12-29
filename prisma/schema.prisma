@@ -21,15 +21,11 @@ enum PostStatus {
 }
 
 enum PageType {
-  PILLAR_ARTICLE    // Your 8000-word comprehensive guides
-  CLUSTER_ARTICLE   // Supporting articles (2000-3000 words)
-  BLOG_POST         // Personal stories, shorter posts
-  LISTICLE          // "Top 10..." posts
-  REVIEW            // Destination/hotel reviews
-  DEAL              // Travel deals (keep this)
-  DESTINATION       // Destination overview pages
-  ITINERARY         // Trip itineraries
-  GUIDE             // How-to guides
+  BLOG_POST
+  DEAL
+  DESTINATION
+  ITINERARY
+  GUIDE
 }
 
 model Category {
