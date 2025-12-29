@@ -185,6 +185,13 @@ const WritePage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Scroll to top when message appears to make alert visible
+    useEffect(() => {
+        if (message) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [message]);
+
     async function handleCreateCategory(name: string) {
         if (!name.trim()) {
             setMessage({ type: "error", text: "Please enter a category" });
@@ -308,9 +315,11 @@ const WritePage = () => {
                 <h1 className="text-4xl font-bold text-center text-white mt-20 mb-10">Write Your Blog</h1>
             </div>
             <div className="min-h-screen py-16 px-2 max-w-screen-lg mx-auto">
-                {/* Alert Message */}
+                {/* Alert Message - Fixed at top */}
                 {message && (
-                    <AlertMessage message={message} onClose={() => setMessage(null)} />
+                    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-screen-lg px-4">
+                        <AlertMessage message={message} onClose={() => setMessage(null)} />
+                    </div>
                 )}
 
                 {/* Loading Indicator */}
