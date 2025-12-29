@@ -71,7 +71,6 @@ export default function DraftContent({ post }: DraftContentProps) {
                                 <Breadcrumb
                                     items={[
                                         { name: 'Blog', href: '/blog', current: false },
-                                        { name: 'Draft', href: '/blog/draft', current: false },
                                         { name: post.title, href: `/blog/draft/${post.slug}`, current: true },
                                     ]}
                                 />
