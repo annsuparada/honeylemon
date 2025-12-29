@@ -159,6 +159,16 @@ export const handleSavePost = async ({
         // The validation will happen in the routing logic if tagSlug is still missing
     }
 
+    // Validate that non-BLOG_POST page types require at least 1 tag when publishing
+    if (isPublish && pageType && pageType !== PageType.BLOG_POST && (!tagIds || tagIds.length === 0)) {
+        const pageTypeName = getPageTypeDisplayName(pageType);
+        setMessage({ 
+            type: 'error', 
+            text: `${pageTypeName} pages require at least 1 tag when publishing. Please add a tag.` 
+        });
+        return;
+    }
+
     setLoading(true);
     setMessage(null);
 

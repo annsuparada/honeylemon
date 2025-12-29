@@ -238,6 +238,13 @@ const WriteForm: React.FC<WriteFormProps> = ({
                             )}
                         </div>
                     )}
+                    {pageType !== PageType.BLOG_POST && !requiresSingleTag(pageType) && selectedTagIds.length === 0 && (
+                        <div className="mt-2 p-3 bg-info/10 border border-info/30 rounded-lg">
+                            <p className="text-sm text-info font-medium">
+                                ℹ️ {getPageTypeDisplayName(pageType)} pages require at least 1 tag when publishing.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Hero Image Upload */}
