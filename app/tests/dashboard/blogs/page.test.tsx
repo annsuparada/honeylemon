@@ -25,15 +25,17 @@ jest.mock('@/app/dashboard/blogs/components/DashboardBlogList', () => (props: an
 ))
 jest.mock('@/app/dashboard/blogs/components/BlogFilter', () => (props: any) => (
     <div>
-        <select onChange={(e) => props.onStatusChange(e.target.value)} data-testid="status-select">
+        <select onChange={(e) => props.onStatusChange(e.target.value)} data-testid="status-select" value={props.selectedStatus}>
             <option value="ALL">All</option>
             <option value="DRAFT">Draft</option>
+            <option value="PUBLISHED">Published</option>
         </select>
-        <select onChange={(e) => props.onTypeChange(e.target.value)} data-testid="type-select">
+        <select onChange={(e) => props.onTypeChange(e.target.value)} data-testid="type-select" value={props.selectedPageType}>
             <option value="ALL">All</option>
-            <option value="BLOG">Blog</option>
+            <option value="BLOG_POST">Blog</option>
+            <option value="DESTINATION">Destination</option>
         </select>
-        <select onChange={(e) => props.onSortChange(e.target.value)} data-testid="sort-select">
+        <select onChange={(e) => props.onSortChange(e.target.value)} data-testid="sort-select" value={props.sortOrder}>
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
         </select>
@@ -325,6 +327,181 @@ describe('Dashboard Page', () => {
             fireEvent.change(screen.getByTestId('status-select'), {
                 target: { value: 'DRAFT' },
             })
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            }, { timeout: 3000 })
+        })
+
+        it('combines special filters with page type filter (Destination)', async () => {
+            const mockDestinationFeaturedPost: BlogPost = {
+                ...mockPost,
+                id: '6',
+                slug: 'destination-featured-post',
+                type: PageType.DESTINATION,
+                featured: true,
+            }
+
+            const mockBlogFeaturedPost: BlogPost = {
+                ...mockPost,
+                id: '7',
+                slug: 'blog-featured-post',
+                type: PageType.BLOG_POST,
+                featured: true,
+            }
+
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost, // BLOG_POST, not featured
+                    mockDestinationFeaturedPost, // DESTINATION, featured
+                    mockBlogFeaturedPost, // BLOG_POST, featured
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 3 posts/i)
+
+            // Filter by featured first
+            fireEvent.click(screen.getByTestId('featured-checkbox'))
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 2 posts/i)).toBeInTheDocument()
+            }, { timeout: 3000 })
+
+            // Now filter by DESTINATION page type
+            fireEvent.change(screen.getByTestId('type-select'), {
+                target: { value: PageType.DESTINATION },
+            })
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            }, { timeout: 3000 })
+        })
+
+        it('combines Featured + Published + Destination filters', async () => {
+            const mockPublishedDestinationFeaturedPost: BlogPost = {
+                ...mockPost,
+                id: '8',
+                slug: 'published-destination-featured',
+                type: PageType.DESTINATION,
+                status: 'PUBLISHED' as const,
+                featured: true,
+            }
+
+            const mockDraftDestinationFeaturedPost: BlogPost = {
+                ...mockPost,
+                id: '9',
+                slug: 'draft-destination-featured',
+                type: PageType.DESTINATION,
+                status: 'DRAFT' as const,
+                featured: true,
+            }
+
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost, // BLOG_POST, DRAFT, not featured
+                    mockPublishedDestinationFeaturedPost, // DESTINATION, PUBLISHED, featured
+                    mockDraftDestinationFeaturedPost, // DESTINATION, DRAFT, featured
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 3 posts/i)
+
+            // Apply all three filters
+            fireEvent.click(screen.getByTestId('featured-checkbox'))
+            fireEvent.change(screen.getByTestId('status-select'), {
+                target: { value: 'PUBLISHED' },
+            })
+            fireEvent.change(screen.getByTestId('type-select'), {
+                target: { value: PageType.DESTINATION },
+            })
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            }, { timeout: 3000 })
+        })
+    })
+
+    describe('Existing Filters Still Work', () => {
+        it('status filter still works independently', async () => {
+            const publishedPost = { ...mockPost, id: '10', slug: 'published', status: 'PUBLISHED' as const }
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost, // DRAFT
+                    publishedPost, // PUBLISHED
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            fireEvent.change(screen.getByTestId('status-select'), {
+                target: { value: 'PUBLISHED' },
+            })
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('page type filter still works independently', async () => {
+            const destinationPost = { ...mockPost, id: '11', slug: 'destination', type: PageType.DESTINATION }
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost, // BLOG_POST
+                    destinationPost, // DESTINATION
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            fireEvent.change(screen.getByTestId('type-select'), {
+                target: { value: PageType.DESTINATION },
+            })
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('sort order still works independently', async () => {
+            const oldPost = { ...mockPost, id: '12', slug: 'old', updatedAt: '2024-01-01' }
+            const newPost = { ...mockPost, id: '13', slug: 'new', updatedAt: '2024-01-02' }
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([oldPost, newPost])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            // Change to oldest first
+            fireEvent.change(screen.getByTestId('sort-select'), {
+                target: { value: 'oldest' },
+            })
+
+            // Sort order change should maintain the same count
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 2 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('all filters work together correctly', async () => {
+            const targetPost: BlogPost = {
+                ...mockPost,
+                id: '14',
+                slug: 'target',
+                status: 'PUBLISHED' as const,
+                type: PageType.DESTINATION,
+                featured: true,
+            }
+
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost, // DRAFT, BLOG_POST, not featured
+                    { ...mockPost, id: '15', status: 'PUBLISHED' as const }, // PUBLISHED, BLOG_POST, not featured
+                    { ...mockPost, id: '16', type: PageType.DESTINATION }, // DRAFT, DESTINATION, not featured
+                    { ...mockPost, id: '17', featured: true }, // DRAFT, BLOG_POST, featured
+                    targetPost, // PUBLISHED, DESTINATION, featured
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 5 posts/i)
+
+            // Apply all filters
+            fireEvent.change(screen.getByTestId('status-select'), { target: { value: 'PUBLISHED' } })
+            fireEvent.change(screen.getByTestId('type-select'), { target: { value: PageType.DESTINATION } })
+            fireEvent.click(screen.getByTestId('featured-checkbox'))
 
             await waitFor(() => {
                 expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()

@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { BlogPost } from '@/app/types'
+import { PageType } from '@prisma/client'
 import DashboardBlogList from '@/app/dashboard/blogs/components/DashboardBlogList'
 
 // Mock dynamic components
@@ -28,8 +29,11 @@ const mockPost: BlogPost = {
         username: 'johndoe'
     },
     status: 'DRAFT',
-    type: 'ARTICLE',
-    tags: []
+    type: PageType.BLOG_POST,
+    tags: [],
+    featured: false,
+    pillarPage: false,
+    trending: false
 }
 
 describe('DashboardBlogList', () => {
@@ -143,5 +147,233 @@ describe('DashboardBlogList', () => {
 
         const viewLink = screen.getByRole('link', { name: /view/i })
         expect(viewLink).toHaveAttribute('href', `/blog/${publishedPost.slug}`)
+    })
+
+    describe('Badge Display', () => {
+        it('displays Featured badge when post is featured', () => {
+            const featuredPost = { ...mockPost, featured: true }
+            render(
+                <DashboardBlogList
+                    posts={[featuredPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/⭐ Featured/i)).toBeInTheDocument()
+        })
+
+        it('displays Pillar badge when post is a pillar page', () => {
+            const pillarPost = { ...mockPost, pillarPage: true }
+            render(
+                <DashboardBlogList
+                    posts={[pillarPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/📚 Pillar/i)).toBeInTheDocument()
+        })
+
+        it('displays Trending badge when post is trending', () => {
+            const trendingPost = { ...mockPost, trending: true }
+            render(
+                <DashboardBlogList
+                    posts={[trendingPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/🔥 Trending/i)).toBeInTheDocument()
+        })
+
+        it('displays multiple badges when post has multiple flags', () => {
+            const multiBadgePost = { ...mockPost, featured: true, pillarPage: true, trending: true }
+            render(
+                <DashboardBlogList
+                    posts={[multiBadgePost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/⭐ Featured/i)).toBeInTheDocument()
+            expect(screen.getByText(/📚 Pillar/i)).toBeInTheDocument()
+            expect(screen.getByText(/🔥 Trending/i)).toBeInTheDocument()
+        })
+
+        it('does not display badge row when no flags are set', () => {
+            render(
+                <DashboardBlogList
+                    posts={[mockPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.queryByText(/⭐ Featured/i)).not.toBeInTheDocument()
+            expect(screen.queryByText(/📚 Pillar/i)).not.toBeInTheDocument()
+            expect(screen.queryByText(/🔥 Trending/i)).not.toBeInTheDocument()
+        })
+    })
+
+    describe('View Counter', () => {
+        it('displays view count when views is defined', () => {
+            const postWithViews = { ...mockPost, views: 1234 }
+            render(
+                <DashboardBlogList
+                    posts={[postWithViews]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/👁️ 1,234 views/i)).toBeInTheDocument()
+        })
+
+        it('formats large view counts with commas', () => {
+            const postWithManyViews = { ...mockPost, views: 1234567 }
+            render(
+                <DashboardBlogList
+                    posts={[postWithManyViews]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/👁️ 1,234,567 views/i)).toBeInTheDocument()
+        })
+
+        it('displays zero views correctly', () => {
+            const postWithZeroViews = { ...mockPost, views: 0 }
+            render(
+                <DashboardBlogList
+                    posts={[postWithZeroViews]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/👁️ 0 views/i)).toBeInTheDocument()
+        })
+
+        it('does not display view counter when views is undefined', () => {
+            render(
+                <DashboardBlogList
+                    posts={[mockPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.queryByText(/👁️/i)).not.toBeInTheDocument()
+        })
+    })
+
+    describe('Read Time', () => {
+        it('displays read time when readTime is defined', () => {
+            const postWithReadTime = { ...mockPost, readTime: 8 }
+            render(
+                <DashboardBlogList
+                    posts={[postWithReadTime]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/📖 8 min read/i)).toBeInTheDocument()
+        })
+
+        it('displays different read times correctly', () => {
+            const postWithReadTime = { ...mockPost, readTime: 15 }
+            render(
+                <DashboardBlogList
+                    posts={[postWithReadTime]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/📖 15 min read/i)).toBeInTheDocument()
+        })
+
+        it('does not display read time when readTime is undefined', () => {
+            render(
+                <DashboardBlogList
+                    posts={[mockPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.queryByText(/📖/i)).not.toBeInTheDocument()
+        })
+
+        it('does not display read time when readTime is null', () => {
+            const postWithNullReadTime = { ...mockPost, readTime: undefined }
+            render(
+                <DashboardBlogList
+                    posts={[postWithNullReadTime]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.queryByText(/📖/i)).not.toBeInTheDocument()
+        })
+
+        it('displays both view count and read time together', () => {
+            const postWithBoth = { ...mockPost, views: 5000, readTime: 10 }
+            render(
+                <DashboardBlogList
+                    posts={[postWithBoth]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            expect(screen.getByText(/👁️ 5,000 views/i)).toBeInTheDocument()
+            expect(screen.getByText(/📖 10 min read/i)).toBeInTheDocument()
+        })
+    })
+
+    describe('Mobile Responsiveness', () => {
+        it('applies responsive classes for mobile layout', () => {
+            const { container } = render(
+                <DashboardBlogList
+                    posts={[mockPost]}
+                    loading={false}
+                    handleArchive={jest.fn()}
+                    handleDelete={jest.fn()}
+                />
+            )
+
+            // Check for responsive flex classes
+            const cardContainer = container.querySelector('.flex.flex-col.md\\:flex-row')
+            expect(cardContainer).toBeInTheDocument()
+
+            // Check for responsive width classes
+            const imageContainer = container.querySelector('.md\\:w-1\\/3.w-full')
+            expect(imageContainer).toBeInTheDocument()
+
+            const contentContainer = container.querySelector('.md\\:w-2\\/3.w-full')
+            expect(contentContainer).toBeInTheDocument()
+        })
     })
 })
