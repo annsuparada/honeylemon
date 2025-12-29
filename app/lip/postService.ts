@@ -80,6 +80,13 @@ export async function getPublishedPosts(
             slug: pt.tag.slug,
         })),
         type: post.type,
+        featured: post.featured ?? undefined,
+        pillarPage: post.pillarPage ?? undefined,
+        trending: post.trending ?? undefined,
+        views: post.views ?? undefined,
+        readTime: post.readTime ?? undefined,
+        metaTitle: post.metaTitle ?? undefined,
+        metaDescription: post.metaDescription ?? undefined,
     }));
 
     return posts;
@@ -198,6 +205,13 @@ export async function getFeaturedPostByCountry(countrySlug: string): Promise<Blo
             type: post.type,
             faqs: post.faqs || [],
             itemListItems: post.itemListItems || [],
+            featured: post.featured ?? undefined,
+            pillarPage: post.pillarPage ?? undefined,
+            trending: post.trending ?? undefined,
+            views: post.views ?? undefined,
+            readTime: post.readTime ?? undefined,
+            metaTitle: post.metaTitle ?? undefined,
+            metaDescription: post.metaDescription ?? undefined,
         };
     }
 
@@ -305,6 +319,11 @@ export async function getFeaturedPostByCountry(countrySlug: string): Promise<Blo
         type: post.type,
         faqs: post.faqs || [],
         itemListItems: post.itemListItems || [],
+        featured: post.featured ?? undefined,
+        pillarPage: post.pillarPage ?? undefined,
+        trending: post.trending ?? undefined,
+        views: post.views ?? undefined,
+        readTime: post.readTime ?? undefined,
     };
 }
 
@@ -397,6 +416,13 @@ export async function getPostBySlug(slug: string) {
         type: post.type,
         faqs: post.faqs || [],
         itemListItems: post.itemListItems || [],
+        featured: post.featured ?? undefined,
+        pillarPage: post.pillarPage ?? undefined,
+        trending: post.trending ?? undefined,
+        views: post.views ?? undefined,
+        readTime: post.readTime ?? undefined,
+        metaTitle: post.metaTitle ?? undefined,
+        metaDescription: post.metaDescription ?? undefined,
     } satisfies BlogPost;
 }
 
@@ -524,6 +550,13 @@ export async function getDestinationPostByTagSlug(tagSlug: string): Promise<Blog
         type: post.type,
         faqs: post.faqs || [],
         itemListItems: post.itemListItems || [],
+        featured: post.featured ?? undefined,
+        pillarPage: post.pillarPage ?? undefined,
+        trending: post.trending ?? undefined,
+        views: post.views ?? undefined,
+        readTime: post.readTime ?? undefined,
+        metaTitle: post.metaTitle ?? undefined,
+        metaDescription: post.metaDescription ?? undefined,
     } satisfies BlogPost;
 }
 

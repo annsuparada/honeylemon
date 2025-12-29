@@ -97,9 +97,13 @@ export async function generatePostMetadata(
     const url = `${routePrefix}/${post.slug}`;
     const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${url}`;
 
+    // Use metaTitle and metaDescription if available, otherwise fallback to title and description
+    const seoTitle = post.metaTitle || post.title;
+    const seoDescription = post.metaDescription || post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad";
+
     return {
-        title: `${post.title} | Travomad`,
-        description: post.description || "Discover travel tips, destination guides, and exclusive deals on Travomad",
+        title: `${seoTitle} | Travomad`,
+        description: seoDescription,
         keywords: keywords,
         authors: [{ name: authorName }],
         creator: authorName,
@@ -107,19 +111,19 @@ export async function generatePostMetadata(
         category: post.category.name,
 
         openGraph: {
-            ...getBaseOpenGraph(post.title, post.description || '', fullUrl),
+            ...getBaseOpenGraph(seoTitle, seoDescription, fullUrl),
             type: "article",
             publishedTime: post.createdAt,
             modifiedTime: post.updatedAt,
             authors: [authorName],
             section: post.category.name,
             tags: [post.category.name, ...tagNames],
-            images: getOpenGraphImages(post.image, post.title),
+            images: getOpenGraphImages(post.image, seoTitle),
         },
 
         twitter: getTwitterMetadata(
-            post.title,
-            post.description || "Discover travel tips and destination guides on Travomad",
+            seoTitle,
+            seoDescription,
             post.image
         ),
 

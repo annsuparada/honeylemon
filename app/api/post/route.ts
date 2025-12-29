@@ -4,6 +4,7 @@ import prisma from "@/prisma/client";
 import { z } from "zod";
 import { postSchema, updatePostSchema } from "@/schemas/postSchema";
 import { verifyToken } from "@/utils/auth";
+import { calculateReadTime, calculateWordCount } from "@/app/lip/readTime-helpers";
 
 // GET: Retrieve all posts, by slug, by category, by status (Public Access)
 export async function GET(req: Request) {
@@ -136,6 +137,10 @@ export async function POST(req: Request) {
         }
 
         // Create post
+        // Calculate read time and word count from content
+        const readTime = calculateReadTime(validatedData.content);
+        const wordCount = calculateWordCount(validatedData.content);
+
         const newPost = await prisma.post.create({
             data: {
                 title: validatedData.title,
@@ -156,6 +161,8 @@ export async function POST(req: Request) {
                 pillarPage: validatedData.pillarPage || false,
                 trending: validatedData.trending || false,
                 publishedAt: validatedData.publishedAt ? (typeof validatedData.publishedAt === 'string' ? new Date(validatedData.publishedAt) : validatedData.publishedAt) : null,
+                readTime: readTime,
+                wordCount: wordCount,
                 tags: validatedData.tagIds && validatedData.tagIds.length > 0 ? {
                     create: validatedData.tagIds.map((tagId: string) => ({
                         tagId: tagId,
@@ -281,6 +288,11 @@ export async function PATCH(req: Request) {
             }
         }
 
+        // Calculate read time and word count if content is being updated
+        const updatedContent = validatedData.content ?? post.content;
+        const readTime = calculateReadTime(updatedContent);
+        const wordCount = calculateWordCount(updatedContent);
+
         // Update post
         const updatedPost = await prisma.post.update({
             where: { id: validatedData.id },
@@ -302,6 +314,8 @@ export async function PATCH(req: Request) {
                 pillarPage: validatedData.pillarPage !== undefined ? validatedData.pillarPage : post.pillarPage,
                 trending: validatedData.trending !== undefined ? validatedData.trending : post.trending,
                 publishedAt: validatedData.publishedAt !== undefined ? (typeof validatedData.publishedAt === 'string' ? new Date(validatedData.publishedAt) : validatedData.publishedAt) : post.publishedAt,
+                readTime: readTime,
+                wordCount: wordCount,
             },
             include: {
                 tags: {

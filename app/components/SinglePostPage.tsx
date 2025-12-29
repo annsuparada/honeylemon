@@ -8,6 +8,8 @@ import { VscError } from "react-icons/vsc";
 import { generateArticleStructuredData, generateFAQStructuredData, generateBreadcrumbListStructuredData, generateItemListStructuredData, formatAuthorName } from '@/app/lip/structured-data-helpers';
 import { extractHeadings, addIdsToHeadings } from '@/app/lip/toc-helpers';
 import TableOfContents from '@/app/components/TableOfContents';
+import ViewCounter from '@/app/components/ViewCounter';
+import ReadTime from '@/app/components/ReadTime';
 import { BlogPost } from '@/app/types';
 
 const ShareButton = dynamic(() => import("./ShareButton"), { ssr: false });
@@ -62,18 +64,18 @@ export default function SinglePostPage({
     // Add IDs to headings and extract them for TOC
     const contentWithIds = addIdsToHeadings(sanitizedContent);
     const headings = extractHeadings(contentWithIds);
-    
+
     // Generate FAQ items for TOC
-    const faqItems = post.faqs && post.faqs.length > 0 
-      ? post.faqs.map((faq, index) => {
-          // Generate a slug-friendly ID from the question (matching FAQSection)
-          const faqId = `faq-${faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}-${index}`;
-          return {
-            id: faqId,
-            question: faq.question
-          };
+    const faqItems = post.faqs && post.faqs.length > 0
+        ? post.faqs.map((faq, index) => {
+            // Generate a slug-friendly ID from the question (matching FAQSection)
+            const faqId = `faq-${faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}-${index}`;
+            return {
+                id: faqId,
+                question: faq.question
+            };
         })
-      : [];
+        : [];
 
     // Generate structured data for SEO
     const articleStructuredData = generateArticleStructuredData(post);
@@ -88,6 +90,8 @@ export default function SinglePostPage({
 
     return (
         <>
+            {/* View Counter - increments views but doesn't display */}
+            <ViewCounter slug={post.slug} />
             {/* Article Structured Data for Rich Results */}
             <script
                 type="application/ld+json"
@@ -134,7 +138,7 @@ export default function SinglePostPage({
                 <div className="flex gap-8">
                     {/* Table of Contents - Desktop Sidebar / Mobile Floating Button */}
                     {(headings.length > 0 || faqItems.length > 0) && (
-                      <TableOfContents headings={headings} faqs={faqItems} />
+                        <TableOfContents headings={headings} faqs={faqItems} />
                     )}
 
                     {/* Main Content Area */}
@@ -152,14 +156,25 @@ export default function SinglePostPage({
                         </div>
                         {/* Blog Header */}
                         <header className="mb-8">
-                            <div className="mt-8 w-full flex justify-between items-center">
-                                <div className="badge badge-soft badge-neutral rounded-sm p-3">
-                                    {post.category?.name}
+                            <div className="mt-8 w-full flex flex-col gap-3">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <div className="badge badge-soft badge-neutral rounded-sm p-3">
+                                            {post.category?.name}
+                                        </div>
+                                        {post.trending && (
+                                            <span className="badge badge-error rounded-sm text-xs">
+                                                🔥 Trending
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <EditPostButton authorId={post.author.id} slug={post.slug} />
+                                        <ShareButton title={post.title} />
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <EditPostButton authorId={post.author.id} slug={post.slug} />
-                                    <ShareButton title={post.title} />
-                                </div>
+                                {/* Read time indicator */}
+                                <ReadTime readTime={post.readTime} />
                             </div>
                         </header>
 

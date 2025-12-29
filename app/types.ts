@@ -70,6 +70,8 @@ export interface BlogPost {
     trending?: boolean;
     views?: number;
     readTime?: number;
+    metaTitle?: string;
+    metaDescription?: string;
 }
 
 

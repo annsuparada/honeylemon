@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { BlogPost } from '../types'
 import SectionHeader from './SectionHeader'
 import FormattedDate from './FormattedDate'
+import ReadTime from './ReadTime'
 
 interface BlogSectionProps {
   posts: BlogPost[]
@@ -91,6 +92,18 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                             {post.category.name}
                           </span>
                         )}
+                      </div>
+                      {/* Trending badge */}
+                      {post.trending && (
+                        <div className="mt-2">
+                          <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                            🔥 Trending
+                          </span>
+                        </div>
+                      )}
+                      {/* Read time */}
+                      <div className="mt-2">
+                        <ReadTime readTime={post.readTime} className="text-xs text-gray-500" />
                       </div>
                       <div className="group relative max-w-xl">
                         <h3 className="my-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">

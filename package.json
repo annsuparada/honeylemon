@@ -11,7 +11,8 @@
     "prisma:generate": "prisma generate",
     "test": "jest",
     "test:cloudinary": "tsx scripts/test-cloudinary.ts",
-    "test:image-apis": "tsx scripts/test-image-apis.ts"
+    "test:image-apis": "tsx scripts/test-image-apis.ts",
+    "update-readtime": "tsx scripts/update-readtime.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

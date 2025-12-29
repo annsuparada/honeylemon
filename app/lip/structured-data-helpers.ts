@@ -90,14 +90,14 @@ export function generateBreadcrumbListStructuredData(
   countrySlug?: string
 ) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
-  
+
   // Determine breadcrumb label based on route prefix
-  const breadcrumbLabel = routePrefix === '/destinations' ? 'Destinations' : 
-                          routePrefix === '/itineraries' ? 'Itineraries' : 
-                          'Blog';
-  
+  const breadcrumbLabel = routePrefix === '/destinations' ? 'Destinations' :
+    routePrefix === '/itineraries' ? 'Itineraries' :
+      'Blog';
+
   // Determine article URL - use /post/ for destinations to avoid conflicts
-  const articleUrl = routePrefix === '/destinations' 
+  const articleUrl = routePrefix === '/destinations'
     ? `${baseUrl}${routePrefix}/post/${post.slug}`
     : `${baseUrl}${routePrefix}/${post.slug}`;
 
@@ -152,7 +152,7 @@ export function generateArticleStructuredData(post: BlogPost) {
   const articleImages = generateImageVariants(baseImage);
   const authorImage = post.author.profilePicture || DEFAULT_LOGO_URL;
 
-  return {
+  const articleData: any = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": post.title,
@@ -180,6 +180,13 @@ export function generateArticleStructuredData(post: BlogPost) {
       }
     }
   };
+
+  // Add timeRequired (read time) if available
+  if (post.readTime !== undefined && post.readTime !== null) {
+    articleData.timeRequired = `PT${post.readTime}M`;
+  }
+
+  return articleData;
 }
 
 /**
