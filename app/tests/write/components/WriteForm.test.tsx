@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { PageType } from '@prisma/client'
 import { Category } from '@/app/types'
@@ -8,10 +8,19 @@ describe('WriteForm Component', () => {
     const mockOnChange = {
         title: jest.fn(),
         description: jest.fn(),
+        excerpt: jest.fn(),
         image: jest.fn(),
+        heroImage: jest.fn(),
         category: jest.fn(),
         type: jest.fn(),
         tags: jest.fn(),
+        metaTitle: jest.fn(),
+        metaDescription: jest.fn(),
+        focusKeyword: jest.fn(),
+        featured: jest.fn(),
+        pillarPage: jest.fn(),
+        trending: jest.fn(),
+        publishedAt: jest.fn(),
     }
 
     const mockOnCreateCategory = jest.fn().mockResolvedValue({ label: 'New Category', value: 'new-cat' })
@@ -38,6 +47,15 @@ describe('WriteForm Component', () => {
             { id: 'tag2', name: 'React', slug: 'react' },
         ],
         selectedTagIds: [],
+        excerpt: '',
+        heroImage: '',
+        metaTitle: '',
+        metaDescription: '',
+        focusKeyword: '',
+        featured: false,
+        pillarPage: false,
+        trending: false,
+        publishedAt: '',
         faqs: [],
         itemListItems: [],
         onChange: mockOnChange,
@@ -109,5 +127,126 @@ describe('WriteForm Component', () => {
     it('triggers onCreateCategory when creating a new category', async () => {
         await mockOnCreateCategory('New Category')
         expect(mockOnCreateCategory).toHaveBeenCalledWith('New Category')
+    })
+
+    describe('Pillar Page functionality', () => {
+        it('renders pillar page checkbox', () => {
+            render(<WriteForm {...defaultProps} />)
+            expect(screen.getByText(/pillar page/i)).toBeInTheDocument()
+        })
+
+        it('shows validation requirements when pillarPage is checked', () => {
+            render(<WriteForm {...defaultProps} pillarPage={true} />)
+
+            expect(screen.getByText(/pillar page requirements/i)).toBeInTheDocument()
+            expect(screen.getByText(/page type must be selected/i)).toBeInTheDocument()
+            expect(screen.getByText(/at least 1 tag is required/i)).toBeInTheDocument()
+        })
+
+        it('shows success message when all requirements are met', () => {
+            render(
+                <WriteForm
+                    {...defaultProps}
+                    pillarPage={true}
+                    pageType={PageType.DESTINATION}
+                    selectedTagIds={['tag1']}
+                />
+            )
+
+            expect(screen.getByText(/all requirements met/i)).toBeInTheDocument()
+        })
+
+        it('auto-toggles pillarPage to true when page type and tag are selected', async () => {
+            const { rerender } = render(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.BLOG_POST}
+                    selectedTagIds={[]}
+                    pillarPage={false}
+                />
+            )
+
+            // Change page type to DESTINATION
+            rerender(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.DESTINATION}
+                    selectedTagIds={[]}
+                    pillarPage={false}
+                />
+            )
+
+            // Add a tag
+            rerender(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.DESTINATION}
+                    selectedTagIds={['tag1']}
+                    pillarPage={false}
+                />
+            )
+
+            await waitFor(() => {
+                expect(mockOnChange.pillarPage).toHaveBeenCalledWith(true)
+            })
+        })
+
+        it('does not auto-toggle when page type is BLOG_POST', async () => {
+            render(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.BLOG_POST}
+                    selectedTagIds={['tag1']}
+                    pillarPage={false}
+                />
+            )
+
+            // Wait a bit to ensure useEffect doesn't trigger
+            await new Promise(resolve => setTimeout(resolve, 100))
+
+            expect(mockOnChange.pillarPage).not.toHaveBeenCalled()
+        })
+
+        it('does not auto-toggle when no tags are selected', async () => {
+            render(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.DESTINATION}
+                    selectedTagIds={[]}
+                    pillarPage={false}
+                />
+            )
+
+            // Wait a bit to ensure useEffect doesn't trigger
+            await new Promise(resolve => setTimeout(resolve, 100))
+
+            expect(mockOnChange.pillarPage).not.toHaveBeenCalled()
+        })
+
+        it('does not auto-toggle when pillarPage is already true', async () => {
+            const { rerender } = render(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.DESTINATION}
+                    selectedTagIds={['tag1']}
+                    pillarPage={true}
+                />
+            )
+
+            // Change something that would trigger the effect
+            rerender(
+                <WriteForm
+                    {...defaultProps}
+                    pageType={PageType.DESTINATION}
+                    selectedTagIds={['tag1', 'tag2']}
+                    pillarPage={true}
+                />
+            )
+
+            await new Promise(resolve => setTimeout(resolve, 100))
+
+            // Should not call onChange.pillarPage since it's already true
+            expect(mockOnChange.pillarPage).not.toHaveBeenCalled()
+        })
     })
 })

@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import Dashboard from '@/app/dashboard/blogs/page'
 import '@testing-library/jest-dom'
 import { BlogPost } from '@/app/types'
+import { PageType } from '@prisma/client'
 
 // Mock entire postActions module
 jest.mock('@/utils/postActions', () => ({
@@ -36,6 +37,24 @@ jest.mock('@/app/dashboard/blogs/components/BlogFilter', () => (props: any) => (
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
         </select>
+        <input
+            type="checkbox"
+            checked={props.featuredOnly}
+            onChange={(e) => props.onFeaturedChange(e.target.checked)}
+            data-testid="featured-checkbox"
+        />
+        <input
+            type="checkbox"
+            checked={props.pillarPagesOnly}
+            onChange={(e) => props.onPillarPagesChange(e.target.checked)}
+            data-testid="pillar-checkbox"
+        />
+        <input
+            type="checkbox"
+            checked={props.trendingOnly}
+            onChange={(e) => props.onTrendingChange(e.target.checked)}
+            data-testid="trending-checkbox"
+        />
     </div>
 ))
 
@@ -50,17 +69,44 @@ const mockPost: BlogPost = {
     createdAt: '2024-01-01',
     updatedAt: '2024-01-02',
     status: 'DRAFT',
-    type: 'ARTICLE',
+    type: PageType.BLOG_POST,
     category: { name: 'Tech', slug: 'tech' },
     categoryId: 'cat1',
     author: {
         id: 'u1',
         name: 'Jane',
         lastName: 'Doe',
-        role: 'ADMIN',
         profilePicture: '',
         username: 'jane_doe',
     },
+    tags: [],
+    featured: false,
+    pillarPage: false,
+    trending: false,
+}
+
+const mockFeaturedPost: BlogPost = {
+    ...mockPost,
+    id: '2',
+    slug: 'featured-post',
+    title: 'Featured Post',
+    featured: true,
+}
+
+const mockPillarPost: BlogPost = {
+    ...mockPost,
+    id: '3',
+    slug: 'pillar-post',
+    title: 'Pillar Post',
+    pillarPage: true,
+}
+
+const mockTrendingPost: BlogPost = {
+    ...mockPost,
+    id: '4',
+    slug: 'trending-post',
+    title: 'Trending Post',
+    trending: true,
 }
 
 describe('Dashboard Page', () => {
@@ -166,6 +212,123 @@ describe('Dashboard Page', () => {
 
         await waitFor(() => {
             expect(screen.queryByText(/Blog list with/i)).not.toBeInTheDocument()
+        })
+    })
+
+    describe('Special Filters', () => {
+        it('filters posts by featured flag', async () => {
+            ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                mockPost,
+                mockFeaturedPost,
+            ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            const featuredCheckbox = screen.getByTestId('featured-checkbox')
+            fireEvent.click(featuredCheckbox)
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('filters posts by pillarPage flag', async () => {
+            ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                mockPost,
+                mockPillarPost,
+            ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            const pillarCheckbox = screen.getByTestId('pillar-checkbox')
+            fireEvent.click(pillarCheckbox)
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('filters posts by trending flag', async () => {
+            ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                mockPost,
+                mockTrendingPost,
+            ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            const trendingCheckbox = screen.getByTestId('trending-checkbox')
+            fireEvent.click(trendingCheckbox)
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('combines multiple special filters', async () => {
+            const mockFeaturedPillarPost: BlogPost = {
+                ...mockPost,
+                id: '5',
+                slug: 'featured-pillar-post',
+                title: 'Featured Pillar Post',
+                featured: true,
+                pillarPage: true,
+            }
+
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost,
+                    mockFeaturedPost,
+                    mockPillarPost,
+                    mockFeaturedPillarPost,
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 4 posts/i)
+
+            // Enable both featured and pillar filters
+            fireEvent.click(screen.getByTestId('featured-checkbox'))
+            fireEvent.click(screen.getByTestId('pillar-checkbox'))
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            })
+        })
+
+        it('combines special filters with status filter', async () => {
+            // Create a post that is both DRAFT and featured
+            const mockDraftFeaturedPost: BlogPost = {
+                ...mockFeaturedPost,
+                id: '5',
+                slug: 'draft-featured-post',
+                status: 'DRAFT' as const,
+            }
+
+                ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([
+                    mockPost, // DRAFT, not featured
+                    mockDraftFeaturedPost, // DRAFT, featured
+                ])
+
+            render(<Dashboard />)
+            await screen.findByText(/Blog list with 2 posts/i)
+
+            // Filter by featured first
+            fireEvent.click(screen.getByTestId('featured-checkbox'))
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            }, { timeout: 3000 })
+
+            // The remaining post should be the featured one
+            // Both posts are DRAFT, so status filter shouldn't change the count
+            fireEvent.change(screen.getByTestId('status-select'), {
+                target: { value: 'DRAFT' },
+            })
+
+            await waitFor(() => {
+                expect(screen.getByText(/Blog list with 1 posts/i)).toBeInTheDocument()
+            }, { timeout: 3000 })
         })
     })
 })

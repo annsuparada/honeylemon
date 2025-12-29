@@ -300,4 +300,103 @@ describe('handleSavePost', () => {
             expect(baseParams.router.push).toHaveBeenCalledWith('/destinations/thailand')
         })
     })
+
+    describe('Pillar page validation', () => {
+        it('requires page type other than BLOG_POST when pillarPage is true', async () => {
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.BLOG_POST,
+                tagIds: ['tag1'],
+            })
+
+            expect(baseParams.setMessage).toHaveBeenCalledWith({
+                type: 'error',
+                text: 'Pillar pages require a page type other than BLOG_POST. Please select a different page type (e.g., DESTINATION, ITINERARY, GUIDE, or DEAL).'
+            })
+            expect(baseParams.createPost).not.toHaveBeenCalled()
+        })
+
+        it('requires at least 1 tag when pillarPage is true', async () => {
+            // Use GUIDE instead of DESTINATION to avoid the "exactly 1 tag" requirement
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.GUIDE,
+                tagIds: [],
+                isPublish: true,
+            })
+
+            expect(baseParams.setMessage).toHaveBeenCalledWith({
+                type: 'error',
+                text: 'Pillar pages require at least 1 tag. Please add a tag.'
+            })
+            expect(baseParams.createPost).not.toHaveBeenCalled()
+        })
+
+        it('allows saving when pillarPage is true with valid page type and tag', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'pillar-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.DESTINATION,
+                tagIds: ['tag1'],
+                isPublish: true,
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalledWith(expect.objectContaining({
+                pillarPage: true,
+                type: PageType.DESTINATION,
+                tagIds: ['tag1'],
+            }))
+        })
+
+        it('allows saving when pillarPage is false even without page type or tag', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'regular-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: false,
+                pageType: PageType.BLOG_POST,
+                tagIds: [],
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalled()
+        })
+
+        it('allows saving when pillarPage is true with ITINERARY page type and tag', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'itinerary-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.ITINERARY,
+                tagIds: ['tag1'],
+                isPublish: true,
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalledWith(expect.objectContaining({
+                pillarPage: true,
+                type: PageType.ITINERARY,
+            }))
+        })
+
+        it('allows saving when pillarPage is true with GUIDE page type and tag', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'guide-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.GUIDE,
+                tagIds: ['tag1'],
+                isPublish: true,
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalledWith(expect.objectContaining({
+                pillarPage: true,
+                type: PageType.GUIDE,
+            }))
+        })
+    })
 })

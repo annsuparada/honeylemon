@@ -21,21 +21,31 @@ describe('DashboardFilters Component', () => {
     const mockOnStatusChange = jest.fn()
     const mockOnTypeChange = jest.fn()
     const mockOnSortChange = jest.fn()
+    const mockOnFeaturedChange = jest.fn()
+    const mockOnPillarPagesChange = jest.fn()
+    const mockOnTrendingChange = jest.fn()
+
+    const defaultProps = {
+        selectedStatus: "draft",
+        selectedPageType: "blog",
+        sortOrder: "desc",
+        onStatusChange: mockOnStatusChange,
+        onTypeChange: mockOnTypeChange,
+        onSortChange: mockOnSortChange,
+        statusOptions: mockStatusOptions,
+        typeOptions: mockTypeOptions,
+        sortOptions: mockSortOptions,
+        featuredOnly: false,
+        pillarPagesOnly: false,
+        trendingOnly: false,
+        onFeaturedChange: mockOnFeaturedChange,
+        onPillarPagesChange: mockOnPillarPagesChange,
+        onTrendingChange: mockOnTrendingChange,
+    }
 
     beforeEach(() => {
-        render(
-            <DashboardFilters
-                selectedStatus="draft"
-                selectedPageType="blog"
-                sortOrder="desc"
-                onStatusChange={mockOnStatusChange}
-                onTypeChange={mockOnTypeChange}
-                onSortChange={mockOnSortChange}
-                statusOptions={mockStatusOptions}
-                typeOptions={mockTypeOptions}
-                sortOptions={mockSortOptions}
-            />
-        )
+        jest.clearAllMocks()
+        render(<DashboardFilters {...defaultProps} />)
     })
 
     it('renders all SelectInput components with correct labels', () => {
@@ -79,6 +89,92 @@ describe('DashboardFilters Component', () => {
 
         fireEvent.change(sortSelect, { target: { value: 'asc' } })
         expect(mockOnSortChange).toHaveBeenCalledWith('asc')
+    })
+
+    it('renders Special Filters section', () => {
+        expect(screen.getByText('Special Filters')).toBeInTheDocument()
+    })
+
+    it('renders all three special filter checkboxes', () => {
+        expect(screen.getByText('Featured Only')).toBeInTheDocument()
+        expect(screen.getByText('Pillar Pages Only')).toBeInTheDocument()
+        expect(screen.getByText('Trending Only')).toBeInTheDocument()
+    })
+
+    it('shows checkboxes as unchecked by default', () => {
+        const featuredLabel = screen.getByText('Featured Only').closest('label')
+        const pillarLabel = screen.getByText('Pillar Pages Only').closest('label')
+        const trendingLabel = screen.getByText('Trending Only').closest('label')
+
+        const featuredCheckbox = featuredLabel?.querySelector('input[type="checkbox"]')
+        const pillarCheckbox = pillarLabel?.querySelector('input[type="checkbox"]')
+        const trendingCheckbox = trendingLabel?.querySelector('input[type="checkbox"]')
+
+        expect(featuredCheckbox).not.toBeChecked()
+        expect(pillarCheckbox).not.toBeChecked()
+        expect(trendingCheckbox).not.toBeChecked()
+    })
+
+    it('calls onFeaturedChange when Featured Only checkbox is clicked', () => {
+        const featuredLabel = screen.getByText('Featured Only').closest('label')
+        const featuredCheckbox = featuredLabel?.querySelector('input[type="checkbox"]') as HTMLInputElement
+
+        expect(featuredCheckbox).toBeInTheDocument()
+        fireEvent.click(featuredCheckbox!)
+        expect(mockOnFeaturedChange).toHaveBeenCalledWith(true)
+    })
+
+    it('calls onPillarPagesChange when Pillar Pages Only checkbox is clicked', () => {
+        const pillarLabel = screen.getByText('Pillar Pages Only').closest('label')
+        const pillarCheckbox = pillarLabel?.querySelector('input[type="checkbox"]') as HTMLInputElement
+
+        expect(pillarCheckbox).toBeInTheDocument()
+        fireEvent.click(pillarCheckbox!)
+        expect(mockOnPillarPagesChange).toHaveBeenCalledWith(true)
+    })
+
+    it('calls onTrendingChange when Trending Only checkbox is clicked', () => {
+        const trendingLabel = screen.getByText('Trending Only').closest('label')
+        const trendingCheckbox = trendingLabel?.querySelector('input[type="checkbox"]') as HTMLInputElement
+
+        expect(trendingCheckbox).toBeInTheDocument()
+        fireEvent.click(trendingCheckbox!)
+        expect(mockOnTrendingChange).toHaveBeenCalledWith(true)
+    })
+
+    it('shows checkboxes as checked when props are true', () => {
+        const { container } = render(
+            <DashboardFilters
+                {...defaultProps}
+                featuredOnly={true}
+                pillarPagesOnly={true}
+                trendingOnly={true}
+            />
+        )
+
+        // Use container to find checkboxes directly
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]')
+
+        // The first three checkboxes should be the special filter checkboxes
+        // (assuming no other checkboxes in SelectInput components)
+        const featuredCheckbox = Array.from(checkboxes).find(cb => {
+            const label = cb.closest('label')
+            return label?.textContent?.includes('Featured Only')
+        }) as HTMLInputElement
+
+        const pillarCheckbox = Array.from(checkboxes).find(cb => {
+            const label = cb.closest('label')
+            return label?.textContent?.includes('Pillar Pages Only')
+        }) as HTMLInputElement
+
+        const trendingCheckbox = Array.from(checkboxes).find(cb => {
+            const label = cb.closest('label')
+            return label?.textContent?.includes('Trending Only')
+        }) as HTMLInputElement
+
+        expect(featuredCheckbox).toBeChecked()
+        expect(pillarCheckbox).toBeChecked()
+        expect(trendingCheckbox).toBeChecked()
     })
 
 })
