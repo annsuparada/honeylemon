@@ -105,11 +105,13 @@ export default async function CountryDestinationPage({ params }: { params: { cou
     }
 
     // Get related posts - other articles about the same country (tag)
+    // Exclude pillar pages from related posts
     const relatedPosts = await getPublishedPosts(
         6,
         post.slug,
         PageType.BLOG_POST, // Get BLOG_POST posts, not DESTINATION posts
-        undefined
+        undefined,
+        true // Exclude pillar pages
     );
 
     // Filter to only show posts with the same country tag

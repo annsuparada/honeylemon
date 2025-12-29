@@ -8,6 +8,7 @@ import { BlogPost } from '../types'
 import SectionHeader from './SectionHeader'
 import FormattedDate from './FormattedDate'
 import ReadTime from './ReadTime'
+import { getBlogRoute } from '@/utils/routeHelpers'
 
 interface BlogSectionProps {
   posts: BlogPost[]
@@ -52,13 +53,15 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                 : 'space-y-20 lg:mt-20 lg:space-y-20'
                 }`}
             >
-              {posts.map((post) => {
+              {posts
+                .filter((post) => !post.pillarPage) // Exclude pillar pages from blog links
+                .map((post) => {
                 const sanitizedDescription = sanitizeHtml(post.description ?? '', {
                   allowedTags: ['b', 'i', 'em', 'strong', 'p'],
                   allowedAttributes: {},
                 })
 
-                return (<Link href={`/blog/${post.slug}`} key={post.slug}>
+                return (<Link href={getBlogRoute(post.slug)} key={post.slug}>
                   <article
                     className={`relative isolate rounded-md shadow-lg h-full flex flex-col justify-between ${threeColumns ? 'gap-2' : 'gap-4 lg:flex-row'}`}
                   >

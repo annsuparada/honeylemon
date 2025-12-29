@@ -4,6 +4,8 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { BlogPost } from "@/app/types";
 import FormattedDate from "@/app/components/FormattedDate";
 import { FaEdit, FaRegEye } from "react-icons/fa";
+import { getBlogRoute, getPostRoute } from "@/utils/routeHelpers";
+import { PageType } from "@prisma/client";
 
 interface DashboardBlogListProps {
     loading: boolean;
@@ -99,7 +101,19 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                                 <FaEdit /> Edit
                             </Link>
                             <Link
-                                href={post.status === 'DRAFT' ? `/blog/draft/${post.slug}` : `/blog/${post.slug}`}
+                                href={
+                                    post.status === 'DRAFT'
+                                        ? `/blog/draft/${post.slug}`
+                                        : post.pillarPage
+                                            ? getPostRoute(
+                                                post.type,
+                                                post.slug,
+                                                post.type === PageType.DESTINATION && post.tags?.[0]?.slug
+                                                    ? post.tags[0].slug
+                                                    : undefined
+                                            )
+                                            : getBlogRoute(post.slug)
+                                }
                                 className="btn btn-outline btn-info btn-sm rounded"
                             >
                                 <FaRegEye /> View

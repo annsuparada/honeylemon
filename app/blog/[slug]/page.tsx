@@ -7,7 +7,8 @@ import SinglePostPage from '@/app/components/SinglePostPage';
 
 // Generate static pages for better performance & SEO
 export async function generateStaticParams() {
-  const posts = await getPublishedPosts();
+  // Exclude pillar pages from blog static generation
+  const posts = await getPublishedPosts(undefined, undefined, undefined, undefined, true);
   return posts.map((post: { slug: string; }) => ({ slug: post.slug }));
 }
 
@@ -18,7 +19,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function SingleBlogPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const post = await getPostBySlug(slug);
-  const blogPosts = await getPublishedPosts(6, slug);
+  // Exclude pillar pages from related posts
+  const blogPosts = await getPublishedPosts(6, slug, undefined, undefined, true);
 
   return (
     <SinglePostPage

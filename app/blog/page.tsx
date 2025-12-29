@@ -6,6 +6,7 @@ import Pagination from "@/app/components/PaginationSSR"
 import { BlogPost } from "@/app/types"
 import { Metadata } from "next"
 import { getPublishedPosts } from "../lip/postService"
+import { getBlogRoute } from "@/utils/routeHelpers"
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
@@ -64,9 +65,9 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
   const itemsPerPage = 5
   const page = parseInt(searchParams?.page || "1", 10)
 
-  const allPosts: BlogPost[] = await getPublishedPosts()
-  // Only show BLOG_POST posts on the blog page
-  const blogPosts = allPosts.filter(post => post.type === 'BLOG_POST')
+  const allPosts: BlogPost[] = await getPublishedPosts(undefined, undefined, undefined, undefined, true)
+  // Only show BLOG_POST posts on the blog page, excluding pillar pages
+  const blogPosts = allPosts.filter(post => post.type === 'BLOG_POST' && !post.pillarPage)
   const totalPages = Math.ceil(blogPosts.length / itemsPerPage)
   const start = (page - 1) * itemsPerPage
   const currentItems = blogPosts.slice(start, start + itemsPerPage)
@@ -126,7 +127,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
                   {post.author?.name} {post.author?.lastName}
                 </span>
                 <Link
-                  href={`/blog/${post.slug}`}
+                  href={getBlogRoute(post.slug)}
                   className="text-secondary hover:underline"
                 >
                   Read More »

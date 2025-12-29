@@ -6,7 +6,8 @@ export async function getPublishedPosts(
     limit?: number,
     excludeSlug?: string,
     pageType?: PageType,
-    categorySlug?: string
+    categorySlug?: string,
+    excludePillarPages: boolean = false
 ) {
     const rawPosts = await prisma.post.findMany({
         where: {
@@ -18,6 +19,7 @@ export async function getPublishedPosts(
                     slug: categorySlug,
                 },
             }),
+            ...(excludePillarPages && { pillarPage: false }),
         },
         orderBy: { createdAt: 'desc' },
         take: limit,

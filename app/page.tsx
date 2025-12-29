@@ -18,8 +18,8 @@ const Home = () => {
     async function loadPosts() {
       setLoading(true)
       const loadedPosts = await fetchPosts("PUBLISHED", 6)
-      // Only show BLOG_POST posts on the home page
-      const blogPosts = loadedPosts.filter((post: BlogPost) => post.type === 'BLOG_POST')
+      // Only show BLOG_POST posts on the home page, excluding pillar pages
+      const blogPosts = loadedPosts.filter((post: BlogPost) => post.type === 'BLOG_POST' && !post.pillarPage)
       setPosts(blogPosts)
       setLoading(false)
     }

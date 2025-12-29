@@ -39,3 +39,11 @@ export function getRoutePrefix(pageType: PageType | string | undefined): string 
     return PAGE_TYPE_ROUTES[type] || PAGE_TYPE_ROUTES.BLOG_POST;
 }
 
+/**
+ * Get the blog route for a post slug
+ * Helper function for generating /blog/[slug] routes
+ */
+export function getBlogRoute(slug: string): string {
+    return `/blog/${slug}`;
+}
+
