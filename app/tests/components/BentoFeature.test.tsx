@@ -157,4 +157,212 @@ describe('BentoFeatures Component', () => {
 
         expect(container.firstChild).toBeNull();
     });
+
+    it('does not render when posts is null', () => {
+        const { container } = render(
+            <BentoFeatures
+                sectionTitle="Layout Test"
+                sectionSubTitle="Grid check"
+                posts={null as any}
+            />
+        );
+
+        expect(container.firstChild).toBeNull();
+    });
+
+    it('does not render when posts is not an array', () => {
+        const { container } = render(
+            <BentoFeatures
+                sectionTitle="Layout Test"
+                sectionSubTitle="Grid check"
+                posts={{ length: 5 } as any}
+            />
+        );
+
+        expect(container.firstChild).toBeNull();
+    });
+
+    it('uses default image when post image is missing', () => {
+        const postsWithoutImages = mockPosts.map(post => ({
+            ...post,
+            image: undefined,
+        }));
+
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={postsWithoutImages}
+            />
+        );
+
+        const images = screen.getAllByRole('img');
+        images.forEach(img => {
+            expect(img).toHaveAttribute('src', 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp');
+        });
+    });
+
+    it('uses "Uncategorized" when category is missing', () => {
+        const postsWithoutCategory = mockPosts.map(post => ({
+            ...post,
+            category: undefined as any,
+        }));
+
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={postsWithoutCategory}
+            />
+        );
+
+        const uncategorizedTexts = screen.getAllByText('Uncategorized');
+        expect(uncategorizedTexts.length).toBeGreaterThan(0);
+    });
+
+    it('handles missing description gracefully', () => {
+        const postsWithoutDescription = mockPosts.map(post => ({
+            ...post,
+            description: undefined,
+        }));
+
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={postsWithoutDescription}
+            />
+        );
+
+        // Should render without errors
+        expect(screen.getByText('Fast Performance')).toBeInTheDocument();
+    });
+
+    it('generates correct link for BLOG_POST type', () => {
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={mockPosts}
+            />
+        );
+
+        const links = screen.getAllByRole('link');
+        expect(links[0]).toHaveAttribute('href', '/blog/fast-performance');
+    });
+
+    it('generates correct link for DESTINATION type with tag slug', () => {
+        const destinationPosts: BlogPost[] = [
+            {
+                id: '1',
+                title: 'Japan Travel Guide',
+                slug: 'japan-travel-guide',
+                content: 'Content',
+                description: 'Explore Japan',
+                status: PostStatus.PUBLISHED,
+                createdAt: '2024-01-01T00:00:00Z',
+                updatedAt: '2024-01-01T00:00:00Z',
+                category: { name: 'Destinations', slug: 'destinations' },
+                categoryId: 'cat1',
+                author: { id: 'auth1', name: 'John', username: 'john' },
+                tags: [{ id: 'tag1', name: 'Japan', slug: 'japan' }],
+                type: PageType.DESTINATION,
+            },
+            ...mockPosts.slice(1),
+        ];
+
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={destinationPosts}
+            />
+        );
+
+        const links = screen.getAllByRole('link');
+        expect(links[0]).toHaveAttribute('href', '/destinations/japan');
+    });
+
+    it('generates correct link for DESTINATION type without tags', () => {
+        const destinationPostsWithoutTags: BlogPost[] = [
+            {
+                id: '1',
+                title: 'Japan Travel Guide',
+                slug: 'japan-travel-guide',
+                content: 'Content',
+                description: 'Explore Japan',
+                status: PostStatus.PUBLISHED,
+                createdAt: '2024-01-01T00:00:00Z',
+                updatedAt: '2024-01-01T00:00:00Z',
+                category: { name: 'Destinations', slug: 'destinations' },
+                categoryId: 'cat1',
+                author: { id: 'auth1', name: 'John', username: 'john' },
+                tags: [],
+                type: PageType.DESTINATION,
+            },
+            ...mockPosts.slice(1),
+        ];
+
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={destinationPostsWithoutTags}
+            />
+        );
+
+        const links = screen.getAllByRole('link');
+        expect(links[0]).toHaveAttribute('href', '/destinations/japan-travel-guide');
+    });
+
+    it('applies all grid layout classes correctly for all indices', () => {
+        const { container } = render(
+            <BentoFeatures
+                sectionTitle="Layout Test"
+                sectionSubTitle="Grid check"
+                posts={mockPosts}
+            />
+        );
+
+        // Index 0: lg:col-span-3 lg:rounded-tl-[2rem]
+        expect(container.innerHTML).toContain('lg:col-span-3 lg:rounded-tl-[2rem]');
+        
+        // Index 1: lg:col-span-3 lg:rounded-tr-[2rem]
+        expect(container.innerHTML).toContain('lg:col-span-3 lg:rounded-tr-[2rem]');
+        
+        // Index 2: lg:col-span-2 lg:rounded-bl-[2rem]
+        expect(container.innerHTML).toContain('lg:col-span-2 lg:rounded-bl-[2rem]');
+        
+        // Index 3: lg:col-span-2 (default case)
+        expect(container.innerHTML).toContain('lg:col-span-2');
+        
+        // Index 4: lg:col-span-2 lg:rounded-br-[2rem]
+        expect(container.innerHTML).toContain('lg:col-span-2 lg:rounded-br-[2rem]');
+    });
+
+    it('renders exactly 5 cards when 5 posts are provided', () => {
+        render(
+            <BentoFeatures
+                sectionTitle="Test"
+                sectionSubTitle="Test"
+                posts={mockPosts}
+            />
+        );
+
+        const links = screen.getAllByRole('link');
+        expect(links).toHaveLength(5);
+    });
+
+    it('does not render when posts array has more than 5 items', () => {
+        const sixPosts = [...mockPosts, { ...mockPosts[0], id: '6', slug: 'sixth-post' }];
+        const { container } = render(
+            <BentoFeatures
+                sectionTitle="Layout Test"
+                sectionSubTitle="Grid check"
+                posts={sixPosts}
+            />
+        );
+
+        expect(container.firstChild).toBeNull();
+    });
 });
