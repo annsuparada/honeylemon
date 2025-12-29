@@ -1,11 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import SelectInput from '@/app/components/SelectInput'
 import TagsInput from '@/app/components/TagsInput'
+import ImageUploader from '@/app/components/ImageUploader'
 import { Category } from '@/app/types'
 import { PageType } from '@prisma/client'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/react/24/outline'
+
+/**
+ * Page types that require exactly 1 tag
+ * Add page types here that should have this restriction
+ */
+const PAGE_TYPES_REQUIRING_SINGLE_TAG: PageType[] = [PageType.DESTINATION];
+
+/**
+ * Check if a page type requires exactly 1 tag
+ */
+const requiresSingleTag = (pageType: PageType): boolean => {
+    return PAGE_TYPES_REQUIRING_SINGLE_TAG.includes(pageType);
+};
+
+/**
+ * Get the display name for a page type (for warning messages)
+ */
+const getPageTypeDisplayName = (pageType: PageType): string => {
+    return pageType.charAt(0) + pageType.slice(1).toLowerCase().replace(/_/g, ' ');
+};
 
 type Tag = {
     id: string
@@ -16,22 +37,40 @@ type Tag = {
 interface WriteFormProps {
     title: string
     description: string
+    excerpt: string
     image: string
+    heroImage: string
     categories: Category[]
     selectedCategory: string
     pageType: PageType
     pageTypeOptions: { label: string; value: string }[]
     tags: Tag[]
     selectedTagIds: string[]
+    metaTitle: string
+    metaDescription: string
+    focusKeyword: string
+    featured: boolean
+    pillarPage: boolean
+    trending: boolean
+    publishedAt: string
     faqs: Array<{ question: string; answer: string }>
     itemListItems: Array<{ name: string; url: string }>
     onChange: {
         title: (val: string) => void
         description: (val: string) => void
+        excerpt: (val: string) => void
         image: (val: string) => void
+        heroImage: (val: string) => void
         category: (val: string) => void
         type: (val: PageType) => void
         tags: (tagIds: string[]) => void
+        metaTitle: (val: string) => void
+        metaDescription: (val: string) => void
+        focusKeyword: (val: string) => void
+        featured: (val: boolean) => void
+        pillarPage: (val: boolean) => void
+        trending: (val: boolean) => void
+        publishedAt: (val: string) => void
     }
     onCreateCategory: (name: string) => Promise<{ label: string; value: string } | null>
     onCreateTag: (name: string) => Promise<Tag | null>
@@ -42,13 +81,22 @@ interface WriteFormProps {
 const WriteForm: React.FC<WriteFormProps> = ({
     title,
     description,
+    excerpt,
     image,
+    heroImage,
     categories,
     selectedCategory,
     pageType,
     pageTypeOptions,
     tags,
     selectedTagIds,
+    metaTitle,
+    metaDescription,
+    focusKeyword,
+    featured,
+    pillarPage,
+    trending,
+    publishedAt,
     faqs,
     itemListItems,
     onChange,
@@ -57,6 +105,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
     onChangeFaqs,
     onChangeItemListItems,
 }) => {
+    const [seoSectionOpen, setSeoSectionOpen] = useState(false);
     const handleAddFaq = () => {
         onChangeFaqs([...faqs, { question: '', answer: '' }]);
     };
@@ -114,6 +163,20 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     />
                 </div>
 
+                {/* Excerpt */}
+                <div className="mb-4">
+                    <label htmlFor="excerpt-textarea" className="block text-lg font-semibold text-gray-700 mb-2">Excerpt</label>
+                    <textarea
+                        id="excerpt-textarea"
+                        className="textarea textarea-bordered w-full"
+                        placeholder="Write a brief excerpt (auto-generated if left empty)..."
+                        value={excerpt}
+                        onChange={(e) => onChange.excerpt(e.target.value)}
+                        rows={3}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Short summary for previews and listings</p>
+                </div>
+
                 {/* Category */}
                 <SelectInput
                     label="Category"
@@ -131,13 +194,14 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     selectedValue={pageType}
                     onChange={(val) => {
                         const newType = val as PageType;
-                        // If switching to DESTINATION and multiple tags are selected, keep only the first one
-                        if (newType === 'DESTINATION' && selectedTagIds.length > 1) {
+                        // If switching to a page type that requires single tag and multiple tags are selected, keep only the first one
+                        if (requiresSingleTag(newType) && selectedTagIds.length > 1) {
                             onChange.tags([selectedTagIds[0]]);
                         }
                         onChange.type(newType);
                     }}
                 />
+
 
                 {/* Tags */}
                 <div>
@@ -146,42 +210,162 @@ const WriteForm: React.FC<WriteFormProps> = ({
                         tags={tags}
                         selectedTagIds={selectedTagIds}
                         onChange={(newTagIds) => {
-                            // Prevent removing the last tag for DESTINATION type
-                            if (pageType === 'DESTINATION' && newTagIds.length === 0 && selectedTagIds.length > 0) {
+                            // Prevent removing the last tag for page types that require exactly 1 tag
+                            if (requiresSingleTag(pageType) && newTagIds.length === 0 && selectedTagIds.length > 0) {
                                 return; // Don't allow removing the last tag
                             }
                             onChange.tags(newTagIds);
                         }}
                         onCreateTag={onCreateTag}
-                        maxTags={pageType === 'DESTINATION' ? 1 : undefined}
+                        maxTags={requiresSingleTag(pageType) ? 1 : undefined}
                     />
-                    {pageType === 'DESTINATION' && (
+                    {requiresSingleTag(pageType) && (
                         <div className="mt-2 p-3 bg-warning/10 border border-warning/30 rounded-lg">
                             <p className="text-sm text-warning font-medium">
-                                ⚠️ Destination pages require exactly 1 tag (the country name).
+                                ⚠️ {getPageTypeDisplayName(pageType)} pages require exactly 1 tag.
                             </p>
-                            <p className="text-xs text-gray-600 mt-1">
-                                Changing the tag will change the route to <code className="bg-gray-100 px-1 rounded">/destinations/[tag-slug]</code>
-                            </p>
-                            {selectedTagIds.length > 0 && (
-                                <p className="text-xs text-gray-500 mt-1 italic">
-                                    Current tag: {tags.find(t => t.id === selectedTagIds[0])?.name || 'N/A'}
-                                </p>
+                            {pageType === 'DESTINATION' && (
+                                <>
+                                    <p className="text-xs text-gray-600 mt-1">
+                                        Changing the tag will change the route to <code className="bg-gray-100 px-1 rounded">/destinations/[tag-slug]</code>
+                                    </p>
+                                    {selectedTagIds.length > 0 && (
+                                        <p className="text-xs text-gray-500 mt-1 italic">
+                                            Current tag: {tags.find(t => t.id === selectedTagIds[0])?.name || 'N/A'}
+                                        </p>
+                                    )}
+                                </>
                             )}
                         </div>
                     )}
                 </div>
 
-                {/* Add Image from URL */}
-                <button
-                    className="btn btn-outline bg-gray-100 mt-4"
-                    onClick={() => {
-                        const url = window.prompt('Enter Image URL', image)
-                        if (url) onChange.image(url)
-                    }}
-                >
-                    Add Image from URL
-                </button>
+                {/* Hero Image Upload */}
+                <div className="mt-4">
+                    <ImageUploader
+                        label="Hero Image"
+                        initialImageUrl={heroImage}
+                        onImageUploaded={(url) => {
+                            onChange.heroImage(url);
+                            // Also update legacy image field for backward compatibility
+                            if (!image || image === 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') {
+                                onChange.image(url);
+                            }
+                        }}
+                        showPreview={true}
+                    />
+                </div>
+
+
+                {/* SEO Fields Section (Collapsible) */}
+                <div className="mt-6">
+                    <Disclosure>
+                        {({ open }) => (
+                            <>
+                                <DisclosureButton className="flex w-full items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200">
+                                    <span className="text-lg font-semibold text-gray-700">SEO Fields</span>
+                                    {open ? (
+                                        <MinusSmallIcon className="size-5 text-gray-600" />
+                                    ) : (
+                                        <PlusSmallIcon className="size-5 text-gray-600" />
+                                    )}
+                                </DisclosureButton>
+                                <DisclosurePanel className="mt-4 space-y-4">
+                                    <div>
+                                        <label htmlFor="meta-title" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Meta Title
+                                        </label>
+                                        <input
+                                            id="meta-title"
+                                            type="text"
+                                            className="input input-bordered w-full"
+                                            placeholder="Custom SEO title (defaults to post title if empty)"
+                                            value={metaTitle}
+                                            onChange={(e) => onChange.metaTitle(e.target.value)}
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">Recommended: 50-60 characters</p>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="meta-description" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Meta Description
+                                        </label>
+                                        <textarea
+                                            id="meta-description"
+                                            className="textarea textarea-bordered w-full"
+                                            placeholder="Custom meta description for search engines"
+                                            value={metaDescription}
+                                            onChange={(e) => onChange.metaDescription(e.target.value)}
+                                            rows={3}
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">Recommended: 150-160 characters</p>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="focus-keyword" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Focus Keyword
+                                        </label>
+                                        <input
+                                            id="focus-keyword"
+                                            type="text"
+                                            className="input input-bordered w-full"
+                                            placeholder="Primary SEO keyword (e.g., 'mexico travel guide')"
+                                            value={focusKeyword}
+                                            onChange={(e) => onChange.focusKeyword(e.target.value)}
+                                        />
+                                    </div>
+                                </DisclosurePanel>
+                            </>
+                        )}
+                    </Disclosure>
+                </div>
+
+                {/* Special Flags */}
+                <div className="mt-6">
+                    <label className="block text-lg font-semibold text-gray-700 mb-3">Special Flags</label>
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary"
+                                checked={featured}
+                                onChange={(e) => onChange.featured(e.target.checked)}
+                            />
+                            <span className="text-sm">⭐ Featured (Show on homepage)</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary"
+                                checked={pillarPage}
+                                onChange={(e) => onChange.pillarPage(e.target.checked)}
+                            />
+                            <span className="text-sm">📚 Pillar Page (Main comprehensive guide)</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary"
+                                checked={trending}
+                                onChange={(e) => onChange.trending(e.target.checked)}
+                            />
+                            <span className="text-sm">🔥 Trending (Highlight as trending content)</span>
+                        </label>
+                    </div>
+                </div>
+
+                {/* Publish Date */}
+                <div className="mt-4">
+                    <label htmlFor="published-at" className="block text-lg font-semibold text-gray-700 mb-2">
+                        Publish Date
+                    </label>
+                    <input
+                        id="published-at"
+                        type="datetime-local"
+                        className="input input-bordered w-full"
+                        value={publishedAt}
+                        onChange={(e) => onChange.publishedAt(e.target.value)}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Schedule publication for a future date (leave empty for immediate publish)</p>
+                </div>
 
                 {/* FAQs Section */}
                 <div className="mt-6">
@@ -337,27 +521,20 @@ const WriteForm: React.FC<WriteFormProps> = ({
 
             {/* Cover Image Preview */}
             <div className="mb-4">
-                <label className="block text-lg font-semibold text-gray-700 mb-2 mt-4">Cover Image</label>
+                <label className="block text-lg font-semibold text-gray-700 mb-2 mt-4">Cover Image Preview</label>
                 <div
                     className="relative w-full overflow-hidden rounded-md border-none"
                     style={{ aspectRatio: "3 / 1" }}
                 >
                     <Image
-                        src={image}
+                        src={heroImage || image}
                         alt="Article cover image"
                         fill
                         sizes="100vw"
                         className="object-cover"
-                        onClick={() => {
-                            const url = window.prompt("Enter Image URL", image);
-                            if (url) onChange.image(url);
-                        }}
                         priority
                     />
                 </div>
-
-
-
             </div>
         </>
     )

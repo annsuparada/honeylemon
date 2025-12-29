@@ -18,11 +18,11 @@ async function main() {
     console.log(`Found ${postsWithNullType.length} posts with null type.`);
 
     if (postsWithNullType.length > 0) {
-        for (const post of postsWithNullType) {
-            await prisma.post.update({
-                where: { id: post.id },
+    for (const post of postsWithNullType) {
+        await prisma.post.update({
+            where: { id: post.id },
                 data: { type: PageType.BLOG_POST }, // Default to BLOG_POST
-            });
+        });
             console.log(`✅ Updated post ${post.id} from null to BLOG_POST`);
         }
     }

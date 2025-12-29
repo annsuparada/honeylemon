@@ -59,16 +59,21 @@ describe('WritePage Component', () => {
     it('renders form UI correctly', async () => {
         render(<WritePage />)
         expect(await screen.findByText(/write your blog/i)).toBeInTheDocument()
+        // There may be multiple publish buttons (MenuBar and page), so use getAllByText
+        expect(screen.getAllByText(/publish/i).length).toBeGreaterThan(0)
+        // Save Draft button should be visible for BLOG_POST (default page type)
         expect(screen.getByText(/save draft/i)).toBeInTheDocument()
-        expect(screen.getByText(/publish/i)).toBeInTheDocument()
     })
 
     it('shows validation error if title is missing on publish', async () => {
         render(<WritePage />)
-        fireEvent.click(screen.getByText(/publish/i))
+        // Get all publish buttons and click the last one (the actual publish button from the page)
+        const publishButtons = screen.getAllByText(/publish/i)
+        fireEvent.click(publishButtons[publishButtons.length - 1]) // Click the last publish button (from the page)
         await waitFor(() => {
+            // Check for the error message (case insensitive)
             expect(screen.getByText(/title is required/i)).toBeInTheDocument()
-        })
+        }, { timeout: 3000 })
     })
 
     it('loads existing post if slug is provided', async () => {
@@ -94,13 +99,7 @@ describe('WritePage Component', () => {
         })
     })
 
-    it('handles image input prompt', async () => {
-        render(<WritePage />)
-
-        const promptSpy = jest.spyOn(window, 'prompt').mockReturnValue('https://myimage.jpg')
-        fireEvent.click(screen.getByText(/add image from url/i))
-
-        expect(promptSpy).toHaveBeenCalledWith('Enter Image URL', expect.any(String))
-        promptSpy.mockRestore()
-    })
+    // Note: Image upload is now handled via ImageUploadModal in MenuBar, not via prompt
+    // This test is no longer relevant as we removed the "Add Image from URL" button
+    // Image upload functionality is tested in ImageUploadModal.test.tsx
 })

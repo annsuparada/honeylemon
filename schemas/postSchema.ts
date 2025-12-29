@@ -6,12 +6,28 @@ const postSchema = z.object({
   slug: z.string().optional(), // Optional, auto-generated if not provided
   content: z.string().min(10, "Content must be at least 10 characters long"),
   description: z.string().optional(),
-  image: z.string().url("Invalid image URL").optional(),
+  excerpt: z.string().optional(),
+  image: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: "Invalid image URL"
+  }).optional(),
+  heroImage: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: "Invalid image URL"
+  }).optional(),
   categoryId: z.string().min(1, "Category ID is required"),
   authorId: z.string().min(1, "Author ID is required"),
   status: z.nativeEnum(PostStatus).optional(),
   type: z.nativeEnum(PageType),
   tagIds: z.array(z.string()).optional(), // Array of tag IDs
+  // SEO Fields
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  focusKeyword: z.string().optional(),
+  // Special Flags
+  featured: z.boolean().optional(),
+  pillarPage: z.boolean().optional(),
+  trending: z.boolean().optional(),
+  // Dates
+  publishedAt: z.string().optional().or(z.date().optional()),
   faqs: z.array(z.object({
     question: z.string().min(1, "Question is required"),
     answer: z.string().min(1, "Answer is required"),
@@ -29,11 +45,27 @@ export const updatePostSchema = z.object({
   slug: z.string().optional(),
   content: z.string().min(10, "Content must be at least 10 characters long"),
   description: z.string().optional(),
-  image: z.string().url("Invalid image URL").optional(),
+  excerpt: z.string().optional(),
+  image: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: "Invalid image URL"
+  }).optional(),
+  heroImage: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: "Invalid image URL"
+  }).optional(),
   categoryId: z.string().min(1, "Category ID is required"),
   status: z.nativeEnum(PostStatus).optional(),
   type: z.nativeEnum(PageType),
   tagIds: z.array(z.string()).optional(), // Array of tag IDs
+  // SEO Fields
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  focusKeyword: z.string().optional(),
+  // Special Flags
+  featured: z.boolean().optional(),
+  pillarPage: z.boolean().optional(),
+  trending: z.boolean().optional(),
+  // Dates
+  publishedAt: z.string().optional().or(z.date().optional()),
   faqs: z.array(z.object({
     question: z.string().min(1, "Question is required"),
     answer: z.string().min(1, "Answer is required"),

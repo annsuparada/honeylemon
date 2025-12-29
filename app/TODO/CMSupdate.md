@@ -25,25 +25,23 @@
 - [x] Verify images appear in Cloudinary dashboard
 
 ## PHASE 4: IMAGE UPLOAD COMPONENT
-- [ ] Create components/admin/ImageUploader.tsx
-- [ ] Create test page for ImageUploader
-- [ ] Test URL upload method
-- [ ] Test file upload method
-- [ ] Test preview functionality
-- [ ] Test copy URL button
-- [ ] Delete test page
+- [x] Create components/ImageUploader.tsx 
+- [x] Create test page for ImageUploader
+- [x] Test URL upload method
+- [x] Test file upload method
+- [x] Test preview functionality
+- [x] Test copy URL button
+- [x] Delete test page
 
 ## PHASE 5: UPDATE POST WRITE/EDIT PAGE
-- [ ] Add type selector dropdown
-- [ ] Add status selector dropdown
-- [ ] Add hero image upload section
-- [ ] Add additional images upload section
-- [ ] Add SEO fields section (collapsible)
-- [ ] Add special flags checkboxes
-- [ ] Add publish date picker
-- [ ] Update form state with new fields
-- [ ] Update submit handler
-- [ ] Test all new fields work
+- [x] Add type selector dropdown
+- [x] Add hero image upload section
+- [x] Update images upload section
+- [x] Add SEO fields section (collapsible)
+- [x] Add special flags checkboxes
+- [x] Update form state with new fields
+- [x] Update submit handler
+- [x] Test all new fields work
 
 ## PHASE 6: UPDATE ADMIN POST LIST
 - [ ] Add filter state

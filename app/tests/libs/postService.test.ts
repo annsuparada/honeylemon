@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { getPublishedPosts, getPostBySlug } from '@/app/lip/postService';
+import { getPublishedPosts, getPostBySlug, getDestinationPostByTagSlug } from '@/app/lip/postService';
 import prisma from '@/prisma/client';
 import { PostStatus, PageType } from '@prisma/client';
 
@@ -12,12 +12,14 @@ jest.mock('@/prisma/client', () => ({
         post: {
             findMany: jest.fn(),
             findUnique: jest.fn(),
+            findFirst: jest.fn(),
         },
     },
 }));
 
 const mockedFindMany = prisma.post.findMany as jest.Mock;
 const mockedFindUnique = prisma.post.findUnique as jest.Mock;
+const mockedFindFirst = prisma.post.findFirst as jest.Mock;
 
 describe('getPublishedPosts', () => {
     it('returns normalized published posts', async () => {
@@ -250,5 +252,149 @@ describe('getPostBySlug', () => {
 
         const result = await getPostBySlug('nonexistent');
         expect(result).toBeNull();
+    });
+});
+
+describe('getDestinationPostByTagSlug', () => {
+    it('returns destination post by tag slug', async () => {
+        const mockPost = {
+            id: 'post1',
+            title: 'Thailand Travel Guide',
+            slug: 'thailand-travel-guide',
+            content: 'Content about Thailand',
+            description: 'Thailand destination guide',
+            image: 'https://image.com/thailand.jpg',
+            status: PostStatus.PUBLISHED,
+            createdAt: new Date('2023-01-01'),
+            updatedAt: new Date('2023-01-02'),
+            type: PageType.DESTINATION,
+            category: {
+                id: 'cat1',
+                name: 'Destinations',
+                slug: 'destinations',
+            },
+            author: {
+                id: 'user1',
+                name: 'John',
+                lastName: 'Doe',
+                username: 'johndoe',
+                profilePicture: 'pfp.png',
+            },
+            tags: [
+                {
+                    tag: {
+                        id: 'tag1',
+                        name: 'Thailand',
+                        slug: 'thailand',
+                    },
+                },
+            ],
+            faqs: [],
+            itemListItems: [],
+        };
+
+        mockedFindFirst.mockResolvedValue(mockPost);
+
+        const result = await getDestinationPostByTagSlug('thailand');
+
+        expect(result).not.toBeNull();
+        expect(result?.slug).toBe('thailand-travel-guide');
+        expect(result?.type).toBe(PageType.DESTINATION);
+        expect(result?.tags).toHaveLength(1);
+        expect(result?.tags[0].slug).toBe('thailand');
+
+        expect(mockedFindFirst).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    type: PageType.DESTINATION,
+                    status: PostStatus.PUBLISHED,
+                    tags: {
+                        some: {
+                            tag: {
+                                slug: 'thailand',
+                            },
+                        },
+                    },
+                },
+            })
+        );
+    });
+
+    it('normalizes tag slug to lowercase', async () => {
+        mockedFindFirst.mockResolvedValue(null);
+
+        await getDestinationPostByTagSlug('THAILAND');
+
+        expect(mockedFindFirst).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: expect.objectContaining({
+                    tags: {
+                        some: {
+                            tag: {
+                                slug: 'thailand',
+                            },
+                        },
+                    },
+                }),
+            })
+        );
+    });
+
+    it('returns null if no destination post found', async () => {
+        mockedFindFirst.mockResolvedValue(null);
+
+        const result = await getDestinationPostByTagSlug('nonexistent');
+
+        expect(result).toBeNull();
+    });
+
+    it('returns most recently updated post when multiple exist', async () => {
+        const mockPost = {
+            id: 'post1',
+            title: 'Thailand Guide',
+            slug: 'thailand-guide',
+            content: 'Content',
+            description: null,
+            image: null,
+            status: PostStatus.PUBLISHED,
+            createdAt: new Date('2023-01-01'),
+            updatedAt: new Date('2023-01-03'),
+            type: PageType.DESTINATION,
+            category: {
+                id: 'cat1',
+                name: 'Destinations',
+                slug: 'destinations',
+            },
+            author: {
+                id: 'user1',
+                name: 'John',
+                lastName: null,
+                username: 'johndoe',
+                profilePicture: null,
+            },
+            tags: [
+                {
+                    tag: {
+                        id: 'tag1',
+                        name: 'Thailand',
+                        slug: 'thailand',
+                    },
+                },
+            ],
+            faqs: [],
+            itemListItems: [],
+        };
+
+        mockedFindFirst.mockResolvedValue(mockPost);
+
+        await getDestinationPostByTagSlug('thailand');
+
+        expect(mockedFindFirst).toHaveBeenCalledWith(
+            expect.objectContaining({
+                orderBy: {
+                    updatedAt: 'desc',
+                },
+            })
+        );
     });
 });

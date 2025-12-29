@@ -91,10 +91,10 @@ export async function getPublishedPosts(
  */
 export async function getFeaturedPostByCountry(countrySlug: string): Promise<BlogPost | null> {
     const countryName = countrySlug.toLowerCase();
-    
+
     // First, try to find a post with "featured-[country]" tag
     const featuredTagName = `featured-${countryName}`;
-    
+
     const featuredPosts = await prisma.post.findMany({
         where: {
             status: PostStatus.PUBLISHED,
@@ -405,6 +405,8 @@ export async function getPostBySlug(slug: string) {
  * For DESTINATION page type, we use the tag slug (country name) as the route
  */
 export async function getDestinationPostByTagSlug(tagSlug: string): Promise<BlogPost | null> {
+    const normalizedSlug = tagSlug.toLowerCase();
+
     const post = await prisma.post.findFirst({
         where: {
             type: PageType.DESTINATION,
@@ -412,7 +414,7 @@ export async function getDestinationPostByTagSlug(tagSlug: string): Promise<Blog
             tags: {
                 some: {
                     tag: {
-                        slug: tagSlug.toLowerCase(),
+                        slug: normalizedSlug,
                     },
                 },
             },
@@ -473,7 +475,24 @@ export async function getDestinationPostByTagSlug(tagSlug: string): Promise<Blog
         },
     });
 
-    if (!post) return null;
+    if (!post) {
+        // Debug: Check if there are any destination posts with this tag slug but different status
+        const draftPost = await prisma.post.findFirst({
+            where: {
+                type: PageType.DESTINATION,
+                status: PostStatus.DRAFT,
+                tags: {
+                    some: {
+                        tag: {
+                            slug: normalizedSlug,
+                        },
+                    },
+                },
+            },
+        });
+
+        return null;
+    }
 
     return {
         id: post.id,

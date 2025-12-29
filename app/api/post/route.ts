@@ -142,11 +142,20 @@ export async function POST(req: Request) {
                 slug: validatedData.slug,
                 content: validatedData.content,
                 description: validatedData.description || "",
+                excerpt: validatedData.excerpt || null,
                 image: validatedData.image || "",
+                heroImage: validatedData.heroImage || null,
                 categoryId: validatedData.categoryId,
                 authorId: decoded.id,
-                status: validatedData.status || "DRAFT",
+                status: validatedData.status ?? "DRAFT",
                 type: validatedData.type,
+                metaTitle: validatedData.metaTitle || null,
+                metaDescription: validatedData.metaDescription || null,
+                focusKeyword: validatedData.focusKeyword || null,
+                featured: validatedData.featured || false,
+                pillarPage: validatedData.pillarPage || false,
+                trending: validatedData.trending || false,
+                publishedAt: validatedData.publishedAt ? (typeof validatedData.publishedAt === 'string' ? new Date(validatedData.publishedAt) : validatedData.publishedAt) : null,
                 tags: validatedData.tagIds && validatedData.tagIds.length > 0 ? {
                     create: validatedData.tagIds.map((tagId: string) => ({
                         tagId: tagId,
@@ -166,6 +175,19 @@ export async function POST(req: Request) {
                         order: index,
                     })),
                 } : undefined,
+            },
+            include: {
+                tags: {
+                    include: {
+                        tag: {
+                            select: {
+                                id: true,
+                                name: true,
+                                slug: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
@@ -267,10 +289,32 @@ export async function PATCH(req: Request) {
                 slug: validatedData.slug ?? post.slug,
                 content: validatedData.content ?? post.content,
                 description: validatedData.description ?? post.description,
+                excerpt: validatedData.excerpt !== undefined ? validatedData.excerpt : post.excerpt,
                 image: validatedData.image ?? post.image,
+                heroImage: validatedData.heroImage !== undefined ? validatedData.heroImage : post.heroImage,
                 status: validatedData.status ?? post.status,
                 categoryId: validatedData.categoryId ?? post.categoryId,
                 type: validatedData.type,
+                metaTitle: validatedData.metaTitle !== undefined ? validatedData.metaTitle : post.metaTitle,
+                metaDescription: validatedData.metaDescription !== undefined ? validatedData.metaDescription : post.metaDescription,
+                focusKeyword: validatedData.focusKeyword !== undefined ? validatedData.focusKeyword : post.focusKeyword,
+                featured: validatedData.featured !== undefined ? validatedData.featured : post.featured,
+                pillarPage: validatedData.pillarPage !== undefined ? validatedData.pillarPage : post.pillarPage,
+                trending: validatedData.trending !== undefined ? validatedData.trending : post.trending,
+                publishedAt: validatedData.publishedAt !== undefined ? (typeof validatedData.publishedAt === 'string' ? new Date(validatedData.publishedAt) : validatedData.publishedAt) : post.publishedAt,
+            },
+            include: {
+                tags: {
+                    include: {
+                        tag: {
+                            select: {
+                                id: true,
+                                name: true,
+                                slug: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 

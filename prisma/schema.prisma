@@ -80,7 +80,6 @@ model Post {
   // Media
   image       String?    // Keep for backward compatibility (use heroImage going forward)
   heroImage   String?    // Main hero image (Cloudinary URL)
-  images      String[]   // Additional images array (Cloudinary URLs)
   
   // Organization & Relations
   authorId    String     @db.ObjectId

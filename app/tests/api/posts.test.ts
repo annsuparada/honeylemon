@@ -37,9 +37,21 @@ describe('Post API', () => {
         updateAt: ""
     };
 
-    it('POST: should create a post', async () => {
+    it('POST: should create a post with tags in response', async () => {
         (prisma.post.findFirst as jest.Mock).mockResolvedValue(null);
-        (prisma.post.create as jest.Mock).mockResolvedValue({ ...validPostData, id: 'post123' });
+        (prisma.post.create as jest.Mock).mockResolvedValue({
+            ...validPostData,
+            id: 'post123',
+            tags: [
+                {
+                    tag: {
+                        id: 'tag1',
+                        name: 'Thailand',
+                        slug: 'thailand'
+                    }
+                }
+            ]
+        });
 
 
         const req = new Request('http://localhost/api/posts', {
@@ -61,7 +73,8 @@ describe('Post API', () => {
         expect(json.post.image).toBe('https://image.com');
         expect(json.post.type).toBe('ARTICLE');
         expect(json.post.status).toBe('DRAFT');
-
+        expect(json.post.tags).toBeDefined();
+        expect(json.post.tags[0].tag.slug).toBe('thailand');
     });
 
     it('POST: should fail to create a post with missing authorId (Zod validation)', async () => {

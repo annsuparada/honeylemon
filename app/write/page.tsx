@@ -38,15 +38,28 @@ const WritePage = () => {
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [image, setImage] = useState<string>(placeholderImg);
     const [postId, setPostId] = useState<string | null>(null);
-    const [pageType, setPageType] = useState<PageType>('ARTICLE');
+    const [pageType, setPageType] = useState<PageType>('BLOG_POST');
+    const [status, setStatus] = useState<PostStatus>('DRAFT');
     const [faqs, setFaqs] = useState<Array<{ question: string; answer: string }>>([]);
     const [itemListItems, setItemListItems] = useState<Array<{ name: string; url: string }>>([]);
     const [showBackToTop, setShowBackToTop] = useState(false);
+
+    // New Phase 5 fields
+    const [excerpt, setExcerpt] = useState<string>('');
+    const [heroImage, setHeroImage] = useState<string>('');
+    const [metaTitle, setMetaTitle] = useState<string>('');
+    const [metaDescription, setMetaDescription] = useState<string>('');
+    const [focusKeyword, setFocusKeyword] = useState<string>('');
+    const [featured, setFeatured] = useState<boolean>(false);
+    const [pillarPage, setPillarPage] = useState<boolean>(false);
+    const [trending, setTrending] = useState<boolean>(false);
+    const [publishedAt, setPublishedAt] = useState<string>('');
 
     const pageTypeOptions = Object.values(PageType).map(type => ({
         label: type,
         value: type
     }))
+
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -75,10 +88,20 @@ const WritePage = () => {
                     setPostId(post.id);
                     setTitle(post.title);
                     setContent(post.content);
-                    setDescription(post.description);
+                    setDescription(post.description || '');
+                    setExcerpt(post.excerpt || '');
                     setImage(post.image || placeholderImg);
+                    setHeroImage(post.heroImage || '');
                     setSelectedCategory(post.categoryId);
                     setPageType(post.type);
+                    setStatus(post.status || 'DRAFT');
+                    setMetaTitle(post.metaTitle || '');
+                    setMetaDescription(post.metaDescription || '');
+                    setFocusKeyword(post.focusKeyword || '');
+                    setFeatured(post.featured || false);
+                    setPillarPage(post.pillarPage || false);
+                    setTrending(post.trending || false);
+                    setPublishedAt(post.publishedAt ? new Date(post.publishedAt).toISOString().split('T')[0] : '');
                     const tagIds = post.tags?.map((tag: { id: string; name: string; slug: string }) => tag.id) || [];
                     setSelectedTagIds(tagIds);
 
@@ -133,9 +156,19 @@ const WritePage = () => {
             setTitle("");
             setContent("");
             setDescription("");
+            setExcerpt("");
             setImage(placeholderImg);
+            setHeroImage("");
             setSelectedCategory("");
-            setPageType("ARTICLE");
+            setPageType("BLOG_POST");
+            setStatus("DRAFT");
+            setMetaTitle("");
+            setMetaDescription("");
+            setFocusKeyword("");
+            setFeatured(false);
+            setPillarPage(false);
+            setTrending(false);
+            setPublishedAt("");
             setSelectedTagIds([]);
             setFaqs([]);
             setItemListItems([]);
@@ -209,26 +242,51 @@ const WritePage = () => {
     }
 
     const handleSave = async (isPublish: boolean) => {
-        // Get tag slug for DESTINATION posts
+        // Get tag slug for DESTINATION posts (and other page types that require single tag)
         let tagSlug: string | undefined;
-        if (pageType === 'DESTINATION' && selectedTagIds.length > 0) {
+        if (pageType === PageType.DESTINATION && selectedTagIds.length > 0) {
             const selectedTag = tags.find(tag => tag.id === selectedTagIds[0]);
             tagSlug = selectedTag?.slug;
+
+            // If tag slug is not found, try to fetch it from the API
+            if (!tagSlug) {
+                try {
+                    const allTags = await fetchAllTags();
+                    const foundTag = allTags.find((t: { id: string; slug: string }) => t.id === selectedTagIds[0]);
+                    tagSlug = foundTag?.slug;
+                    // Update local tags array if found
+                    if (foundTag && !tags.find(t => t.id === foundTag.id)) {
+                        setTags(prev => [...prev, foundTag]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching tag slug:', error);
+                }
+            }
         }
 
         await handleSavePost({
             title,
             content,
             description,
+            excerpt,
             selectedCategory,
             image,
+            heroImage,
             pageType,
+            status: undefined, // Let handler determine from isPublish
             postId,
             slug,
             user,
             isPublish,
             tagIds: selectedTagIds,
             tagSlug,
+            metaTitle,
+            metaDescription,
+            focusKeyword,
+            featured,
+            pillarPage,
+            trending,
+            publishedAt,
             faqs: faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
             itemListItems: itemListItems.filter(item => item.name.trim() && item.url.trim()),
             createPost,
@@ -264,20 +322,38 @@ const WritePage = () => {
                 <WriteForm
                     title={title}
                     description={description}
+                    excerpt={excerpt}
                     image={image}
+                    heroImage={heroImage}
                     categories={categories}
                     selectedCategory={selectedCategory}
                     pageType={pageType}
                     pageTypeOptions={pageTypeOptions}
                     tags={tags}
                     selectedTagIds={selectedTagIds}
+                    metaTitle={metaTitle}
+                    metaDescription={metaDescription}
+                    focusKeyword={focusKeyword}
+                    featured={featured}
+                    pillarPage={pillarPage}
+                    trending={trending}
+                    publishedAt={publishedAt}
                     onChange={{
                         title: setTitle,
                         description: setDescription,
+                        excerpt: setExcerpt,
                         image: setImage,
+                        heroImage: setHeroImage,
                         category: setSelectedCategory,
                         type: setPageType,
                         tags: setSelectedTagIds,
+                        metaTitle: setMetaTitle,
+                        metaDescription: setMetaDescription,
+                        focusKeyword: setFocusKeyword,
+                        featured: setFeatured,
+                        pillarPage: setPillarPage,
+                        trending: setTrending,
+                        publishedAt: setPublishedAt,
                     }}
                     onCreateCategory={handleCreateCategory}
                     onCreateTag={handleCreateTag}
@@ -333,17 +409,20 @@ const WritePage = () => {
                         </svg>
                     </button>
                 )}
-                <button
-                    className="btn btn-primary shadow-lg btn-sm md:btn-md text-xs md:text-base"
-                    onClick={() => handleSave(false)}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <span className="loading loading-spinner loading-sm"></span>
-                    ) : (
-                        'Save Draft'
-                    )}
-                </button>
+                {/* Only show "Save Draft" for blog posts */}
+                {pageType === PageType.BLOG_POST && (
+                    <button
+                        className="btn btn-primary shadow-lg btn-sm md:btn-md text-xs md:text-base"
+                        onClick={() => handleSave(false)}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <span className="loading loading-spinner loading-sm"></span>
+                        ) : (
+                            'Save Draft'
+                        )}
+                    </button>
+                )}
                 <button
                     className="btn btn-accent shadow-lg btn-sm md:btn-md text-xs md:text-base"
                     onClick={() => handleSave(true)}
@@ -355,6 +434,12 @@ const WritePage = () => {
                         'Publish'
                     )}
                 </button>
+                {/* Show info message for non-blog-post types */}
+                {pageType !== PageType.BLOG_POST && (
+                    <div className="bg-info/10 border border-info/30 rounded-lg p-2 text-xs text-info max-w-[200px] shadow-lg">
+                        <p className="font-medium">ℹ️ This page type must be published to be accessible.</p>
+                    </div>
+                )}
             </div>
         </ProtectedPage>
     );

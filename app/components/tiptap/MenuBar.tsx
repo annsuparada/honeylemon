@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useCurrentEditor } from "@tiptap/react";
 import type { Level } from "@tiptap/extension-heading";
+import ImageUploadModal from "./ImageUploadModal";
 
 interface ToolbarButton {
     label: string;
@@ -14,6 +16,8 @@ const headingLevels: Level[] = [1, 2, 3, 4, 5, 6];
 
 const MenuBar = () => {
     const { editor } = useCurrentEditor();
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+
     if (!editor) return null;
 
     const buttons: ToolbarButton[] = [
@@ -106,10 +110,7 @@ const MenuBar = () => {
         {
             label: "🖼️ Add Image",
             command: () => {
-                const url = window.prompt("Enter Image URL");
-                if (!url) return;
-                const alt = window.prompt("Enter Alt Text (optional)", "");
-                editor.chain().focus().setImage({ src: url, alt: alt || "" }).run();
+                setIsImageModalOpen(true);
             },
         },
         {
@@ -147,19 +148,28 @@ const MenuBar = () => {
     ];
 
     return (
-        <div className="sticky top-0 z-50 bg-white shadow p-2 rounded-md flex flex-wrap gap-2 mb-8">
-            {buttons.map((btn) => (
-                <button
-                    key={btn.label}
-                    className={`btn btn-sm ${btn.isActive && btn.isActive() ? "btn-active btn-primary" : ""
-                        }`}
-                    onClick={btn.command}
-                    disabled={btn.disabled?.() || false}
-                >
-                    {btn.label}
-                </button>
-            ))}
-        </div>
+        <>
+            <div className="sticky top-0 z-50 bg-white shadow p-2 rounded-md flex flex-wrap gap-2 mb-8">
+                {buttons.map((btn) => (
+                    <button
+                        key={btn.label}
+                        className={`btn btn-sm ${btn.isActive && btn.isActive() ? "btn-active btn-primary" : ""
+                            }`}
+                        onClick={btn.command}
+                        disabled={btn.disabled?.() || false}
+                    >
+                        {btn.label}
+                    </button>
+                ))}
+            </div>
+            <ImageUploadModal
+                isOpen={isImageModalOpen}
+                onClose={() => setIsImageModalOpen(false)}
+                onInsert={(url, alt) => {
+                    editor.chain().focus().setImage({ src: url, alt: alt || "" }).run();
+                }}
+            />
+        </>
     );
 };
 
