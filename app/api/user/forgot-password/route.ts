@@ -12,11 +12,8 @@ export async function POST(req: Request) {
 
         const user = await prisma.user.findUnique({ where: { email } })
         if (!user) {
-            console.log(`No user found for email: ${email}`)
             return NextResponse.json({ success: false, error: 'No account found with this email address' }, { status: 404 })
         }
-
-        console.log(`User found: ${user.email} (ID: ${user.id})`)
 
         const token = crypto.randomBytes(32).toString('hex')
         const expiresAt = add(new Date(), { minutes: 15 })

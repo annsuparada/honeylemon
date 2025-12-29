@@ -17,10 +17,6 @@ export interface EmailOptions {
 
 export async function sendEmail({ to, subject, html }: EmailOptions): Promise<boolean> {
     try {
-        // Debug: Check if environment variables are set
-        console.log('GMAIL_USER:', process.env.GMAIL_USER ? 'Set' : 'Not set')
-        console.log('GMAIL_APP_PASSWORD:', process.env.GMAIL_APP_PASSWORD ? 'Set' : 'Not set')
-
         const mailOptions = {
             from: `"Travomad" <${process.env.GMAIL_USER}>`,
             to,
@@ -28,9 +24,7 @@ export async function sendEmail({ to, subject, html }: EmailOptions): Promise<bo
             html,
         }
 
-        console.log('Sending email to:', to)
-        const result = await transporter.sendMail(mailOptions)
-        console.log('Email sent successfully:', result.messageId)
+        await transporter.sendMail(mailOptions)
         return true
     } catch (error) {
         console.error('Email sending failed:', error)

@@ -84,7 +84,6 @@ export default function DashboardEmailPage() {
             </div>
         )
     }
-    console.log("subscriptions", subscriptions)
     return (
         <div className="space-y-8">
             <div className="mb-8">

@@ -72,7 +72,6 @@ export default function ProfilePage() {
         setSavingPassword(true);
         if (!user) return;
         const res = await changePassword(user.id, passwordData.oldPassword, passwordData.newPassword);
-        console.log('res', res)
         if (res?.success) {
             setPasswordAlert({ type: 'success', text: 'Password updated successfully.' });
             setPasswordData({ oldPassword: '', newPassword: '' });

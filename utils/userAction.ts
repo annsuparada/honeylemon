@@ -127,7 +127,6 @@ export async function changePassword(userId: string, currentPassword: string, ne
                 newPassword,
             }),
         });
-        console.log('reponse.json')
 
         if (!response.ok) {
             const err = await response.json();

@@ -37,9 +37,13 @@ Travomad is a full-featured travel blog platform designed for content creators a
 ### Content Management
 - 📝 **Rich Text Editor**: TipTap-powered editor with formatting, tables, images, and more
 - 🏷️ **Category & Tag System**: Organize content with flexible categorization
-- 📊 **Content Types**: Support for Articles, Destinations, Deals, and Itineraries
+- 📊 **Content Types**: Support for Blog Posts, Pillar Articles, Cluster Articles, Listicles, Reviews, Guides, Destinations, Deals, and Itineraries
 - 💾 **Draft System**: Save and manage drafts before publishing
-- 🔍 **Advanced Filtering**: Filter posts by status, category, type, and date
+- 🔍 **Advanced Filtering**: Filter posts by status, category, type, date, featured, pillar pages, and trending
+- 🖼️ **Image Management**: Cloudinary integration for image uploads (URL and file upload)
+- ⭐ **Special Flags**: Mark posts as Featured, Pillar Pages, or Trending
+- 📊 **Analytics**: View counter and read time calculation for posts
+- 🎯 **SEO Optimization**: Custom meta titles, descriptions, and focus keywords per post
 
 ### SEO & Performance
 - 🎯 **Structured Data**: Automatic generation of Article, BreadcrumbList, FAQPage, and ItemList schemas
@@ -77,6 +81,7 @@ Travomad is a full-featured travel blog platform designed for content creators a
 - **ORM**: [Prisma](https://www.prisma.io/)
 - **Authentication**: JWT (jsonwebtoken)
 - **Email**: [Nodemailer](https://nodemailer.com/)
+- **Image Storage**: [Cloudinary](https://cloudinary.com/) for image uploads and optimization
 
 ### Development & Testing
 - **Testing**: [Jest](https://jestjs.io/) + [React Testing Library](https://testing-library.com/)
@@ -132,6 +137,7 @@ travomad/
 │   ├── api/              # API routes
 │   │   ├── campaign/     # Email campaign endpoints
 │   │   ├── category/     # Category management
+│   │   ├── images/       # Image upload endpoints (Cloudinary)
 │   │   ├── post/         # Blog post CRUD operations
 │   │   ├── user/         # User authentication & management
 │   │   └── newsletter/   # Newsletter subscription
@@ -145,10 +151,13 @@ travomad/
 │   │   ├── email/        # Email campaign management
 │   │   └── profile/        # User profile settings
 │   ├── lip/              # Library/utility functions
+│   │   ├── cloudinary.ts          # Cloudinary configuration
 │   │   ├── metadata-helpers.ts
 │   │   ├── structured-data-helpers.ts
 │   │   ├── postService.ts
-│   │   └── toc-helpers.ts
+│   │   ├── readTime-helpers.ts    # Read time calculation
+│   │   ├── toc-helpers.ts
+│   │   └── uploadToCloudinary.ts  # Image upload utilities
 │   ├── tests/            # Test files
 │   └── write/            # Content creation interface
 ├── prisma/
@@ -236,9 +245,13 @@ EMAIL_HOST="smtp.gmail.com"
 EMAIL_PORT=587
 EMAIL_USER="your-email@gmail.com"
 EMAIL_PASS="your-app-password"
+GMAIL_USER="your-email@gmail.com"
+GMAIL_APP_PASSWORD="your-app-password"
 
-# Optional: Cloudinary (for image optimization)
-CLOUDINARY_URL="your-cloudinary-url"
+# Cloudinary (for image uploads and optimization)
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
 ```
 
 ## 📊 SEO Features
@@ -247,11 +260,25 @@ Travomad implements comprehensive SEO best practices:
 
 - ✅ **Structured Data**: Article, BreadcrumbList, FAQPage, ItemList schemas
 - ✅ **Meta Tags**: Dynamic title, description, keywords
+- ✅ **Custom SEO Fields**: Per-post meta titles, descriptions, and focus keywords
 - ✅ **Open Graph**: Rich social media previews
 - ✅ **Twitter Cards**: Optimized Twitter sharing
 - ✅ **Canonical URLs**: Prevents duplicate content issues
+- ✅ **Hero Images**: SEO-optimized hero images for each post
+- ✅ **Read Time**: Automatic read time calculation for better UX
 - ✅ **Sitemap**: Auto-generated sitemap (if implemented)
 - ✅ **Robots.txt**: Proper search engine directives
+
+## 🖼️ Image Management
+
+Travomad uses Cloudinary for image management:
+
+- **URL Upload**: Upload images directly from URLs
+- **File Upload**: Upload images from your device
+- **Automatic Optimization**: Images are automatically optimized for web
+- **CDN Delivery**: Fast image delivery via Cloudinary CDN
+- **Hero Images**: Support for hero images on blog posts
+- **Image Gallery**: Multiple images per post support
 
 ## 🤝 Contributing
 

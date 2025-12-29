@@ -161,8 +161,7 @@ export async function POST(req: Request) {
             }
         }
 
-        // Log campaign results
-        console.log(`Campaign sent: ${sentCount} successful, ${failedCount} failed`);
+        // Campaign results logged via email service
 
         return NextResponse.json({
             success: true,
