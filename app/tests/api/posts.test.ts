@@ -31,7 +31,7 @@ describe('Post API', () => {
         image: 'https://image.com',
         categoryId: 'cat123',
         authorId: 'user123',
-        type: 'ARTICLE',
+        type: 'BLOG_POST',
         status: 'DRAFT',
         createAt: "",
         updateAt: ""
@@ -71,7 +71,7 @@ describe('Post API', () => {
         expect(json.post.content).toBe('Some content');
         expect(json.post.description).toBe('Short desc');
         expect(json.post.image).toBe('https://image.com');
-        expect(json.post.type).toBe('ARTICLE');
+        expect(json.post.type).toBe('BLOG_POST');
         expect(json.post.status).toBe('DRAFT');
         expect(json.post.tags).toBeDefined();
         expect(json.post.tags[0].tag.slug).toBe('thailand');
@@ -85,7 +85,7 @@ describe('Post API', () => {
             description: 'Short desc',
             image: 'https://image.com',
             categoryId: 'cat123',
-            type: 'ARTICLE',
+            type: 'BLOG_POST',
             status: 'DRAFT',
             // ❌ authorId is missing
         };
@@ -231,7 +231,7 @@ describe('Post API', () => {
                 title: 'An Article Post',
                 slug: 'article-post',
                 content: 'Content of the article.',
-                type: 'ARTICLE',
+                type: 'BLOG_POST',
                 author: {
                     username: 'ann',
                     profilePicture: 'https://image.com/profile.jpg',
@@ -250,7 +250,7 @@ describe('Post API', () => {
 
         (prisma.post.findMany as jest.Mock).mockResolvedValue(mockPosts);
 
-        const req = new Request('http://localhost/api/posts?type=ARTICLE', {
+        const req = new Request('http://localhost/api/posts?type=BLOG_POST', {
             method: 'GET',
         });
 
@@ -260,12 +260,12 @@ describe('Post API', () => {
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
         expect(Array.isArray(json.posts)).toBe(true);
-        expect(json.posts[0].type).toBe('ARTICLE');
+        expect(json.posts[0].type).toBe('BLOG_POST');
     });
 
     it('PATCH: should update a post', async () => {
         (prisma.post.findFirst as jest.Mock).mockResolvedValue({ id: 'post123', title: 'Old' });
-        (prisma.post.update as jest.Mock).mockResolvedValue({ id: 'post123', title: 'Updated', type: 'ARTICLE' });
+        (prisma.post.update as jest.Mock).mockResolvedValue({ id: 'post123', title: 'Updated', type: 'BLOG_POST' });
 
         const req = new Request('http://localhost/api/posts', {
             method: 'PATCH',
@@ -278,7 +278,7 @@ describe('Post API', () => {
                 title: 'Updated',
                 content: 'Updated content', // required by schema
                 categoryId: 'cat123',       // required by schema
-                type: 'ARTICLE',            // required by schema
+                type: 'BLOG_POST',            // required by schema
             }),
         });
 
@@ -304,7 +304,7 @@ describe('Post API', () => {
                 title: 'Updated',
                 content: 'This is updated content.',
                 categoryId: 'cat123',
-                type: 'ARTICLE',
+                type: 'BLOG_POST',
             }),
         });
 
