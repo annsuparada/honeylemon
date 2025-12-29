@@ -54,13 +54,12 @@
 - [x] Apply these filters to existing posts query
 
 ### Enhance Blog Cards (Add to existing card display)
-- [ ] Add small badge row below status badge:
-  - [ ] Show ⭐ "Featured" badge if featured=true (yellow bg)
-  - [ ] Show 📚 "Pillar" badge if pillarPage=true (purple bg)
-  - [ ] Show 🔥 "Trending" badge if trending=true (red bg)
-- [ ] Add view counter below category: "👁️ 1,234 views"
-- [ ] Add read time (optional): "📖 8 min read"
-- [ ] Show publishedAt date if published (instead of updatedAt for published posts)
+- [x] Add small badge row below status badge:
+  - [x] Show ⭐ "Featured" badge if featured=true (yellow bg)
+  - [x] Show 📚 "Pillar" badge if pillarPage=true (purple bg)
+  - [x] Show 🔥 "Trending" badge if trending=true (red bg)
+- [x] Add view counter below category: "👁️ 1,234 views"
+
 
 
 ### Testing
@@ -74,15 +73,12 @@
 - [ ] Test on mobile responsiveness
 
 ## PHASE 7: UPDATE FRONTEND POST DISPLAY
-- [ ] Update post query to include new fields
-- [ ] Display hero image
 - [ ] Add read time indicator
 - [ ] Add trending badge
 - [ ] Update SEO metadata function
 - [ ] Add JSON-LD structured data
 - [ ] Create view counter API route
 - [ ] Create ViewCounter component
-- [ ] Add ViewCounter to post page
 - [ ] Test view counter increments
 - [ ] Test on mobile
 
