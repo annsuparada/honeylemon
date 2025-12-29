@@ -58,6 +58,33 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                                 {post.status}
                             </span>
                         </p>
+                        {(post.featured || post.pillarPage || post.trending) && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {post.featured && (
+                                    <span className="badge badge-warning rounded text-xs">
+                                        ⭐ Featured
+                                    </span>
+                                )}
+                                {post.pillarPage && (
+                                    <span className="badge rounded text-xs" style={{ backgroundColor: '#9333ea', color: 'white' }}>
+                                        📚 Pillar
+                                    </span>
+                                )}
+                                {post.trending && (
+                                    <span className="badge badge-error rounded text-xs">
+                                        🔥 Trending
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                        <div className="flex flex-wrap gap-3 text-sm text-gray-500 mt-2">
+                            {post.views !== undefined && (
+                                <span>👁️ {post.views.toLocaleString()} views</span>
+                            )}
+                            {post.readTime !== undefined && post.readTime !== null && (
+                                <span>📖 {post.readTime} min read</span>
+                            )}
+                        </div>
                         <h3 className="text-2xl font-bold mt-2">{post.title}</h3>
                         <p className="mt-2 mb-10 text-gray-700">
                             {post.description?.slice(0, 200)}

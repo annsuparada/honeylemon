@@ -68,6 +68,8 @@ export interface BlogPost {
     featured?: boolean;
     pillarPage?: boolean;
     trending?: boolean;
+    views?: number;
+    readTime?: number;
 }
 
 
