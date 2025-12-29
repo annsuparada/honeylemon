@@ -64,7 +64,7 @@ type BentoFeaturesProps = {
 
 export default function BentoFeatures({ posts, sectionTitle, sectionSubTitle }: BentoFeaturesProps) {
     // Only display when there are exactly 5 posts for the bento grid layout
-    if (posts.length !== 5) {
+    if (!posts || !Array.isArray(posts) || posts.length !== 5) {
         return null;
     }
 

@@ -15,6 +15,8 @@ export async function GET(req: Request) {
         const categoryParam = searchParams.get("category");
         const limitParam = searchParams.get("limit")
         const typeParam = searchParams.get("type")
+        const featuredParam = searchParams.get("featured");
+        const trendingParam = searchParams.get("trending");
 
         const validStatuses = Object.values(PostStatus);
         const status = validStatuses.includes(statusParam as PostStatus)
@@ -30,6 +32,8 @@ export async function GET(req: Request) {
         if (slug) filter.slug = slug;
         if (status) filter.status = status;
         if (type) filter.type = type;
+        if (featuredParam === "true") filter.featured = true;
+        if (trendingParam === "true") filter.trending = true;
 
         if (categoryParam) {
             const category = await prisma.category.findFirst({

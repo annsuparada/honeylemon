@@ -3,9 +3,10 @@ import FormattedDate from "@/app/components/FormattedDate"
 import Image from "next/image"
 import Link from "next/link"
 import Pagination from "@/app/components/PaginationSSR"
+import TrendingPosts from "@/app/components/TrendingPosts"
 import { BlogPost } from "@/app/types"
 import { Metadata } from "next"
-import { getPublishedPosts } from "../lip/postService"
+import { getPublishedPosts, getTrendingPosts } from "../lip/postService"
 import { getBlogRoute } from "@/utils/routeHelpers"
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -72,6 +73,10 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
   const start = (page - 1) * itemsPerPage
   const currentItems = blogPosts.slice(start, start + itemsPerPage)
 
+  // Fetch trending posts
+  const trendingPosts = await getTrendingPosts(6)
+  const trendingBlogPosts = trendingPosts.filter(post => post.type === 'BLOG_POST' && !post.pillarPage)
+
   return (
     <>
       <HeroSection
@@ -80,6 +85,14 @@ export default async function BlogPage({ searchParams }: { searchParams?: { page
         description="From travel hacks and destination guides to the latest flight deals — the Travomad blog helps smart explorers plan better, travel cheaper, and experience more. No hype, just real-world insight."
         imageUrl="https://images.pexels.com/photos/27855084/pexels-photo-27855084/free-photo-of-acropolis.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
+
+      {trendingBlogPosts.length > 0 && (
+        <TrendingPosts 
+          posts={trendingBlogPosts}
+          title="🔥 Trending Now"
+          subTitle="Popular posts our readers love"
+        />
+      )}
 
       <div className="text-center pt-16">
         <h2 className="text-4xl font-bold">Latest Posts</h2>

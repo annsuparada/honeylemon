@@ -83,11 +83,8 @@
 - [ ] Test on mobile
 
 ## PHASE 8: HOMEPAGE FEATURED SECTION
-- [ ] Create components/home/FeaturedPosts.tsx
-- [ ] Add FeaturedPosts to homepage
-- [ ] Create TrendingPosts component (optional)
-- [ ] Create PillarPages component (optional)
-- [ ] Mark some posts as featured
+- [x] update bento feature component to render feature boolean, 
+- [x] Create TrendingPosts component and display it on blog page
 - [ ] Test featured section displays
 - [ ] Test responsive layout
 

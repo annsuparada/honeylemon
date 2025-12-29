@@ -95,6 +95,170 @@ export async function getPublishedPosts(
 }
 
 /**
+ * Get featured posts (posts with featured=true)
+ */
+export async function getFeaturedPosts(limit: number = 5): Promise<BlogPost[]> {
+    const rawPosts = await prisma.post.findMany({
+        where: {
+            status: PostStatus.PUBLISHED,
+            featured: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                    profilePicture: true,
+                    name: true,
+                    lastName: true,
+                },
+            },
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                },
+            },
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    const posts: BlogPost[] = rawPosts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        description: post.description ?? undefined,
+        image: post.image ?? undefined,
+        status: post.status as PostStatus,
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+        category: {
+            name: post.category.name,
+            slug: post.category.slug,
+        },
+        categoryId: post.category.id,
+        author: {
+            id: post.author.id,
+            name: post.author.name ?? '',
+            lastName: post.author.lastName ?? undefined,
+            username: post.author.username,
+            profilePicture: post.author.profilePicture ?? undefined,
+        },
+        tags: post.tags.map(pt => ({
+            id: pt.tag.id,
+            name: pt.tag.name,
+            slug: pt.tag.slug,
+        })),
+        type: post.type,
+        featured: post.featured ?? undefined,
+        pillarPage: post.pillarPage ?? undefined,
+        trending: post.trending ?? undefined,
+        views: post.views ?? undefined,
+        readTime: post.readTime ?? undefined,
+        metaTitle: post.metaTitle ?? undefined,
+        metaDescription: post.metaDescription ?? undefined,
+    }));
+
+    return posts;
+}
+
+/**
+ * Get trending posts (posts with trending=true)
+ */
+export async function getTrendingPosts(limit: number = 6): Promise<BlogPost[]> {
+    const rawPosts = await prisma.post.findMany({
+        where: {
+            status: PostStatus.PUBLISHED,
+            trending: true,
+        },
+        orderBy: { views: 'desc' }, // Order by views for trending
+        take: limit,
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                    profilePicture: true,
+                    name: true,
+                    lastName: true,
+                },
+            },
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                },
+            },
+            tags: {
+                include: {
+                    tag: {
+                        select: {
+                            id: true,
+                            name: true,
+                            slug: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    const posts: BlogPost[] = rawPosts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        description: post.description ?? undefined,
+        image: post.image ?? undefined,
+        status: post.status as PostStatus,
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+        category: {
+            name: post.category.name,
+            slug: post.category.slug,
+        },
+        categoryId: post.category.id,
+        author: {
+            id: post.author.id,
+            name: post.author.name ?? '',
+            lastName: post.author.lastName ?? undefined,
+            username: post.author.username,
+            profilePicture: post.author.profilePicture ?? undefined,
+        },
+        tags: post.tags.map(pt => ({
+            id: pt.tag.id,
+            name: pt.tag.name,
+            slug: pt.tag.slug,
+        })),
+        type: post.type,
+        featured: post.featured ?? undefined,
+        pillarPage: post.pillarPage ?? undefined,
+        trending: post.trending ?? undefined,
+        views: post.views ?? undefined,
+        readTime: post.readTime ?? undefined,
+        metaTitle: post.metaTitle ?? undefined,
+        metaDescription: post.metaDescription ?? undefined,
+    }));
+
+    return posts;
+}
+
+/**
  * Get featured post for a specific country
  * Looks for posts with a "featured-[country]" tag first, then falls back to latest post with country tag
  */
