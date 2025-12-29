@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCurrentEditor } from "@tiptap/react";
 import type { Level } from "@tiptap/extension-heading";
 import ImageUploadModal from "./ImageUploadModal";
+import InternalLinkModal from "./InternalLinkModal";
 
 interface ToolbarButton {
     label: string;
@@ -17,6 +18,7 @@ const headingLevels: Level[] = [1, 2, 3, 4, 5, 6];
 const MenuBar = () => {
     const { editor } = useCurrentEditor();
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isInternalLinkModalOpen, setIsInternalLinkModalOpen] = useState(false);
 
     if (!editor) return null;
 
@@ -123,6 +125,12 @@ const MenuBar = () => {
             },
         },
         {
+            label: "🔗 Internal Link",
+            command: () => {
+                setIsInternalLinkModalOpen(true);
+            },
+        },
+        {
             label: "❌ Remove Link",
             command: () => editor.chain().focus().unsetLink().run(),
         },
@@ -167,6 +175,13 @@ const MenuBar = () => {
                 onClose={() => setIsImageModalOpen(false)}
                 onInsert={(url, alt) => {
                     editor.chain().focus().setImage({ src: url, alt: alt || "" }).run();
+                }}
+            />
+            <InternalLinkModal
+                isOpen={isInternalLinkModalOpen}
+                onClose={() => setIsInternalLinkModalOpen(false)}
+                onInsert={(url) => {
+                    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
                 }}
             />
         </>
