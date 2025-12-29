@@ -8,6 +8,13 @@ jest.mock('@/app/components/FormattedDate', () => ({ dateString }: { dateString:
     <span>{dateString}</span>
 ));
 
+jest.mock('@/app/components/ReadTime', () => ({
+    __esModule: true,
+    default: function ReadTime({ readTime }: { readTime?: number | null; className?: string }) {
+        return readTime ? <span data-testid="read-time">{readTime} min read</span> : null;
+    },
+}));
+
 const mockPosts: BlogPost[] = [
     {
         slug: 'test-post',

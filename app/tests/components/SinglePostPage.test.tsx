@@ -79,6 +79,20 @@ jest.mock('@/app/lip/toc-helpers', () => ({
     addIdsToHeadings: jest.fn((html: string) => html),
 }));
 
+jest.mock('@/app/components/ReadTime', () => ({
+    __esModule: true,
+    default: function ReadTime({ readTime }: { readTime?: number | null }) {
+        return readTime ? <span data-testid="read-time">{readTime} min read</span> : null;
+    },
+}));
+
+jest.mock('@/app/components/ViewCounter', () => ({
+    __esModule: true,
+    default: function ViewCounter() {
+        return null;
+    },
+}));
+
 jest.mock('@/app/lip/structured-data-helpers', () => ({
     generateArticleStructuredData: jest.fn(() => ({ '@context': 'https://schema.org' })),
     generateFAQStructuredData: jest.fn(() => null),
