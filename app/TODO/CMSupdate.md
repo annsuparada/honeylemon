@@ -43,19 +43,35 @@
 - [x] Update submit handler
 - [x] Test all new fields work
 
-## PHASE 6: UPDATE ADMIN POST LIST
-- [ ] Add filter state
-- [ ] Add type filter dropdown
-- [ ] Add status filter dropdown
-- [ ] Add special flags filters
-- [ ] Update posts query with filters
-- [ ] Display hero image thumbnails
-- [ ] Display type badges
-- [ ] Display status badges
-- [ ] Display special flag badges
-- [ ] Show view counts
-- [ ] Add bulk actions (optional)
-- [ ] Test all filters
+## PHASE 6: ENHANCE BLOG LIST PAGE
+**File: /dashboard/blogs**
+
+### Add Special Flags Filters (New filters below existing ones)
+- [x] Add "Special Filters" section below Sort by
+- [x] Add "⭐ Featured Only" checkbox
+- [x] Add "📚 Pillar Pages Only" checkbox  
+- [x] Add "🔥 Trending Only" checkbox
+- [x] Apply these filters to existing posts query
+
+### Enhance Blog Cards (Add to existing card display)
+- [ ] Add small badge row below status badge:
+  - [ ] Show ⭐ "Featured" badge if featured=true (yellow bg)
+  - [ ] Show 📚 "Pillar" badge if pillarPage=true (purple bg)
+  - [ ] Show 🔥 "Trending" badge if trending=true (red bg)
+- [ ] Add view counter below category: "👁️ 1,234 views"
+- [ ] Add read time (optional): "📖 8 min read"
+- [ ] Show publishedAt date if published (instead of updatedAt for published posts)
+
+
+### Testing
+- [ ] Test "Featured Only" filter
+- [ ] Test "Pillar Pages Only" filter
+- [ ] Test "Trending Only" filter
+- [ ] Test combining filters (Featured + Published + Destination)
+- [ ] Verify new badges display correctly
+- [ ] Verify view counts show
+- [ ] Test that existing filters still work
+- [ ] Test on mobile responsiveness
 
 ## PHASE 7: UPDATE FRONTEND POST DISPLAY
 - [ ] Update post query to include new fields

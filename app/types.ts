@@ -65,6 +65,9 @@ export interface BlogPost {
         url: string;
         order: number;
     }>;
+    featured?: boolean;
+    pillarPage?: boolean;
+    trending?: boolean;
 }
 
 

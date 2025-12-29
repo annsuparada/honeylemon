@@ -162,11 +162,29 @@ export const handleSavePost = async ({
     // Validate that non-BLOG_POST page types require at least 1 tag when publishing
     if (isPublish && pageType && pageType !== PageType.BLOG_POST && (!tagIds || tagIds.length === 0)) {
         const pageTypeName = getPageTypeDisplayName(pageType);
-        setMessage({ 
-            type: 'error', 
-            text: `${pageTypeName} pages require at least 1 tag when publishing. Please add a tag.` 
+        setMessage({
+            type: 'error',
+            text: `${pageTypeName} pages require at least 1 tag when publishing. Please add a tag.`
         });
         return;
+    }
+
+    // Validate pillar page requirements
+    if (pillarPage) {
+        if (!pageType || pageType === PageType.BLOG_POST) {
+            setMessage({
+                type: 'error',
+                text: 'Pillar pages require a page type other than BLOG_POST. Please select a different page type (e.g., DESTINATION, ITINERARY, GUIDE, or DEAL).'
+            });
+            return;
+        }
+        if (!tagIds || tagIds.length === 0) {
+            setMessage({
+                type: 'error',
+                text: 'Pillar pages require at least 1 tag. Please add a tag.'
+            });
+            return;
+        }
     }
 
     setLoading(true);

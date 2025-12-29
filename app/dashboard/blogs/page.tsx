@@ -21,6 +21,9 @@ export default function Dashboard() {
     const [currentItems, setCurrentItems] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [sortOrder, setSortOrder] = useState('newest');
+    const [featuredOnly, setFeaturedOnly] = useState(false);
+    const [pillarPagesOnly, setPillarPagesOnly] = useState(false);
+    const [trendingOnly, setTrendingOnly] = useState(false);
 
 
     const statusCounts = useMemo(() => {
@@ -92,6 +95,18 @@ export default function Dashboard() {
             updated = updated.filter(post => post.type === selectedPageType);
         }
 
+        if (featuredOnly) {
+            updated = updated.filter(post => post.featured === true);
+        }
+
+        if (pillarPagesOnly) {
+            updated = updated.filter(post => post.pillarPage === true);
+        }
+
+        if (trendingOnly) {
+            updated = updated.filter(post => post.trending === true);
+        }
+
         updated = updated.sort((a, b) => {
             const dateA = new Date(a.updatedAt).getTime();
             const dateB = new Date(b.updatedAt).getTime();
@@ -100,7 +115,7 @@ export default function Dashboard() {
 
         setFilteredPosts(updated);
         setCurrentItems(updated.slice(0, itemsPerPage));
-    }, [selectedStatus, selectedPageType, sortOrder, blogPosts]);
+    }, [selectedStatus, selectedPageType, sortOrder, featuredOnly, pillarPagesOnly, trendingOnly, blogPosts]);
 
     const handleArchive = async (post: BlogPost) => {
         const result = await updatePost({
@@ -151,7 +166,13 @@ export default function Dashboard() {
                     onSortChange={(value) => setSortOrder(value)}
                     statusOptions={postStatusOptions}
                     typeOptions={pageTypeOptions}
-                    sortOptions={sortOptions} />
+                    sortOptions={sortOptions}
+                    featuredOnly={featuredOnly}
+                    pillarPagesOnly={pillarPagesOnly}
+                    trendingOnly={trendingOnly}
+                    onFeaturedChange={setFeaturedOnly}
+                    onPillarPagesChange={setPillarPagesOnly}
+                    onTrendingChange={setTrendingOnly} />
 
                 {message && <AlertMessage message={message} onClose={() => setMessage(null)} />}
 

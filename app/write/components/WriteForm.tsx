@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import SelectInput from '@/app/components/SelectInput'
 import TagsInput from '@/app/components/TagsInput'
@@ -106,6 +106,17 @@ const WriteForm: React.FC<WriteFormProps> = ({
     onChangeItemListItems,
 }) => {
     const [seoSectionOpen, setSeoSectionOpen] = useState(false);
+
+    // Auto-toggle pillarPage when page type (non-BLOG_POST) and at least one tag are selected
+    useEffect(() => {
+        const hasValidPageType = pageType && pageType !== PageType.BLOG_POST;
+        const hasAtLeastOneTag = selectedTagIds && selectedTagIds.length > 0;
+
+        if (hasValidPageType && hasAtLeastOneTag && !pillarPage) {
+            onChange.pillarPage(true);
+        }
+    }, [pageType, selectedTagIds, pillarPage]);
+
     const handleAddFaq = () => {
         onChangeFaqs([...faqs, { question: '', answer: '' }]);
     };
@@ -338,15 +349,35 @@ const WriteForm: React.FC<WriteFormProps> = ({
                             />
                             <span className="text-sm">⭐ Featured (Show on homepage)</span>
                         </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                className="checkbox checkbox-primary"
-                                checked={pillarPage}
-                                onChange={(e) => onChange.pillarPage(e.target.checked)}
-                            />
-                            <span className="text-sm">📚 Pillar Page (Main comprehensive guide)</span>
-                        </label>
+                        <div>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox checkbox-primary"
+                                    checked={pillarPage}
+                                    onChange={(e) => onChange.pillarPage(e.target.checked)}
+                                />
+                                <span className="text-sm">📚 Pillar Page (Main comprehensive guide)</span>
+                            </label>
+                            {pillarPage && (
+                                <div className="mt-2 ml-6 p-3 bg-warning/10 border border-warning/30 rounded-lg">
+                                    <p className="text-sm text-warning font-medium mb-1">
+                                        ⚠️ Pillar Page Requirements:
+                                    </p>
+                                    <ul className="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                                        {(!pageType || pageType === PageType.BLOG_POST) && (
+                                            <li className="text-error">Page type must be selected (choose DESTINATION, ITINERARY, GUIDE, or DEAL)</li>
+                                        )}
+                                        {selectedTagIds.length === 0 && (
+                                            <li className="text-error">At least 1 tag is required</li>
+                                        )}
+                                        {pageType && pageType !== PageType.BLOG_POST && selectedTagIds.length > 0 && (
+                                            <li className="text-green-600">✓ All requirements met</li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="checkbox"
