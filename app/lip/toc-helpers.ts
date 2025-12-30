@@ -11,14 +11,37 @@ export function extractHeadings(html: string): Heading[] {
     const headings: Heading[] = []
     const headingRegex = /<h([2-6])[^>]*>(.*?)<\/h[1-6]>/gi
     let match
+    const idCounts = new Map<string, number>()
 
     while ((match = headingRegex.exec(html)) !== null) {
         const level = parseInt(match[1], 10)
         const text = match[2].replace(/<[^>]*>/g, '').trim() // Remove any HTML tags from text
 
         if (text) {
-            const id = generateId(text)
-            headings.push({ id, text, level })
+            // Check if heading already has an ID attribute
+            const idMatch = match[0].match(/id=["']([^"']+)["']/i)
+            let id: string
+            
+            if (idMatch) {
+                // Use existing ID
+                id = idMatch[1]
+            } else {
+                // Generate new ID
+                id = generateId(text)
+            }
+
+            // Ensure unique ID by appending number if duplicate
+            const baseId = id
+            let uniqueId = id
+            let counter = 1
+            
+            while (idCounts.has(uniqueId)) {
+                uniqueId = `${baseId}-${counter}`
+                counter++
+            }
+            
+            idCounts.set(uniqueId, (idCounts.get(uniqueId) || 0) + 1)
+            headings.push({ id: uniqueId, text, level })
         }
     }
 
@@ -30,19 +53,36 @@ export function extractHeadings(html: string): Heading[] {
  */
 export function addIdsToHeadings(html: string): string {
     const headingRegex = /<h([2-6])([^>]*)>(.*?)<\/h[1-6]>/gi
+    const usedIds = new Set<string>()
 
     return html.replace(headingRegex, (match, level, attributes, content) => {
         const text = content.replace(/<[^>]*>/g, '').trim()
         if (!text) return match
 
-        const id = generateId(text)
-
         // Check if id already exists in attributes
-        if (attributes && attributes.includes('id=')) {
-            return match // Don't add duplicate id
+        const existingIdMatch = attributes.match(/id=["']([^"']+)["']/i)
+        if (existingIdMatch) {
+            const existingId = existingIdMatch[1]
+            usedIds.add(existingId)
+            return match // Keep existing ID
         }
 
-        return `<h${level}${attributes} id="${id}">${content}</h${level}>`
+        // Generate unique ID
+        let baseId = generateId(text)
+        let uniqueId = baseId
+        let counter = 1
+
+        // Ensure ID is unique
+        while (usedIds.has(uniqueId)) {
+            uniqueId = `${baseId}-${counter}`
+            counter++
+        }
+
+        usedIds.add(uniqueId)
+
+        // Add id attribute
+        const newAttributes = attributes ? `${attributes} id="${uniqueId}"` : `id="${uniqueId}"`
+        return `<h${level} ${newAttributes}>${content}</h${level}>`
     })
 }
 
