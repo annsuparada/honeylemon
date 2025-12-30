@@ -213,16 +213,18 @@ describe('postActions', () => {
             expect(res.success).toBe(true);
         });
 
-        it('returns null without token', async () => {
+        it('returns error object without token', async () => {
             const res = await deletePost('post123');
-            expect(res).toBeNull();
+            expect(res.success).toBe(false);
+            expect(res.error).toBe('Unauthorized');
         });
 
-        it('returns null on fetch failure', async () => {
+        it('returns error object on fetch failure', async () => {
             localStorage.setItem('token', 'token');
             fetchMock.mockRejectOnce(new Error('Failed'));
             const res = await deletePost('post123');
-            expect(res).toBeNull();
+            expect(res.success).toBe(false);
+            expect(res.error).toBe('An error occurred while deleting the post');
         });
     });
 });

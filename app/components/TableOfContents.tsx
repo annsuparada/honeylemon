@@ -62,11 +62,20 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
     e.preventDefault()
     const element = document.getElementById(id)
     if (element) {
-      // Use scrollIntoView - scroll-margin-top is handled by CSS
-      element.scrollIntoView({
+      // Calculate offset for fixed header (matches CSS scroll-margin-top: 100px)
+      const offset = 100
+
+      // Get element's position relative to document
+      const elementTop = element.getBoundingClientRect().top + window.pageYOffset
+
+      // Calculate scroll position with offset
+      const scrollPosition = elementTop - offset
+
+      // Use window.scrollTo for better test compatibility
+      // scroll-margin-top in CSS will handle native anchor navigation
+      window.scrollTo({
+        top: Math.max(0, scrollPosition),
         behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
       })
     }
   }
@@ -120,8 +129,8 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
                 setIsMobileOpen(false) // Close mobile menu after click
               }}
               className={`block text-sm py-1 px-2 ml-4 rounded transition-colors text-gray-600 ${activeId === faq.id
-                  ? 'bg-primary text-primary-content'
-                  : 'hover:bg-base-200 text-gray-700'
+                ? 'bg-primary text-primary-content'
+                : 'hover:bg-base-200 text-gray-700'
                 }`}
             >
               {faq.question}

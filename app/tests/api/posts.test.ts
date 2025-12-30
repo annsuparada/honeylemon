@@ -16,6 +16,18 @@ jest.mock('@/prisma/client', () => ({
     category: {
         findFirst: jest.fn(),
     },
+    postTag: {
+        deleteMany: jest.fn(),
+    },
+    comment: {
+        deleteMany: jest.fn(),
+    },
+    fAQ: {
+        deleteMany: jest.fn(),
+    },
+    itemListItem: {
+        deleteMany: jest.fn(),
+    },
 }));
 
 jest.mock('@/utils/auth', () => ({
@@ -317,6 +329,10 @@ describe('Post API', () => {
 
     it('DELETE: should delete a post', async () => {
         (prisma.post.findFirst as jest.Mock).mockResolvedValue({ id: 'post123' });
+        (prisma.postTag.deleteMany as jest.Mock).mockResolvedValue({ count: 0 });
+        (prisma.comment.deleteMany as jest.Mock).mockResolvedValue({ count: 0 });
+        (prisma.fAQ.deleteMany as jest.Mock).mockResolvedValue({ count: 0 });
+        (prisma.itemListItem.deleteMany as jest.Mock).mockResolvedValue({ count: 0 });
         (prisma.post.delete as jest.Mock).mockResolvedValue({ id: 'post123' });
 
         const req = new Request('http://localhost/api/posts', {

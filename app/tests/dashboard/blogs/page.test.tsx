@@ -114,7 +114,7 @@ const mockTrendingPost: BlogPost = {
 describe('Dashboard Page', () => {
     beforeEach(() => {
         ; (postActions.fetchPosts as jest.Mock).mockResolvedValue([mockPost])
-            ; (postActions.deletePost as jest.Mock).mockResolvedValue(true)
+            ; (postActions.deletePost as jest.Mock).mockResolvedValue({ success: true })
             ; (postActions.updatePost as jest.Mock).mockResolvedValue({
                 success: true,
                 post: { ...mockPost, status: 'ARCHIVED' },
@@ -194,7 +194,7 @@ describe('Dashboard Page', () => {
     })
 
     it('does not show success if deletePost fails', async () => {
-        ; (postActions.deletePost as jest.Mock).mockResolvedValue(false)
+        ; (postActions.deletePost as jest.Mock).mockResolvedValue({ success: false, error: 'Failed to delete' })
         jest.spyOn(window, 'confirm').mockReturnValue(true)
 
         render(<Dashboard />)

@@ -25,10 +25,27 @@ beforeEach(() => {
   document.getElementById = jest.fn((id: string) => {
     const element = document.createElement('div');
     element.id = id;
+    // Mock getBoundingClientRect for scroll calculation
+    element.getBoundingClientRect = jest.fn(() => ({
+      top: 500,
+      left: 0,
+      bottom: 550,
+      right: 0,
+      width: 100,
+      height: 50,
+      x: 0,
+      y: 500,
+      toJSON: jest.fn(),
+    }));
     return element;
   });
   // Mock window.scrollTo
   window.scrollTo = jest.fn();
+  // Mock window.pageYOffset
+  Object.defineProperty(window, 'pageYOffset', {
+    writable: true,
+    value: 0,
+  });
 });
 
 describe('TableOfContents Component', () => {
@@ -124,7 +141,7 @@ describe('TableOfContents Component', () => {
     // Get the link from within the mobile drawer
     const drawer = document.querySelector('.fixed.bottom-0');
     const firstHeadingLink = drawer?.querySelector('a[href="#heading-1"]');
-    
+
     if (firstHeadingLink) {
       fireEvent.click(firstHeadingLink);
     }

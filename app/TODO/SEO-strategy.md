@@ -116,10 +116,10 @@ Based on your travel niche, here are 8 high-impact content clusters to build:
 - Links to ALL Mexico cluster pages below
 
 #### Cluster Pages (8-15 pages):
-1. **Best All-Inclusive Resorts in Mexico** ✅ (Already exists!)
-2. Best Time to Visit Mexico (Weather, Festivals, Crowds)
-3. Mexico Travel Costs: Daily Budget Breakdown
-4. Cancun vs. Tulum vs. Playa del Carmen: Which to Choose?
+1. ✅ **Best All-Inclusive Resorts in Mexico** ✅ (Already exists!)
+2. ✅ Best Time to Visit Mexico (Weather, Festivals, Crowds)
+3. ✅ Mexico Travel Costs: Daily Budget Breakdown
+4. ✅ Cancun vs. Tulum vs. Playa del Carmen: Which to Choose?
 5. Mexico Safety Guide for Travelers (2025 Update)
 6. Top 10 Hidden Gems in Mexico Off the Beaten Path
 7. Mexican Food Guide: What to Eat and Where
