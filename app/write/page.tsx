@@ -295,7 +295,18 @@ const WritePage = () => {
             trending,
             publishedAt,
             faqs: faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
-            itemListItems: itemListItems.filter(item => item.name.trim() && item.url.trim()),
+            itemListItems: itemListItems.filter(item => {
+                const hasName = item.name.trim();
+                const hasUrl = item.url.trim();
+                if (!hasName || !hasUrl) return false;
+                // Validate URL format
+                try {
+                    new URL(item.url.trim());
+                    return true;
+                } catch {
+                    return false;
+                }
+            }),
             createPost,
             updatePost,
             router,

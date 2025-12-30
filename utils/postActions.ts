@@ -145,7 +145,9 @@ export async function updatePost(input: z.infer<typeof updatePostSchema>): Promi
 export async function deletePost(id: string) {
   try {
     const token = localStorage.getItem('token');
-    if (!token) throw new Error('Unauthorized');
+    if (!token) {
+      return { success: false, error: 'Unauthorized' };
+    }
 
     const res = await fetch(POST_API_URL, {
       method: 'DELETE',
@@ -156,10 +158,16 @@ export async function deletePost(id: string) {
       body: JSON.stringify({ id }),
     });
 
-    return await res.json();
+    const data = await res.json();
+
+    if (res.ok) {
+      return { success: true, ...data };
+    } else {
+      return { success: false, error: data.error || 'Failed to delete post' };
+    }
   } catch (err) {
     console.error('Error deleting post:', err);
-    return null;
+    return { success: false, error: 'An error occurred while deleting the post' };
   }
 }
 

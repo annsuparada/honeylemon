@@ -143,9 +143,11 @@ export default function Dashboard() {
     const handleDelete = async (postId: string) => {
         if (!confirm("Delete this post?")) return;
         const result = await deletePost(postId);
-        if (result) {
+        if (result?.success) {
             setBlogPosts(prev => prev.filter(p => p.id !== postId));
             setMessage({ type: "success", text: "Post deleted." });
+        } else {
+            setMessage({ type: "error", text: result?.error || "Failed to delete post." });
         }
     };
 

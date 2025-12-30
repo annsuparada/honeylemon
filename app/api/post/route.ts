@@ -377,7 +377,28 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 });
         }
 
-        // Delete post (FAQs will be auto-deleted due to onDelete: Cascade)
+        // Delete related records first
+        // Delete PostTags (junction table)
+        await prisma.postTag.deleteMany({
+            where: { postId: validatedData.id }
+        });
+
+        // Delete Comments
+        await prisma.comment.deleteMany({
+            where: { postId: validatedData.id }
+        });
+
+        // Delete FAQs (should cascade, but being explicit)
+        await prisma.fAQ.deleteMany({
+            where: { postId: validatedData.id }
+        });
+
+        // Delete ItemListItems (should cascade, but being explicit)
+        await prisma.itemListItem.deleteMany({
+            where: { postId: validatedData.id }
+        });
+
+        // Delete post (FAQs and ItemListItems will also auto-delete due to onDelete: Cascade, but we're being explicit above)
         await prisma.post.delete({ where: { id: validatedData.id } });
 
         return NextResponse.json({ success: true, message: "Post deleted successfully" }, { status: 200 });
