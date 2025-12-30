@@ -62,13 +62,11 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
     e.preventDefault()
     const element = document.getElementById(id)
     if (element) {
-      const offset = 100 // Offset for fixed header if you have one
-      const elementPosition = element.getBoundingClientRect().top
-      const offsetPosition = elementPosition + window.pageYOffset - offset
-
-      window.scrollTo({
-        top: offsetPosition,
+      // Use scrollIntoView - scroll-margin-top is handled by CSS
+      element.scrollIntoView({
         behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
       })
     }
   }
@@ -101,12 +99,12 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
           {heading.text}
         </a>
       ))}
-      
+
       {/* FAQs Section Separator */}
       {headings.length > 0 && faqs && faqs.length > 0 && (
         <div className="my-2 border-t border-base-300"></div>
       )}
-      
+
       {/* FAQs */}
       {faqs && faqs.length > 0 && (
         <>
@@ -121,11 +119,10 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
                 handleClick(e, faq.id)
                 setIsMobileOpen(false) // Close mobile menu after click
               }}
-              className={`block text-sm py-1 px-2 ml-4 rounded transition-colors text-gray-600 ${
-                activeId === faq.id
+              className={`block text-sm py-1 px-2 ml-4 rounded transition-colors text-gray-600 ${activeId === faq.id
                   ? 'bg-primary text-primary-content'
                   : 'hover:bg-base-200 text-gray-700'
-              }`}
+                }`}
             >
               {faq.question}
             </a>

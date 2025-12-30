@@ -19,6 +19,8 @@
     margin-bottom: 10px;
     border-bottom: 2px solid #ddd;
     padding-bottom: 5px;
+    scroll-margin-top: 100px;
+    /* Offset for fixed header when scrolling to anchor */
 }
 
 .post-content h3 {
@@ -26,6 +28,8 @@
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 8px;
+    scroll-margin-top: 100px;
+    /* Offset for fixed header when scrolling to anchor */
 }
 
 .post-content h4,
@@ -35,6 +39,8 @@
     font-weight: bold;
     margin-top: 15px;
     margin-bottom: 5px;
+    scroll-margin-top: 100px;
+    /* Offset for fixed header when scrolling to anchor */
 }
 
 /* Paragraphs */
