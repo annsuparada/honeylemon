@@ -55,6 +55,7 @@ interface WriteFormProps {
     publishedAt: string
     faqs: Array<{ question: string; answer: string }>
     itemListItems: Array<{ name: string; url: string }>
+    pillarWarning?: string | null
     onChange: {
         title: (val: string) => void
         description: (val: string) => void
@@ -99,6 +100,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
     publishedAt,
     faqs,
     itemListItems,
+    pillarWarning,
     onChange,
     onCreateCategory,
     onCreateTag,
@@ -106,16 +108,6 @@ const WriteForm: React.FC<WriteFormProps> = ({
     onChangeItemListItems,
 }) => {
     const [seoSectionOpen, setSeoSectionOpen] = useState(false);
-
-    // Auto-toggle pillarPage when page type (non-BLOG_POST) and at least one tag are selected
-    useEffect(() => {
-        const hasValidPageType = pageType && pageType !== PageType.BLOG_POST;
-        const hasAtLeastOneTag = selectedTagIds && selectedTagIds.length > 0;
-
-        if (hasValidPageType && hasAtLeastOneTag && !pillarPage) {
-            onChange.pillarPage(true);
-        }
-    }, [pageType, selectedTagIds, pillarPage]);
 
     const handleAddFaq = () => {
         onChangeFaqs([...faqs, { question: '', answer: '' }]);
@@ -221,10 +213,8 @@ const WriteForm: React.FC<WriteFormProps> = ({
                         tags={tags}
                         selectedTagIds={selectedTagIds}
                         onChange={(newTagIds) => {
-                            // Prevent removing the last tag for page types that require exactly 1 tag
-                            if (requiresSingleTag(pageType) && newTagIds.length === 0 && selectedTagIds.length > 0) {
-                                return; // Don't allow removing the last tag
-                            }
+                            // Allow tag changes - user can remove and select a different tag
+                            // Validation for required tags will happen on save
                             onChange.tags(newTagIds);
                         }}
                         onCreateTag={onCreateTag}
@@ -359,22 +349,9 @@ const WriteForm: React.FC<WriteFormProps> = ({
                                 />
                                 <span className="text-sm">📚 Pillar Page (Main comprehensive guide)</span>
                             </label>
-                            {pillarPage && (
+                            {pillarWarning && (
                                 <div className="mt-2 ml-6 p-3 bg-warning/10 border border-warning/30 rounded-lg">
-                                    <p className="text-sm text-warning font-medium mb-1">
-                                        ⚠️ Pillar Page Requirements:
-                                    </p>
-                                    <ul className="text-xs text-gray-700 space-y-1 list-disc list-inside">
-                                        {(!pageType || pageType === PageType.BLOG_POST) && (
-                                            <li className="text-error">Page type must be selected (choose DESTINATION, ITINERARY, GUIDE, or DEAL)</li>
-                                        )}
-                                        {selectedTagIds.length === 0 && (
-                                            <li className="text-error">At least 1 tag is required</li>
-                                        )}
-                                        {pageType && pageType !== PageType.BLOG_POST && selectedTagIds.length > 0 && (
-                                            <li className="text-green-600">✓ All requirements met</li>
-                                        )}
-                                    </ul>
+                                    <p className="text-sm text-warning font-medium">{pillarWarning}</p>
                                 </div>
                             )}
                         </div>

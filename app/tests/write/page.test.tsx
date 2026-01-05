@@ -32,6 +32,10 @@ jest.mock('@tiptap/react', () => ({
     EditorProvider: ({ children }: any) => <div>{children}</div>,
 }))
 
+jest.mock('@/utils/pillarPageHelpers', () => ({
+    checkPillarExists: jest.fn(),
+}))
+
 // Mock localStorage
 Object.defineProperty(window, 'localStorage', {
     value: {

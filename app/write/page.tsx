@@ -54,6 +54,7 @@ const WritePage = () => {
     const [pillarPage, setPillarPage] = useState<boolean>(false);
     const [trending, setTrending] = useState<boolean>(false);
     const [publishedAt, setPublishedAt] = useState<string>('');
+    const [pillarWarning, setPillarWarning] = useState<string | null>(null);
 
     const pageTypeOptions = Object.values(PageType).map(type => ({
         label: type,
@@ -184,6 +185,35 @@ const WritePage = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Check for existing pillar page when pillar checkbox is checked
+    useEffect(() => {
+        const checkForExistingPillar = async () => {
+            if (pillarPage && pageType && pageType !== PageType.BLOG_POST && selectedTagIds.length > 0) {
+                try {
+                    const response = await fetch(
+                        `/api/check-pillar?type=${pageType}&tagId=${selectedTagIds[0]}${postId ? `&excludePostId=${postId}` : ''}`
+                    );
+                    const data = await response.json();
+
+                    if (data.exists) {
+                        setPillarWarning(
+                            '⚠️ A pillar page already exists for this destination. Creating this as a pillar will be blocked when you save. Consider creating a regular article instead.'
+                        );
+                    } else {
+                        setPillarWarning(null);
+                    }
+                } catch (error) {
+                    console.error('Error checking pillar:', error);
+                    setPillarWarning(null);
+                }
+            } else {
+                setPillarWarning(null);
+            }
+        };
+
+        checkForExistingPillar();
+    }, [pillarPage, pageType, selectedTagIds, postId]);
 
     // Scroll to top when message appears to make alert visible
     useEffect(() => {
@@ -358,6 +388,7 @@ const WritePage = () => {
                     pillarPage={pillarPage}
                     trending={trending}
                     publishedAt={publishedAt}
+                    pillarWarning={pillarWarning}
                     onChange={{
                         title: setTitle,
                         description: setDescription,
@@ -429,8 +460,8 @@ const WritePage = () => {
                         </svg>
                     </button>
                 )}
-                {/* Only show "Save Draft" for blog posts */}
-                {pageType === PageType.BLOG_POST && (
+                {/* Show "Save Draft" for BLOG_POST or non-pillar pages */}
+                {(pageType === PageType.BLOG_POST || !pillarPage) && (
                     <button
                         className="btn btn-primary shadow-lg btn-sm md:btn-md text-xs md:text-base"
                         onClick={() => handleSave(false)}
@@ -454,10 +485,10 @@ const WritePage = () => {
                         'Publish'
                     )}
                 </button>
-                {/* Show info message for non-blog-post types */}
-                {pageType !== PageType.BLOG_POST && (
+                {/* Show info message for non-blog-post types when pillar page is checked */}
+                {pageType !== PageType.BLOG_POST && pillarPage && (
                     <div className="bg-info/10 border border-info/30 rounded-lg p-2 text-xs text-info max-w-[200px] shadow-lg">
-                        <p className="font-medium">ℹ️ This page type must be published to be accessible.</p>
+                        <p className="font-medium">ℹ️ Drafts are not accessible for this page type. Use "Publish" to save.</p>
                     </div>
                 )}
             </div>

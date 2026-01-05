@@ -307,6 +307,7 @@ describe('getDestinationPostByTagSlug', () => {
             expect.objectContaining({
                 where: {
                     type: PageType.DESTINATION,
+                    pillarPage: true, // Only show pillar pages in destinations
                     status: PostStatus.PUBLISHED,
                     tags: {
                         some: {

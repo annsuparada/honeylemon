@@ -602,6 +602,7 @@ export async function getDestinationPostByTagSlug(tagSlug: string): Promise<Blog
     const post = await prisma.post.findFirst({
         where: {
             type: PageType.DESTINATION,
+            pillarPage: true, // Only show pillar pages in destinations
             status: PostStatus.PUBLISHED,
             tags: {
                 some: {

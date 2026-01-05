@@ -86,6 +86,11 @@ model Post {
   
   // Special Flags
   featured    Boolean    @default(false)  // Show on homepage
+  // Pillar page flag
+  // - true: This is a comprehensive hub/guide article (can be any type)
+  // - false: Regular article/cluster page
+  // - For DESTINATION/ITINERARY/etc: Only ONE pillar allowed per tag
+  // - For BLOG_POST: No restriction (can have multiple pillars)
   pillarPage  Boolean    @default(false)  // Is this pillar content?
   trending    Boolean    @default(false)  // Trending post
   

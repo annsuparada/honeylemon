@@ -132,12 +132,12 @@ export const handleSavePost = async ({
         return;
     }
 
-    // Validate that non-blog-post types cannot be saved as draft
-    if (!isPublish && pageType && requiresPublishing(pageType)) {
+    // Validate that pillar pages cannot be saved as draft (only for non-BLOG_POST types)
+    if (!isPublish && pageType && pageType !== PageType.BLOG_POST && pillarPage) {
         const pageTypeName = getPageTypeDisplayName(pageType);
         setMessage({
             type: 'error',
-            text: `${pageTypeName} pages must be published to be accessible. Please use the "Publish" button instead.`
+            text: `${pageTypeName} pillar pages must be published to be accessible. Please use the "Publish" button instead.`
         });
         return;
     }
@@ -159,21 +159,29 @@ export const handleSavePost = async ({
         // The validation will happen in the routing logic if tagSlug is still missing
     }
 
-    // Validate pillar page requirements (check before general page type requirements)
-    if (pillarPage) {
-        if (!pageType || pageType === PageType.BLOG_POST) {
-            setMessage({
-                type: 'error',
-                text: 'Pillar pages require a page type other than BLOG_POST. Please select a different page type (e.g., DESTINATION, ITINERARY, GUIDE, or DEAL).'
-            });
-            return;
-        }
-        if (!tagIds || tagIds.length === 0) {
-            setMessage({
-                type: 'error',
-                text: 'Pillar pages require at least 1 tag. Please add a tag.'
-            });
-            return;
+    // Check for duplicate pillar pages
+    if (pillarPage && pageType) {
+        // For page types that use tags (DESTINATION, ITINERARY, GUIDE, etc.)
+        if (pageType !== PageType.BLOG_POST && tagIds && tagIds.length > 0) {
+            try {
+                // Call API endpoint instead of using Prisma directly (can't run in browser)
+                const checkUrl = `/api/check-pillar?type=${encodeURIComponent(pageType)}&tagId=${encodeURIComponent(tagIds[0])}${postId ? `&excludePostId=${encodeURIComponent(postId)}` : ''}`;
+                const response = await fetch(checkUrl);
+                const data = await response.json();
+
+                if (data.exists) {
+                    const pageTypeName = getPageTypeDisplayName(pageType);
+                    setMessage({
+                        type: 'error',
+                        text: `A pillar page already exists for this ${pageTypeName.toLowerCase()}. Only one pillar page is allowed per ${pageTypeName.toLowerCase()}. Please edit the existing pillar or create a regular article instead.`
+                    });
+                    return;
+                }
+            } catch (error) {
+                // If API call fails, log error but don't block save
+                // (This allows saves to work even if API is temporarily unavailable)
+                console.error('Error checking pillar existence:', error);
+            }
         }
     }
 
@@ -224,8 +232,11 @@ export const handleSavePost = async ({
             const param = slug || result.post?.slug;
 
             if (isPublish && param) {
-                // For DESTINATION posts, use the tag slug instead of post slug
+                // For DESTINATION posts, use the tag slug instead of post slug (only for pillar pages)
                 let route: string;
+
+                // Get pillar page status - use passed parameter (user's selection), fallback to result if not provided
+                const isPillarPage = pillarPage !== undefined ? pillarPage : (result.post?.pillarPage ?? false);
 
                 // Get tag slug - try from passed tagSlug first, then from API response
                 let finalTagSlug = tagSlug;
@@ -239,12 +250,15 @@ export const handleSavePost = async ({
                     }
                 }
 
-                if (postType === PageType.DESTINATION && finalTagSlug) {
+                // Only use destination route (/destinations/[tag-slug]) for pillar pages
+                // Non-pillar destination pages use blog route (/blog/[slug])
+                if (postType === PageType.DESTINATION && finalTagSlug && isPillarPage) {
                     // Ensure tag slug is lowercase for consistency with destination route
                     const normalizedTagSlug = finalTagSlug.toLowerCase();
                     route = getPostRoute(postType, param, normalizedTagSlug);
                 } else {
-                    route = getPostRoute(postType, param);
+                    // For non-pillar destination pages or other types, use standard route
+                    route = getPostRoute(postType === PageType.DESTINATION ? PageType.BLOG_POST : postType, param);
                 }
                 router.push(route);
             } else if (param) {

@@ -58,6 +58,7 @@ describe('WriteForm Component', () => {
         publishedAt: '',
         faqs: [],
         itemListItems: [],
+        pillarWarning: null,
         onChange: mockOnChange,
         onCreateCategory: mockOnCreateCategory,
         onCreateTag: mockOnCreateTag,
@@ -135,117 +136,58 @@ describe('WriteForm Component', () => {
             expect(screen.getByText(/pillar page/i)).toBeInTheDocument()
         })
 
-        it('shows validation requirements when pillarPage is checked', () => {
-            render(<WriteForm {...defaultProps} pillarPage={true} />)
+        it('shows pillar warning when provided', () => {
+            const warningMessage = '⚠️ A pillar page already exists for this destination'
+            render(<WriteForm {...defaultProps} pillarPage={true} pillarWarning={warningMessage} />)
 
-            expect(screen.getByText(/pillar page requirements/i)).toBeInTheDocument()
-            expect(screen.getByText(/page type must be selected/i)).toBeInTheDocument()
-            expect(screen.getByText(/at least 1 tag is required/i)).toBeInTheDocument()
+            expect(screen.getByText(warningMessage)).toBeInTheDocument()
         })
 
-        it('shows success message when all requirements are met', () => {
-            render(
-                <WriteForm
-                    {...defaultProps}
-                    pillarPage={true}
-                    pageType={PageType.DESTINATION}
-                    selectedTagIds={['tag1']}
-                />
-            )
+        it('does not show warning when pillarWarning is null', () => {
+            render(<WriteForm {...defaultProps} pillarPage={true} pillarWarning={null} />)
 
-            expect(screen.getByText(/all requirements met/i)).toBeInTheDocument()
+            const warning = screen.queryByText(/pillar page already exists/i)
+            expect(warning).not.toBeInTheDocument()
         })
 
-        it('auto-toggles pillarPage to true when page type and tag are selected', async () => {
-            const { rerender } = render(
-                <WriteForm
-                    {...defaultProps}
-                    pageType={PageType.BLOG_POST}
-                    selectedTagIds={[]}
-                    pillarPage={false}
-                />
-            )
-
-            // Change page type to DESTINATION
-            rerender(
-                <WriteForm
-                    {...defaultProps}
-                    pageType={PageType.DESTINATION}
-                    selectedTagIds={[]}
-                    pillarPage={false}
-                />
-            )
-
-            // Add a tag
-            rerender(
-                <WriteForm
-                    {...defaultProps}
-                    pageType={PageType.DESTINATION}
-                    selectedTagIds={['tag1']}
-                    pillarPage={false}
-                />
-            )
-
-            await waitFor(() => {
-                expect(mockOnChange.pillarPage).toHaveBeenCalledWith(true)
-            })
-        })
-
-        it('does not auto-toggle when page type is BLOG_POST', async () => {
-            render(
-                <WriteForm
-                    {...defaultProps}
-                    pageType={PageType.BLOG_POST}
-                    selectedTagIds={['tag1']}
-                    pillarPage={false}
-                />
-            )
-
-            // Wait a bit to ensure useEffect doesn't trigger
-            await new Promise(resolve => setTimeout(resolve, 100))
-
-            expect(mockOnChange.pillarPage).not.toHaveBeenCalled()
-        })
-
-        it('does not auto-toggle when no tags are selected', async () => {
+        // Auto-toggle functionality has been removed - users can manually control pillarPage
+        // The following tests verify that pillarPage checkbox works correctly
+        it('allows manual toggle of pillarPage checkbox', () => {
             render(
                 <WriteForm
                     {...defaultProps}
                     pageType={PageType.DESTINATION}
-                    selectedTagIds={[]}
+                    selectedTagIds={['tag1']}
                     pillarPage={false}
                 />
             )
 
-            // Wait a bit to ensure useEffect doesn't trigger
-            await new Promise(resolve => setTimeout(resolve, 100))
+            const checkbox = screen.getByRole('checkbox', { name: /pillar page/i })
+            expect(checkbox).not.toBeChecked()
 
-            expect(mockOnChange.pillarPage).not.toHaveBeenCalled()
+            // User can manually check/uncheck the checkbox
+            fireEvent.click(checkbox)
+            expect(mockOnChange.pillarPage).toHaveBeenCalledWith(true)
         })
 
-        it('does not auto-toggle when pillarPage is already true', async () => {
-            const { rerender } = render(
+        it('does not auto-toggle pillarPage when page type and tags are selected', async () => {
+            render(
                 <WriteForm
                     {...defaultProps}
                     pageType={PageType.DESTINATION}
                     selectedTagIds={['tag1']}
-                    pillarPage={true}
+                    pillarPage={false}
                 />
             )
 
-            // Change something that would trigger the effect
-            rerender(
-                <WriteForm
-                    {...defaultProps}
-                    pageType={PageType.DESTINATION}
-                    selectedTagIds={['tag1', 'tag2']}
-                    pillarPage={true}
-                />
-            )
-
+            // Wait a bit to ensure no auto-toggle happens
             await new Promise(resolve => setTimeout(resolve, 100))
 
-            // Should not call onChange.pillarPage since it's already true
+            // Should not auto-toggle - user must manually check the box
+            const checkbox = screen.getByRole('checkbox', { name: /pillar page/i })
+            expect(checkbox).not.toBeChecked()
+            
+            // Verify onChange.pillarPage was not called automatically
             expect(mockOnChange.pillarPage).not.toHaveBeenCalled()
         })
     })

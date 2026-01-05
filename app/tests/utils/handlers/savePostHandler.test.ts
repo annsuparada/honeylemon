@@ -115,32 +115,71 @@ describe('handleSavePost', () => {
     })
 
     describe('Page type validation', () => {
-        it('prevents saving DESTINATION page type as draft', async () => {
+        it('prevents saving DESTINATION pillar page as draft', async () => {
             await handleSavePost({
                 ...baseParams,
                 pageType: PageType.DESTINATION,
+                pillarPage: true,
                 isPublish: false,
             })
 
             expect(baseParams.setMessage).toHaveBeenCalledWith({
                 type: 'error',
-                text: 'Destination pages must be published to be accessible. Please use the "Publish" button instead.'
+                text: 'Destination pillar pages must be published to be accessible. Please use the "Publish" button instead.'
             })
             expect(baseParams.createPost).not.toHaveBeenCalled()
         })
 
-        it('prevents saving ITINERARY page type as draft', async () => {
+        it('allows saving DESTINATION non-pillar page as draft', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'destination-draft-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pageType: PageType.DESTINATION,
+                pillarPage: false,
+                tagIds: ['tag1'],
+                isPublish: false,
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalled()
+            expect(baseParams.setMessage).not.toHaveBeenCalledWith(expect.objectContaining({
+                type: 'error',
+                text: expect.stringContaining('must be published')
+            }))
+        })
+
+        it('prevents saving ITINERARY pillar page as draft', async () => {
             await handleSavePost({
                 ...baseParams,
                 pageType: PageType.ITINERARY,
+                pillarPage: true,
+                tagIds: ['tag1'],
                 isPublish: false,
             })
 
             expect(baseParams.setMessage).toHaveBeenCalledWith({
                 type: 'error',
-                text: 'Itinerary pages must be published to be accessible. Please use the "Publish" button instead.'
+                text: 'Itinerary pillar pages must be published to be accessible. Please use the "Publish" button instead.'
             })
             expect(baseParams.createPost).not.toHaveBeenCalled()
+        })
+
+        it('allows saving ITINERARY non-pillar page as draft', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'itinerary-draft-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pageType: PageType.ITINERARY,
+                pillarPage: false,
+                tagIds: ['tag1'],
+                isPublish: false,
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalled()
+            expect(baseParams.setMessage).not.toHaveBeenCalledWith(expect.objectContaining({
+                type: 'error',
+                text: expect.stringContaining('must be published')
+            }))
         })
 
         it('allows saving BLOG_POST as draft', async () => {
@@ -155,15 +194,16 @@ describe('handleSavePost', () => {
             expect(baseParams.createPost).toHaveBeenCalled()
         })
 
-        it('allows publishing DESTINATION page type', async () => {
+        it('allows publishing DESTINATION pillar page type', async () => {
             baseParams.createPost.mockResolvedValue({
                 success: true,
-                post: { slug: 'test-slug', type: PageType.DESTINATION, tags: [{ tag: { slug: 'thailand' } }] }
+                post: { slug: 'test-slug', type: PageType.DESTINATION, pillarPage: true, tags: [{ tag: { slug: 'thailand' } }] }
             })
 
             await handleSavePost({
                 ...baseParams,
                 pageType: PageType.DESTINATION,
+                pillarPage: true,
                 isPublish: true,
                 tagIds: ['tag1'], // Required for DESTINATION pages
                 tagSlug: 'thailand',
@@ -171,6 +211,25 @@ describe('handleSavePost', () => {
 
             expect(baseParams.createPost).toHaveBeenCalled()
             expect(baseParams.router.push).toHaveBeenCalledWith('/destinations/thailand')
+        })
+
+        it('redirects non-pillar DESTINATION pages to blog route', async () => {
+            baseParams.createPost.mockResolvedValue({
+                success: true,
+                post: { slug: 'test-slug', type: PageType.DESTINATION, pillarPage: false, tags: [{ tag: { slug: 'mexico' } }] }
+            })
+
+            await handleSavePost({
+                ...baseParams,
+                pageType: PageType.DESTINATION,
+                pillarPage: false,
+                isPublish: true,
+                tagIds: ['tag1'],
+                tagSlug: 'mexico',
+            })
+
+            expect(baseParams.createPost).toHaveBeenCalled()
+            expect(baseParams.router.push).toHaveBeenCalledWith('/blog/test-slug')
         })
     })
 
@@ -237,15 +296,16 @@ describe('handleSavePost', () => {
     })
 
     describe('Destination page routing', () => {
-        it('redirects to destination route with tag slug when publishing DESTINATION post', async () => {
+        it('redirects pillar DESTINATION pages to destination route with tag slug', async () => {
             baseParams.createPost.mockResolvedValue({
                 success: true,
-                post: { slug: 'test-slug', type: PageType.DESTINATION, tags: [{ tag: { slug: 'thailand' } }] }
+                post: { slug: 'test-slug', type: PageType.DESTINATION, pillarPage: true, tags: [{ tag: { slug: 'thailand' } }] }
             })
 
             await handleSavePost({
                 ...baseParams,
                 pageType: PageType.DESTINATION,
+                pillarPage: true,
                 isPublish: true,
                 tagIds: ['tag1'],
                 tagSlug: 'thailand',
@@ -254,12 +314,31 @@ describe('handleSavePost', () => {
             expect(baseParams.router.push).toHaveBeenCalledWith('/destinations/thailand')
         })
 
-        it('falls back to tag slug from API response if not provided', async () => {
+        it('redirects non-pillar DESTINATION pages to blog route', async () => {
+            baseParams.createPost.mockResolvedValue({
+                success: true,
+                post: { slug: 'non-pillar-slug', type: PageType.DESTINATION, pillarPage: false, tags: [{ tag: { slug: 'mexico' } }] }
+            })
+
+            await handleSavePost({
+                ...baseParams,
+                pageType: PageType.DESTINATION,
+                pillarPage: false,
+                isPublish: true,
+                tagIds: ['tag1'],
+                tagSlug: 'mexico',
+            })
+
+            expect(baseParams.router.push).toHaveBeenCalledWith('/blog/non-pillar-slug')
+        })
+
+        it('falls back to tag slug from API response for pillar pages if not provided', async () => {
             baseParams.createPost.mockResolvedValue({
                 success: true,
                 post: {
                     slug: 'test-slug',
                     type: PageType.DESTINATION,
+                    pillarPage: true,
                     tags: [{ tag: { slug: 'japan' } }]
                 }
             })
@@ -267,6 +346,7 @@ describe('handleSavePost', () => {
             await handleSavePost({
                 ...baseParams,
                 pageType: PageType.DESTINATION,
+                pillarPage: true,
                 isPublish: true,
                 tagIds: ['tag1'], // Required for DESTINATION pages
                 tagSlug: undefined, // Not provided, should fallback to API response
@@ -277,21 +357,23 @@ describe('handleSavePost', () => {
             expect(baseParams.createPost).toHaveBeenCalledWith(expect.objectContaining({
                 tagIds: ['tag1'],
                 type: PageType.DESTINATION,
+                pillarPage: true,
                 status: 'PUBLISHED',
             }))
-            // Verify router was called with tag slug from API response
+            // Verify router was called with tag slug from API response (for pillar pages)
             expect(baseParams.router.push).toHaveBeenCalledWith('/destinations/japan')
         })
 
-        it('normalizes tag slug to lowercase', async () => {
+        it('normalizes tag slug to lowercase for pillar pages', async () => {
             baseParams.createPost.mockResolvedValue({
                 success: true,
-                post: { slug: 'test-slug', type: PageType.DESTINATION, tags: [{ tag: { slug: 'THAILAND' } }] }
+                post: { slug: 'test-slug', type: PageType.DESTINATION, pillarPage: true, tags: [{ tag: { slug: 'THAILAND' } }] }
             })
 
             await handleSavePost({
                 ...baseParams,
                 pageType: PageType.DESTINATION,
+                pillarPage: true,
                 isPublish: true,
                 tagIds: ['tag1'],
                 tagSlug: 'THAILAND',
@@ -302,39 +384,64 @@ describe('handleSavePost', () => {
     })
 
     describe('Pillar page validation', () => {
-        it('requires page type other than BLOG_POST when pillarPage is true', async () => {
+        const originalFetch = global.fetch;
+
+        beforeEach(() => {
+            // Mock fetch for API calls
+            global.fetch = jest.fn() as jest.Mock;
+        });
+
+        afterEach(() => {
+            global.fetch = originalFetch;
+        });
+
+        it('allows BLOG_POST to be a pillar page', async () => {
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'blog-pillar-slug' } })
+
             await handleSavePost({
                 ...baseParams,
                 pillarPage: true,
                 pageType: PageType.BLOG_POST,
-                tagIds: ['tag1'],
+                tagIds: [],
             })
 
-            expect(baseParams.setMessage).toHaveBeenCalledWith({
-                type: 'error',
-                text: 'Pillar pages require a page type other than BLOG_POST. Please select a different page type (e.g., DESTINATION, ITINERARY, GUIDE, or DEAL).'
-            })
-            expect(baseParams.createPost).not.toHaveBeenCalled()
+            expect(baseParams.createPost).toHaveBeenCalledWith(expect.objectContaining({
+                pillarPage: true,
+                type: PageType.BLOG_POST,
+            }))
+            // BLOG_POST pillars don't check for duplicates (no API call)
+            expect(global.fetch).not.toHaveBeenCalled()
         })
 
-        it('requires at least 1 tag when pillarPage is true', async () => {
-            // Use GUIDE instead of DESTINATION to avoid the "exactly 1 tag" requirement
+        it('prevents duplicate pillar pages for DESTINATION type', async () => {
+            (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => ({ exists: true, message: 'A pillar page already exists' })
+            });
+
             await handleSavePost({
                 ...baseParams,
                 pillarPage: true,
-                pageType: PageType.GUIDE,
-                tagIds: [],
+                pageType: PageType.DESTINATION,
+                tagIds: ['tag1'],
                 isPublish: true,
             })
 
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining('/api/check-pillar?type=DESTINATION&tagId=tag1')
+            )
             expect(baseParams.setMessage).toHaveBeenCalledWith({
                 type: 'error',
-                text: 'Pillar pages require at least 1 tag. Please add a tag.'
+                text: 'A pillar page already exists for this destination. Only one pillar page is allowed per destination. Please edit the existing pillar or create a regular article instead.'
             })
             expect(baseParams.createPost).not.toHaveBeenCalled()
         })
 
-        it('allows saving when pillarPage is true with valid page type and tag', async () => {
+        it('allows creating new pillar page when none exists', async () => {
+            (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => ({ exists: false, message: 'No pillar page exists' })
+            });
             baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'pillar-slug' } })
 
             await handleSavePost({
@@ -345,6 +452,9 @@ describe('handleSavePost', () => {
                 isPublish: true,
             })
 
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining('/api/check-pillar?type=DESTINATION&tagId=tag1')
+            )
             expect(baseParams.createPost).toHaveBeenCalledWith(expect.objectContaining({
                 pillarPage: true,
                 type: PageType.DESTINATION,
@@ -352,20 +462,50 @@ describe('handleSavePost', () => {
             }))
         })
 
-        it('allows saving when pillarPage is false even without page type or tag', async () => {
+        it('allows editing existing pillar page (excludes current post from check)', async () => {
+            (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => ({ exists: false, message: 'No pillar page exists' })
+            });
+            baseParams.updatePost.mockResolvedValue({ success: true, post: { slug: 'pillar-slug' } })
+
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.DESTINATION,
+                tagIds: ['tag1'],
+                postId: 'existing-post-id',
+                isPublish: true,
+            })
+
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining('/api/check-pillar?type=DESTINATION&tagId=tag1&excludePostId=existing-post-id')
+            )
+            expect(baseParams.updatePost).toHaveBeenCalled()
+            expect(baseParams.createPost).not.toHaveBeenCalled()
+        })
+
+        it('allows saving when pillarPage is false even with same type and tag', async () => {
             baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'regular-slug' } })
 
             await handleSavePost({
                 ...baseParams,
                 pillarPage: false,
-                pageType: PageType.BLOG_POST,
-                tagIds: [],
+                pageType: PageType.DESTINATION,
+                tagIds: ['tag1'],
+                isPublish: true,
             })
 
+            // Should not check for duplicates when pillarPage is false
+            expect(global.fetch).not.toHaveBeenCalled()
             expect(baseParams.createPost).toHaveBeenCalled()
         })
 
         it('allows saving when pillarPage is true with ITINERARY page type and tag', async () => {
+            (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => ({ exists: false, message: 'No pillar page exists' })
+            });
             baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'itinerary-slug' } })
 
             await handleSavePost({
@@ -383,6 +523,10 @@ describe('handleSavePost', () => {
         })
 
         it('allows saving when pillarPage is true with GUIDE page type and tag', async () => {
+            (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => ({ exists: false, message: 'No pillar page exists' })
+            });
             baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'guide-slug' } })
 
             await handleSavePost({
@@ -397,6 +541,23 @@ describe('handleSavePost', () => {
                 pillarPage: true,
                 type: PageType.GUIDE,
             }))
+        })
+
+        it('handles API error gracefully when checking for duplicate pillar', async () => {
+            (global.fetch as jest.Mock).mockRejectedValue(new Error('API error'));
+            baseParams.createPost.mockResolvedValue({ success: true, post: { slug: 'pillar-slug' } })
+
+            // Should still allow save even if API check fails (graceful degradation)
+            await handleSavePost({
+                ...baseParams,
+                pillarPage: true,
+                pageType: PageType.DESTINATION,
+                tagIds: ['tag1'],
+                isPublish: true,
+            })
+
+            // Save should proceed (API error is logged but doesn't block)
+            expect(baseParams.createPost).toHaveBeenCalled()
         })
     })
 })

@@ -7,13 +7,15 @@ import { getDestinationPostByTagSlug, getPublishedPosts } from '@/app/lip/postSe
 import { generatePostMetadata } from '@/app/lip/metadata-helpers';
 import { PageType } from '@prisma/client';
 
-// Generate static params for all destination posts
+// Generate static params for all destination pillar posts
 export async function generateStaticParams() {
+    // Only generate params for pillar destination posts
     const destinationPosts = await getPublishedPosts(undefined, undefined, PageType.DESTINATION);
+    const destinationPillars = destinationPosts.filter((post: { pillarPage?: boolean }) => post.pillarPage === true);
 
-    // Extract unique tag slugs from destination posts
+    // Extract unique tag slugs from destination pillar posts
     const countrySlugs = new Set<string>();
-    destinationPosts.forEach((post: { tags: Array<{ slug: string }> }) => {
+    destinationPillars.forEach((post: { tags: Array<{ slug: string }> }) => {
         post.tags?.forEach((tag: { slug: string }) => {
             if (tag.slug) {
                 countrySlugs.add(tag.slug);
