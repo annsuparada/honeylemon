@@ -30,3 +30,10 @@
   display: block;
   width: 100%;
 }
+
+/* Disabled button styling */
+.btn-disabled-visible:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

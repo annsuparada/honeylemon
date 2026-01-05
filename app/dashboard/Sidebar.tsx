@@ -19,7 +19,7 @@ import {
 import { FC } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowTrendingUpIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
+import { ArrowTrendingUpIcon, EnvelopeIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
 
 // Type Definitions
@@ -33,6 +33,7 @@ interface NavItem {
 const navigation: Omit<NavItem, 'current'>[] = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Blogs', href: '/dashboard/blogs', icon: DocumentPlusIcon },
+    { name: 'AI Content Generator', href: '/dashboard/ai-generate', icon: SparklesIcon },
     { name: 'Scheduled Publishing', href: '/dashboard/scheduled', icon: CalendarIcon },
     { name: 'SEO Keywords', href: '/dashboard/seo', icon: ArrowTrendingUpIcon },
     { name: 'Email', href: '/dashboard/email', icon: EnvelopeIcon },
@@ -159,28 +160,31 @@ const Sidebar: FC = () => {
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
                                     <ul role="list" className="-mx-2 space-y-1">
-                                        {navigation.map((item) => (
-                                            <li key={item.name}>
-                                                <a
-                                                    href={item.href}
-                                                    className={classNames(
-                                                        pathname === item.href
-                                                            ? 'bg-blue-500 text-white'
-                                                            : 'text-white hover:bg-blue-500 hover:text-white',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
-                                                    )}
-                                                >
-                                                    <item.icon
-                                                        aria-hidden="true"
+                                        {navigation.map((item) => {
+                                            const isActive = pathname === item.href
+                                            return (
+                                                <li key={item.name}>
+                                                    <Link
+                                                        href={item.href}
                                                         className={classNames(
-                                                            pathname === item.href ? 'text-white' : 'text-white group-hover:text-white',
-                                                            'size-6 shrink-0',
+                                                            isActive
+                                                                ? 'bg-blue-500 text-white'
+                                                                : 'text-white hover:bg-blue-500 hover:text-white',
+                                                            'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
                                                         )}
-                                                    />
-                                                    {item.name}
-                                                </a>
-                                            </li>
-                                        ))}
+                                                    >
+                                                        <item.icon
+                                                            aria-hidden="true"
+                                                            className={classNames(
+                                                                isActive ? 'text-white' : 'text-white group-hover:text-white',
+                                                                'size-6 shrink-0',
+                                                            )}
+                                                        />
+                                                        {item.name}
+                                                    </Link>
+                                                </li>
+                                            )
+                                        })}
                                     </ul>
                                 </li>
 
