@@ -146,7 +146,14 @@ export async function POST(req: Request) {
 
         // Generate article using Claude API
         try {
+            console.log('🚀 Starting AI content generation...');
+            console.log('📋 Content type:', body.contentType);
+            console.log('📝 Topic:', body.topic || body.pillarTopic || 'N/A');
+            
             const articleResponse = await generateArticle(body, pillarContent, pillarTitle);
+            console.log('✅ Article generated successfully');
+            console.log('📄 Title:', articleResponse.title);
+            console.log('📊 Word count:', articleResponse.content.length);
 
             // Handle images if requested
             let heroImageUrl: string | undefined;
@@ -159,22 +166,34 @@ export async function POST(req: Request) {
 
                     // Get hero image if requested
                     if (body.generateHeroImage) {
+                        console.log('🖼️  Generating hero image...');
                         const heroQuery = body.topic || body.pillarTopic || articleResponse.title;
+                        console.log('🔍 Hero image search query:', heroQuery);
                         const heroImage = await getHeroImage(heroQuery);
                         if (heroImage) {
+                            console.log('✅ Hero image found:', heroImage.id);
                             // Upload hero image to Cloudinary
                             const { uploadImageFromUrl } = await import('@/app/lip/uploadToCloudinary');
+                            console.log('☁️  Uploading hero image to Cloudinary...');
                             heroImageUrl = await uploadImageFromUrl(heroImage.url, `hero-${Date.now()}`);
+                            console.log('✅ Hero image uploaded:', heroImageUrl);
+                        } else {
+                            console.log('⚠️  No hero image found');
                         }
                     }
 
                     // Handle content images if requested
                     if (body.includeImages && articleResponse.imageSuggestions && articleResponse.imageSuggestions.length > 0) {
+                        console.log('🖼️  Processing content images...');
+                        console.log('📸 Image suggestions:', articleResponse.imageSuggestions.length);
+                        
                         // Search for images based on suggestions
                         const unsplashImages = await searchImagesForSuggestions(articleResponse.imageSuggestions);
+                        console.log('✅ Found', unsplashImages.length, 'images from Unsplash');
                         
                         // Separate hero from content images (if hero wasn't already generated)
                         const { heroImage: separatedHero, contentImages } = separateHeroImage(unsplashImages);
+                        console.log('📦 Separated into', contentImages.length, 'content images');
 
                         // Calculate placements
                         const placements = calculateImagePlacements(
@@ -182,19 +201,26 @@ export async function POST(req: Request) {
                             contentImages,
                             body.includeImages ? 400 : undefined
                         );
+                        console.log('📍 Calculated', placements.length, 'image placements');
 
                         // Upload images to Cloudinary
                         const userId = decoded.id;
+                        console.log('☁️  Uploading', placements.length, 'images to Cloudinary...');
                         const uploadedPlacements = await uploadImagesToCloudinary(placements, userId);
+                        console.log('✅ Images uploaded to Cloudinary');
 
                         // Insert images into content
+                        console.log('🔧 Inserting images into content...');
                         finalContent = insertImagesIntoContent(articleResponse.content, uploadedPlacements);
+                        console.log('✅ Images inserted into content');
                     }
                 } catch (imageError) {
-                    console.error('Error processing images:', imageError);
+                    console.error('❌ Error processing images:', imageError);
                     // Continue without images if image processing fails
                 }
             }
+
+            console.log('🎉 Content generation complete!');
 
             return NextResponse.json(
                 {

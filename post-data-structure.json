@@ -1,0 +1,183 @@
+{
+    "description": "This JSON file represents the complete data structure for a blog post/article as returned from the GET post API endpoint. Use this as a reference for generating article content.",
+    "postStructure": {
+        "id": "string (MongoDB ObjectId)",
+        "title": "string (required, min 3 characters)",
+        "slug": "string (unique, auto-generated from title if not provided)",
+        "content": "string (required, min 10 characters, HTML/Markdown format)",
+        "description": "string (optional, short description/summary)",
+        "excerpt": "string (optional, short summary for previews)",
+        "image": "string (optional, image URL for backward compatibility)",
+        "heroImage": "string (optional, main hero image URL - Cloudinary URL preferred)",
+        "status": "PostStatus enum (required): DRAFT | PUBLISHED | SCHEDULED | ARCHIVED",
+        "type": "PageType enum (required): BLOG_POST | DEAL | DESTINATION | ITINERARY | GUIDE",
+        "createdAt": "string (ISO 8601 date string)",
+        "updatedAt": "string (ISO 8601 date string)",
+        "publishedAt": "string (optional, ISO 8601 date string)",
+        "category": {
+            "name": "string (category name)",
+            "slug": "string (category slug)"
+        },
+        "categoryId": "string (MongoDB ObjectId)",
+        "author": {
+            "id": "string (MongoDB ObjectId)",
+            "name": "string (author's first name)",
+            "lastName": "string (optional, author's last name)",
+            "username": "string (author's username)",
+            "profilePicture": "string (optional, profile picture URL)"
+        },
+        "authorId": "string (MongoDB ObjectId, required for creating posts)",
+        "tags": [
+            {
+                "id": "string (MongoDB ObjectId)",
+                "name": "string (tag name)",
+                "slug": "string (tag slug)"
+            }
+        ],
+        "tagIds": [
+            "string (array of tag IDs, used when creating/updating posts)"
+        ],
+        "faqs": [
+            {
+                "id": "string (MongoDB ObjectId, auto-generated)",
+                "question": "string (required, min 1 character)",
+                "answer": "string (required, min 1 character)",
+                "order": "number (optional, default 0, used for ordering)"
+            }
+        ],
+        "itemListItems": [
+            {
+                "id": "string (MongoDB ObjectId, auto-generated)",
+                "name": "string (required, min 1 character)",
+                "url": "string (required, valid URL)",
+                "order": "number (optional, default 0, used for ordering)"
+            }
+        ],
+        "featured": "boolean (optional, default false, show on homepage)",
+        "pillarPage": "boolean (optional, default false, is this pillar content)",
+        "trending": "boolean (optional, default false, trending post)",
+        "views": "number (optional, view counter, default 0)",
+        "readTime": "number (optional, estimated read time in minutes)",
+        "wordCount": "number (optional, total word count)",
+        "metaTitle": "string (optional, custom SEO title, defaults to title if null)",
+        "metaDescription": "string (optional, custom meta description for SEO)",
+        "focusKeyword": "string (optional, primary SEO keyword)"
+    },
+    "examplePost": {
+        "id": "507f1f77bcf86cd799439011",
+        "title": "10 Best Travel Destinations in 2024",
+        "slug": "10-best-travel-destinations-2024",
+        "content": "<h1>Introduction</h1><p>Discover the most amazing travel destinations...</p>",
+        "description": "Explore the top 10 must-visit destinations for 2024",
+        "excerpt": "From tropical paradises to cultural hubs, here are the destinations you can't miss this year.",
+        "image": "https://res.cloudinary.com/example/image/upload/v1234567890/hero.jpg",
+        "heroImage": "https://res.cloudinary.com/example/image/upload/v1234567890/hero.jpg",
+        "status": "PUBLISHED",
+        "type": "BLOG_POST",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-20T14:45:00.000Z",
+        "publishedAt": "2024-01-16T09:00:00.000Z",
+        "category": {
+            "name": "Travel Guides",
+            "slug": "travel-guides"
+        },
+        "categoryId": "507f1f77bcf86cd799439012",
+        "author": {
+            "id": "507f1f77bcf86cd799439013",
+            "name": "John",
+            "lastName": "Doe",
+            "username": "johndoe",
+            "profilePicture": "https://res.cloudinary.com/example/image/upload/v1234567890/profile.jpg"
+        },
+        "authorId": "507f1f77bcf86cd799439013",
+        "tags": [
+            {
+                "id": "507f1f77bcf86cd799439014",
+                "name": "Travel",
+                "slug": "travel"
+            },
+            {
+                "id": "507f1f77bcf86cd799439015",
+                "name": "Destinations",
+                "slug": "destinations"
+            }
+        ],
+        "tagIds": [
+            "507f1f77bcf86cd799439014",
+            "507f1f77bcf86cd799439015"
+        ],
+        "faqs": [
+            {
+                "id": "507f1f77bcf86cd799439016",
+                "question": "What is the best time to visit these destinations?",
+                "answer": "The best time varies by destination, but generally spring and fall offer the best weather and fewer crowds.",
+                "order": 0
+            },
+            {
+                "id": "507f1f77bcf86cd799439017",
+                "question": "Do I need a visa for these countries?",
+                "answer": "Visa requirements depend on your nationality. Check with each country's embassy for specific requirements.",
+                "order": 1
+            }
+        ],
+        "itemListItems": [
+            {
+                "id": "507f1f77bcf86cd799439018",
+                "name": "Paris, France",
+                "url": "https://example.com/destinations/paris",
+                "order": 0
+            },
+            {
+                "id": "507f1f77bcf86cd799439019",
+                "name": "Tokyo, Japan",
+                "url": "https://example.com/destinations/tokyo",
+                "order": 1
+            }
+        ],
+        "featured": true,
+        "pillarPage": false,
+        "trending": true,
+        "views": 1250,
+        "readTime": 8,
+        "wordCount": 2500,
+        "metaTitle": "Top 10 Travel Destinations 2024 | Best Places to Visit",
+        "metaDescription": "Discover the 10 best travel destinations for 2024. From tropical beaches to cultural cities, plan your next adventure.",
+        "focusKeyword": "best travel destinations 2024"
+    },
+    "requiredFieldsForCreation": [
+        "title",
+        "content",
+        "categoryId",
+        "authorId",
+        "type"
+    ],
+    "optionalFieldsForCreation": [
+        "slug",
+        "description",
+        "excerpt",
+        "image",
+        "heroImage",
+        "status",
+        "tagIds",
+        "metaTitle",
+        "metaDescription",
+        "focusKeyword",
+        "featured",
+        "pillarPage",
+        "trending",
+        "publishedAt",
+        "faqs",
+        "itemListItems"
+    ],
+    "notes": {
+        "contentFormat": "Content should be in HTML or Markdown format. The system uses TipTap editor which supports rich text formatting.",
+        "slugGeneration": "If slug is not provided, it will be auto-generated from the title. Slugs must be unique.",
+        "statusDefault": "If status is not provided, it defaults to DRAFT.",
+        "typeDefault": "If type is not provided, it defaults to BLOG_POST.",
+        "imageFields": "Use heroImage for the main hero image. The image field is kept for backward compatibility.",
+        "dates": "All date fields should be in ISO 8601 format (e.g., '2024-01-15T10:30:00.000Z').",
+        "ids": "All IDs are MongoDB ObjectIds (24 character hex strings).",
+        "faqsAndItemLists": "FAQs and itemListItems are optional arrays. The order field is used for sorting.",
+        "seoFields": "metaTitle and metaDescription are important for SEO. If metaTitle is not provided, the title will be used."
+    }
+}

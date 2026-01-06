@@ -154,7 +154,7 @@ export default function ArticleReview({
                 <div className="lg:col-span-2">
                     <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                         <h2 className="text-2xl font-bold mb-4">Article Preview</h2>
-                        
+
                         {/* Stats */}
                         <div className="flex gap-4 mb-4 text-sm text-gray-600">
                             <span>{wordCount} words</span>

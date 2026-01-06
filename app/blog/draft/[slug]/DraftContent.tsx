@@ -13,8 +13,8 @@ import Link from 'next/link';
 import ProtectedPage from '@/app/components/ProtectedPage';
 import { BlogPost } from '@/app/types';
 
-const ShareButton = dynamic(() => import("../../../components/ShareButton"), { ssr: false });
-const FAQSection = dynamic(() => import("../../../components/FAQSection"), { ssr: false });
+const ShareButton = dynamic(() => import("@/app/components/ShareButton"), { ssr: false });
+const FAQSection = dynamic(() => import("@/app/components/FAQSection"), { ssr: false });
 
 interface DraftContentProps {
     post: BlogPost;

@@ -24,7 +24,7 @@ export interface ImageSuggestion {
  */
 export async function searchImages(query: string, count: number = 1): Promise<UnsplashImage[]> {
     const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-    
+
     if (!accessKey) {
         throw new Error('UNSPLASH_ACCESS_KEY is not configured');
     }
@@ -77,7 +77,7 @@ export async function searchImages(query: string, count: number = 1): Promise<Un
  */
 export async function getRandomImage(query: string): Promise<UnsplashImage | null> {
     const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-    
+
     if (!accessKey) {
         throw new Error('UNSPLASH_ACCESS_KEY is not configured');
     }
@@ -133,7 +133,7 @@ export async function searchImagesForSuggestions(
         try {
             // Try searching with the suggested query
             const images = await searchImages(suggestion.searchQuery, 1);
-            
+
             if (images.length > 0) {
                 results.push({
                     ...images[0],
@@ -175,18 +175,91 @@ export async function searchImagesForSuggestions(
 }
 
 /**
- * Get hero image - searches for a high-quality hero image
+ * Extract location (city or country) from title/query
+ * Examples:
+ * - "Complete Guide to Tokyo" -> "Tokyo"
+ * - "Best Things to Do in Paris" -> "Paris"
+ * - "Mexico Travel Guide" -> "Mexico"
+ * - "Tokyo Food Guide" -> "Tokyo"
+ */
+function extractLocation(text: string): string {
+    if (!text) return text;
+
+    // Common patterns to extract location
+    const patterns = [
+        // "Guide to [Location]", "Travel Guide to [Location]"
+        /(?:guide to|travel guide to|complete guide to|ultimate guide to)\s+(.+?)(?:\s+guide|\s+travel|\s*$)/i,
+        // "Things to Do in [Location]", "Best of [Location]"
+        /(?:things to do in|best of|visit|exploring|explore)\s+(.+?)(?:\s+travel|\s+guide|\s*$)/i,
+        // "[Location] Travel Guide", "[Location] Food Guide"
+        /^(.+?)\s+(?:travel|food|complete|ultimate|best|top)\s+(?:guide|things|attractions|destinations)/i,
+        // "[Location]" at the start
+        /^(.+?)(?:\s+(?:guide|travel|food|best|top|things|attractions|destinations|cost|budget|itinerary))/i,
+    ];
+
+    for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match && match[1]) {
+            let location = match[1].trim();
+            // Clean up common prefixes/suffixes
+            location = location.replace(/^(the|a|an)\s+/i, '').trim();
+            return location;
+        }
+    }
+
+    // If no pattern matches, try to get first significant word(s) before common keywords
+    const words = text.split(/\s+/);
+    if (words.length <= 3) {
+        // Short titles - return first significant word
+        return words[0];
+    }
+
+    // Return original text if we can't extract
+    return text;
+}
+
+/**
+ * Get hero image - searches for a specific image based on location in the title
+ * Uses search instead of random to get more relevant images
  */
 export async function getHeroImage(query: string): Promise<UnsplashImage | null> {
     try {
-        // Try to get a random image for the query
-        const image = await getRandomImage(query);
-        return image;
+        // Extract location from the query/title
+        const locationQuery = extractLocation(query);
+
+        // Search for images using the extracted location
+        // Use search instead of random to get better, more relevant results
+        const images = await searchImages(locationQuery, 1);
+
+        if (images.length > 0) {
+            // Return the first (most relevant) result
+            return images[0];
+        }
+
+        // If search fails, try with the original query
+        console.warn(`No images found for "${locationQuery}", trying original query "${query}"`);
+        const fallbackImages = await searchImages(query, 1);
+        if (fallbackImages.length > 0) {
+            return fallbackImages[0];
+        }
+
+        // Last fallback: generic travel destination
+        console.warn(`No images found, using generic travel destination fallback`);
+        const genericImages = await searchImages('travel destination', 1);
+        if (genericImages.length > 0) {
+            return genericImages[0];
+        }
+
+        return null;
     } catch (error) {
         console.warn('Failed to get hero image, trying fallback:', error);
         try {
-            // Fallback to generic travel image
-            return await getRandomImage('travel destination');
+            // Final fallback: try generic travel search
+            const fallbackImages = await searchImages('travel', 1);
+            if (fallbackImages.length > 0) {
+                return fallbackImages[0];
+            }
+            return null;
         } catch (fallbackError) {
             console.error('Failed to get fallback hero image:', fallbackError);
             return null;

@@ -1,4 +1,4 @@
-import GenerationForm from '@/app/components/ai-generator/GenerationForm'
+import GenerationForm from './components/GenerationForm'
 
 export default function AIGeneratePage() {
     return (

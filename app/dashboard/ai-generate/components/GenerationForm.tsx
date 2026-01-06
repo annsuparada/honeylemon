@@ -355,14 +355,13 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                 />
             )}
 
-            {generating && (
-                <GenerationProgress
-                    currentStep={currentStep}
-                    totalSteps={progressSteps.length}
-                    steps={progressSteps}
-                    estimatedTime={120} // 2 minutes estimate
-                />
-            )}
+            <GenerationProgress
+                isOpen={generating}
+                currentStep={currentStep}
+                totalSteps={progressSteps.length}
+                steps={progressSteps}
+                estimatedTime={120} // 2 minutes estimate
+            />
 
             <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-6">
                 {/* Content Type Selector */}
@@ -758,11 +757,20 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                     <button
                         type="submit"
                         className="btn btn-primary"
+                        disabled={generating}
                     >
-                        ✨ Generate Content
+                        {generating ? (
+                            <>
+                                <span className="loading loading-spinner loading-sm"></span>
+                                Generating...
+                            </>
+                        ) : (
+                            '✨ Generate Content'
+                        )}
                     </button>
                 </div>
             </form>
         </div>
     )
 }
+
