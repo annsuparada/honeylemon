@@ -144,12 +144,36 @@ export async function POST(req: Request) {
             }
         }
 
+        // Handle AI-suggest mode for cluster articles
+        if (body.contentType === 'cluster' && body.clusterTopicMode === 'ai-suggest' && body.selectedPillarId) {
+            console.log('🤖 AI-suggest mode: Getting topic suggestions...');
+            const { suggestClusterTopics } = await import('@/lib/claude');
+            const suggestions = await suggestClusterTopics(body.selectedPillarId);
+
+            if (!suggestions || suggestions.length === 0) {
+                return NextResponse.json(
+                    { error: "No cluster topics could be suggested. Please try custom topics instead." },
+                    { status: 400 }
+                );
+            }
+
+            // Use the first N suggestions based on numberOfClusters (default to 1 for now)
+            const numClusters = body.numberOfClusters || 1;
+            const selectedTopics = suggestions.slice(0, numClusters);
+
+            console.log(`✅ Got ${suggestions.length} suggestions, using first ${selectedTopics.length}`);
+
+            // Update formData to use the first suggested topic
+            body.clusterTopicMode = 'custom';
+            body.customClusterTopics = selectedTopics;
+        }
+
         // Generate article using Claude API
         try {
             console.log('🚀 Starting AI content generation...');
             console.log('📋 Content type:', body.contentType);
-            console.log('📝 Topic:', body.topic || body.pillarTopic || 'N/A');
-            
+            console.log('📝 Topic:', body.topic || body.pillarTopic || (body.customClusterTopics?.[0] || 'N/A'));
+
             const articleResponse = await generateArticle(body, pillarContent, pillarTitle);
             console.log('✅ Article generated successfully');
             console.log('📄 Title:', articleResponse.title);
@@ -186,11 +210,11 @@ export async function POST(req: Request) {
                     if (body.includeImages && articleResponse.imageSuggestions && articleResponse.imageSuggestions.length > 0) {
                         console.log('🖼️  Processing content images...');
                         console.log('📸 Image suggestions:', articleResponse.imageSuggestions.length);
-                        
+
                         // Search for images based on suggestions
                         const unsplashImages = await searchImagesForSuggestions(articleResponse.imageSuggestions);
                         console.log('✅ Found', unsplashImages.length, 'images from Unsplash');
-                        
+
                         // Separate hero from content images (if hero wasn't already generated)
                         const { heroImage: separatedHero, contentImages } = separateHeroImage(unsplashImages);
                         console.log('📦 Separated into', contentImages.length, 'content images');
@@ -263,7 +287,7 @@ export async function POST(req: Request) {
 
     } catch (error) {
         console.error("Error in AI generation API:", error);
-        
+
         // Handle specific error types
         if (error instanceof Error) {
             // Network or API errors
@@ -273,7 +297,7 @@ export async function POST(req: Request) {
                     { status: 503 }
                 );
             }
-            
+
             // Rate limit errors (will be handled in Phase 6)
             if (error.message.includes('rate limit') || error.message.includes('429')) {
                 return NextResponse.json(
