@@ -60,6 +60,13 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
     const [showReview, setShowReview] = useState(false)
     const [alert, setAlert] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
+    // Scroll to top when alert appears to make alert visible
+    useEffect(() => {
+        if (alert) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [alert])
+
     // Fetch pillar pages when cluster type is selected
     useEffect(() => {
         if (contentType === 'cluster') {
@@ -112,6 +119,26 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
         }
 
         setErrors(newErrors)
+
+        // Set alert if validation fails
+        if (Object.keys(newErrors).length > 0) {
+            // Create a user-friendly error message
+            const errorMessages = Object.values(newErrors)
+            const errorMessage = errorMessages.length === 1
+                ? errorMessages[0]
+                : `Please fix the following errors: ${errorMessages.join(', ')}`
+
+            setAlert({
+                type: 'error',
+                text: errorMessage,
+            })
+
+            // Scroll to top after setting alert
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            }, 100)
+        }
+
         return Object.keys(newErrors).length === 0
     }
 
@@ -306,11 +333,14 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
     if (showReview && generatedArticle) {
         return (
             <div className="max-w-7xl mx-auto">
+                {/* Alert Message - Fixed at top */}
                 {alert && (
-                    <AlertMessage
-                        message={alert}
-                        onClose={() => setAlert(null)}
-                    />
+                    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-screen-lg px-4">
+                        <AlertMessage
+                            message={alert}
+                            onClose={() => setAlert(null)}
+                        />
+                    </div>
                 )}
                 <ArticleReview
                     article={generatedArticle}
@@ -348,11 +378,14 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
 
     return (
         <div className="max-w-4xl mx-auto">
+            {/* Alert Message - Fixed at top */}
             {alert && (
-                <AlertMessage
-                    message={alert}
-                    onClose={() => setAlert(null)}
-                />
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-screen-lg px-4">
+                    <AlertMessage
+                        message={alert}
+                        onClose={() => setAlert(null)}
+                    />
+                </div>
             )}
 
             <GenerationProgress
