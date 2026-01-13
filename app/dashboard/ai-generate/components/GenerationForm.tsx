@@ -41,6 +41,7 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
     const [autoSuggestClusters, setAutoSuggestClusters] = useState(true)
     const [selectedPillarId, setSelectedPillarId] = useState('')
     const [clusterTopicMode, setClusterTopicMode] = useState<'ai-suggest' | 'custom'>('ai-suggest')
+    // TODO: Implement multiple custom topics - currently only supports one topic at a time
     const [customClusterTopics, setCustomClusterTopics] = useState<string[]>([''])
     const [numberOfClusters, setNumberOfClusters] = useState('5')
 
@@ -111,9 +112,10 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                 newErrors.selectedPillarId = 'Please select a pillar page'
             }
             if (clusterTopicMode === 'custom') {
-                const validTopics = customClusterTopics.filter(t => t.trim().length >= 3)
-                if (validTopics.length === 0) {
-                    newErrors.customClusterTopics = 'Please enter at least one valid cluster topic (min 3 characters)'
+                // TODO: Support multiple topics - currently only validates first topic
+                const topic = customClusterTopics[0]?.trim() || ''
+                if (!topic || topic.length < 3) {
+                    newErrors.customClusterTopics = 'Please enter a valid cluster topic (min 3 characters)'
                 }
             }
         }
@@ -167,12 +169,16 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
             autoSuggestClusters: contentType === 'pillar' ? autoSuggestClusters : undefined,
             selectedPillarId: contentType === 'cluster' ? selectedPillarId : undefined,
             clusterTopicMode: contentType === 'cluster' ? clusterTopicMode : undefined,
+            // TODO: Support multiple custom topics - currently only uses first topic
             customClusterTopics: contentType === 'cluster' && clusterTopicMode === 'custom'
-                ? customClusterTopics.filter(t => t.trim().length >= 3)
+                ? (customClusterTopics[0]?.trim() && customClusterTopics[0].trim().length >= 3
+                    ? [customClusterTopics[0].trim()]
+                    : undefined)
                 : undefined,
-            numberOfClusters: contentType === 'cluster' && clusterTopicMode === 'ai-suggest'
-                ? parseInt(numberOfClusters)
-                : undefined,
+            // TODO: Implement batch cluster generation - currently only generates one article
+            // numberOfClusters: contentType === 'cluster' && clusterTopicMode === 'ai-suggest'
+            //     ? parseInt(numberOfClusters)
+            //     : undefined,
         }
 
         // Start generation
@@ -181,29 +187,11 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
         setGeneratedArticle(null)
         setAlert(null)
 
-        // Initialize progress steps
-        const steps: ProgressStep[] = [
-            { label: 'Building your prompt...', progress: 5, status: 'pending' },
-            { label: 'Writing article content...', progress: 10, status: 'pending' },
-            { label: 'Generating SEO metadata...', progress: 65, status: 'pending' },
-            { label: 'Finding perfect images...', progress: 70, status: 'pending' },
-            { label: 'Uploading images...', progress: 80, status: 'pending' },
-            { label: 'Optimizing content...', progress: 90, status: 'pending' },
-            { label: 'Finalizing...', progress: 95, status: 'pending' },
-            { label: 'Complete!', progress: 100, status: 'pending' },
-        ]
-        setProgressSteps(steps)
-        setCurrentStep(0)
-
         try {
             const token = localStorage.getItem('token')
             if (!token) {
                 throw new Error('Not authenticated')
             }
-
-            // Update progress: Building prompt
-            setProgressSteps(prev => prev.map((s, i) => i === 0 ? { ...s, status: 'active' } : s))
-            setCurrentStep(1)
 
             // Call API
             const response = await fetch('/api/ai-generate', {
@@ -221,10 +209,6 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                 throw new Error(data.error || 'Failed to generate content')
             }
 
-            // Update progress: Complete
-            setProgressSteps(prev => prev.map(s => ({ ...s, status: 'completed' })))
-            setCurrentStep(steps.length)
-
             // Set generated article
             setGeneratedArticle(data.article)
             setHeroImageUrl(data.heroImageUrl)
@@ -232,14 +216,11 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
             setGenerating(false)
         } catch (error) {
             console.error('Error generating content:', error)
+            setGenerating(false)
             setAlert({
                 type: 'error',
                 text: error instanceof Error ? error.message : 'Failed to generate content',
             })
-            setProgressSteps(prev => prev.map((s, i) =>
-                i === currentStep ? { ...s, status: 'error' } : s
-            ))
-            setGenerating(false)
         }
     }
 
@@ -252,23 +233,25 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
         setProgressSteps([])
     }
 
-    const addCustomClusterTopic = () => {
-        if (customClusterTopics.length < 10) {
-            setCustomClusterTopics([...customClusterTopics, ''])
-        }
-    }
+    // TODO: Implement multiple custom topics - these functions will be used for batch topic input
+    // const addCustomClusterTopic = () => {
+    //     if (customClusterTopics.length < 10) {
+    //         setCustomClusterTopics([...customClusterTopics, ''])
+    //     }
+    // }
 
     const updateCustomClusterTopic = (index: number, value: string) => {
+        // Currently only supports index 0 (single topic)
         const updated = [...customClusterTopics]
         updated[index] = value
         setCustomClusterTopics(updated)
     }
 
-    const removeCustomClusterTopic = (index: number) => {
-        if (customClusterTopics.length > 1) {
-            setCustomClusterTopics(customClusterTopics.filter((_, i) => i !== index))
-        }
-    }
+    // const removeCustomClusterTopic = (index: number) => {
+    //     if (customClusterTopics.length > 1) {
+    //         setCustomClusterTopics(customClusterTopics.filter((_, i) => i !== index))
+    //     }
+    // }
 
     // Article Format Options
     const articleFormatOptions = [
@@ -362,12 +345,16 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                         autoSuggestClusters: contentType === 'pillar' ? autoSuggestClusters : undefined,
                         selectedPillarId: contentType === 'cluster' ? selectedPillarId : undefined,
                         clusterTopicMode: contentType === 'cluster' ? clusterTopicMode : undefined,
+                        // TODO: Support multiple custom topics - currently only uses first topic
                         customClusterTopics: contentType === 'cluster' && clusterTopicMode === 'custom'
-                            ? customClusterTopics.filter(t => t.trim().length >= 3)
+                            ? (customClusterTopics[0]?.trim() && customClusterTopics[0].trim().length >= 3
+                                ? [customClusterTopics[0].trim()]
+                                : undefined)
                             : undefined,
-                        numberOfClusters: contentType === 'cluster' && clusterTopicMode === 'ai-suggest'
-                            ? parseInt(numberOfClusters)
-                            : undefined,
+                        // TODO: Implement batch cluster generation - currently only generates one article
+                        // numberOfClusters: contentType === 'cluster' && clusterTopicMode === 'ai-suggest'
+                        //     ? parseInt(numberOfClusters)
+                        //     : undefined,
                     }}
                     heroImageUrl={heroImageUrl}
                     onRegenerate={handleRegenerate}
@@ -390,10 +377,10 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
 
             <GenerationProgress
                 isOpen={generating}
-                currentStep={currentStep}
-                totalSteps={progressSteps.length}
-                steps={progressSteps}
-                estimatedTime={120} // 2 minutes estimate
+                currentStep={0}
+                totalSteps={1}
+                steps={[]}
+                estimatedTime={240} // 4 minutes estimate
             />
 
             <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-6">
@@ -569,18 +556,33 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
 
                                 {clusterTopicMode === 'ai-suggest' && (
                                     <div className="mt-4">
-                                        <SelectInput
+                                        {/* TODO: Implement batch cluster generation
+                                            Currently only generates one article per request.
+                                            When implemented, this will allow generating multiple
+                                            cluster articles at once based on the selected number.
+                                        */}
+                                        {/* <SelectInput
                                             label="Number of clusters"
                                             options={numberOfClustersOptions}
                                             selectedValue={numberOfClusters}
                                             onChange={setNumberOfClusters}
-                                        />
+                                        /> */}
                                     </div>
                                 )}
 
                                 {clusterTopicMode === 'custom' && (
                                     <div className="mt-4 space-y-3">
-                                        {customClusterTopics.map((topic, index) => (
+                                        {/* TODO: Implement multiple custom topics - currently only supports one topic at a time
+                                            When implemented, uncomment the map function and add/remove buttons below
+                                        */}
+                                        <input
+                                            type="text"
+                                            className="input input-bordered w-full"
+                                            placeholder="Enter cluster topic"
+                                            value={customClusterTopics[0] || ''}
+                                            onChange={(e) => updateCustomClusterTopic(0, e.target.value)}
+                                        />
+                                        {/* {customClusterTopics.map((topic, index) => (
                                             <div key={index} className="flex gap-2">
                                                 <input
                                                     type="text"
@@ -608,7 +610,7 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                                             >
                                                 Add another topic
                                             </button>
-                                        )}
+                                        )} */}
                                         {errors.customClusterTopics && (
                                             <p className="text-sm text-red-600">{errors.customClusterTopics}</p>
                                         )}

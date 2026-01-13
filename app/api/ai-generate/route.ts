@@ -157,11 +157,15 @@ export async function POST(req: Request) {
                 );
             }
 
-            // Use the first N suggestions based on numberOfClusters (default to 1 for now)
-            const numClusters = body.numberOfClusters || 1;
+            // TODO: Implement batch cluster generation
+            // Currently only generates one article per request using the first suggested topic.
+            // When batch generation is implemented, this will use numberOfClusters to generate
+            // multiple articles in sequence.
+            const numClusters = 1; // body.numberOfClusters || 1; // Commented out until batch generation is implemented
             const selectedTopics = suggestions.slice(0, numClusters);
 
             console.log(`✅ Got ${suggestions.length} suggestions, using first ${selectedTopics.length}`);
+            console.log(`ℹ️  Note: Batch generation not yet implemented - only generating first article`);
 
             // Update formData to use the first suggested topic
             body.clusterTopicMode = 'custom';
