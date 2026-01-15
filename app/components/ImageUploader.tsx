@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import AlertMessage from './AlertMessage';
 
@@ -11,16 +11,30 @@ interface ImageUploaderProps {
     showPreview?: boolean;
 }
 
+interface UnsplashImage {
+    id: string;
+    url: string;
+    thumbUrl: string;
+    smallUrl: string;
+    photographer: string;
+    photographerUrl: string;
+    description?: string;
+    alt: string;
+}
+
 /**
  * ImageUploader Component
  * 
  * A reusable component for uploading images to Cloudinary via:
  * 1. File upload from device
  * 2. URL upload (fetches and hosts on Cloudinary)
+ * 3. Unsplash search (searches and uploads from Unsplash)
  * 
  * Features:
  * - Drag & drop file upload
  * - URL input for external images
+ * - Unsplash image search
+ * - Alt text input
  * - Image preview
  * - Copy URL to clipboard
  * - Loading states
@@ -33,11 +47,23 @@ export default function ImageUploader({
     showPreview = true,
 }: ImageUploaderProps) {
     const [imageUrl, setImageUrl] = useState<string>(initialImageUrl);
+    const [altText, setAltText] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [urlInput, setUrlInput] = useState('');
-    const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('file');
+    const [uploadMethod, setUploadMethod] = useState<'file' | 'url' | 'unsplash'>('file');
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Unsplash search state
+    const [unsplashQuery, setUnsplashQuery] = useState('');
+    const [unsplashImages, setUnsplashImages] = useState<UnsplashImage[]>([]);
+    const [searchingUnsplash, setSearchingUnsplash] = useState(false);
+    const [selectedUnsplashImage, setSelectedUnsplashImage] = useState<UnsplashImage | null>(null);
+
+    // Update imageUrl when initialImageUrl changes
+    useEffect(() => {
+        setImageUrl(initialImageUrl);
+    }, [initialImageUrl]);
 
     const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -140,6 +166,86 @@ export default function ImageUploader({
         }
     };
 
+    const handleUnsplashSearch = async () => {
+        if (!unsplashQuery.trim()) {
+            setMessage({ type: 'error', text: 'Please enter a search query' });
+            return;
+        }
+
+        setSearchingUnsplash(true);
+        setMessage(null);
+        setSelectedUnsplashImage(null);
+
+        try {
+            const response = await fetch('/api/images/search-unsplash', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: unsplashQuery.trim(),
+                    count: 12,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.images) {
+                setUnsplashImages(data.images);
+                if (data.images.length === 0) {
+                    setMessage({ type: 'error', text: 'No images found. Try a different search query.' });
+                }
+            } else {
+                setMessage({ type: 'error', text: data.error || 'Failed to search Unsplash' });
+            }
+        } catch (error) {
+            setMessage({
+                type: 'error',
+                text: error instanceof Error ? error.message : 'Failed to search Unsplash',
+            });
+        } finally {
+            setSearchingUnsplash(false);
+        }
+    };
+
+    const handleSelectUnsplashImage = async (image: UnsplashImage) => {
+        setSelectedUnsplashImage(image);
+        setLoading(true);
+        setMessage(null);
+
+        try {
+            // Upload Unsplash image to Cloudinary
+            const response = await fetch('/api/images/upload-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    imageUrl: image.url,
+                    fileName: `unsplash-${image.id}-${Date.now()}`,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.imageUrl) {
+                setImageUrl(data.imageUrl);
+                setAltText(image.alt);
+                setMessage({ type: 'success', text: 'Image uploaded successfully!' });
+                onImageUploaded?.(data.imageUrl);
+            } else {
+                setMessage({ type: 'error', text: data.error || 'Failed to upload image from Unsplash' });
+            }
+        } catch (error) {
+            setMessage({
+                type: 'error',
+                text: error instanceof Error ? error.message : 'Failed to upload image from Unsplash',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -194,6 +300,12 @@ export default function ImageUploader({
                     onClick={() => setUploadMethod('url')}
                 >
                     🌐 From URL
+                </button>
+                <button
+                    className={`tab ${uploadMethod === 'unsplash' ? 'tab-active' : ''}`}
+                    onClick={() => setUploadMethod('unsplash')}
+                >
+                    🔍 Search Unsplash
                 </button>
             </div>
 
@@ -279,6 +391,76 @@ export default function ImageUploader({
                 </div>
             )}
 
+            {/* Unsplash Search Section */}
+            {uploadMethod === 'unsplash' && (
+                <div className="space-y-4">
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            className="input input-bordered flex-1"
+                            placeholder="Search for images (e.g., tokyo travel, beach sunset)"
+                            value={unsplashQuery}
+                            onChange={(e) => setUnsplashQuery(e.target.value)}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleUnsplashSearch();
+                                }
+                            }}
+                            disabled={searchingUnsplash || loading}
+                        />
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleUnsplashSearch}
+                            disabled={searchingUnsplash || loading || !unsplashQuery.trim()}
+                        >
+                            {searchingUnsplash ? (
+                                <span className="loading loading-spinner loading-sm"></span>
+                            ) : (
+                                'Search'
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Unsplash Image Grid */}
+                    {searchingUnsplash && unsplashImages.length === 0 && (
+                        <div className="flex flex-col items-center gap-2 py-8">
+                            <span className="loading loading-spinner loading-lg"></span>
+                            <p className="text-gray-600">Searching Unsplash...</p>
+                        </div>
+                    )}
+
+                    {!searchingUnsplash && unsplashImages.length === 0 && unsplashQuery && (
+                        <div className="flex flex-col items-center gap-2 py-8 text-gray-500">
+                            <p>No images found. Try a different search query.</p>
+                        </div>
+                    )}
+
+                    {unsplashImages.length > 0 && (
+                        <div className="grid grid-cols-3 gap-3 max-h-96 overflow-y-auto p-2 border border-gray-200 rounded-lg">
+                            {unsplashImages.map((image) => (
+                                <div
+                                    key={image.id}
+                                    className={`relative w-full cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${selectedUnsplashImage?.id === image.id
+                                            ? 'border-primary ring-2 ring-primary'
+                                            : 'border-gray-200 hover:border-primary'
+                                        }`}
+                                    style={{ aspectRatio: '1 / 1' }}
+                                    onClick={() => handleSelectUnsplashImage(image)}
+                                >
+                                    <Image
+                                        src={image.smallUrl || image.thumbUrl}
+                                        alt={image.alt}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 33vw, 400px"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
             {/* Image Preview */}
             {showPreview && imageUrl && (
                 <div className="mt-6">
@@ -295,7 +477,7 @@ export default function ImageUploader({
                     <div className="relative w-full h-64 rounded-lg overflow-hidden border border-gray-200">
                         <Image
                             src={imageUrl}
-                            alt="Uploaded image preview"
+                            alt={altText || 'Uploaded image preview'}
                             fill
                             className="object-contain"
                             sizes="100vw"
@@ -310,9 +492,21 @@ export default function ImageUploader({
                             onClick={(e) => (e.target as HTMLInputElement).select()}
                         />
                     </div>
+                    {/* Alt Text Input */}
+                    <div className="mt-3">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Alt Text (Optional)
+                        </label>
+                        <input
+                            type="text"
+                            className="input input-bordered input-sm w-full"
+                            placeholder="Describe the image for accessibility"
+                            value={altText}
+                            onChange={(e) => setAltText(e.target.value)}
+                        />
+                    </div>
                 </div>
             )}
         </div>
     );
 }
-

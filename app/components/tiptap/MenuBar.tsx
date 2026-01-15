@@ -173,8 +173,21 @@ const MenuBar = () => {
             <ImageUploadModal
                 isOpen={isImageModalOpen}
                 onClose={() => setIsImageModalOpen(false)}
-                onInsert={(url, alt) => {
-                    editor.chain().focus().setImage({ src: url, alt: alt || "" }).run();
+                onInsert={(url, alt, showCredit, photographer, photographerUrl) => {
+                    if (showCredit && photographer && photographerUrl) {
+                        // Insert as figure with figcaption
+                        const figureHtml = `
+<figure class="article-image my-8">
+    <img src="${url}" alt="${(alt || "").replace(/"/g, '&quot;')}" class="w-full rounded-lg" />
+    <figcaption class="text-sm text-gray-600 mt-2 text-center">
+        Photo by <a href="${photographerUrl}" target="_blank" rel="noopener noreferrer" class="underline">${photographer}</a> on <a href="https://unsplash.com/?utm_source=travomad&utm_medium=referral" target="_blank" rel="noopener noreferrer" class="underline">Unsplash</a>
+    </figcaption>
+</figure>`;
+                        editor.chain().focus().insertContent(figureHtml).run();
+                    } else {
+                        // Insert as simple image
+                        editor.chain().focus().setImage({ src: url, alt: alt || "" }).run();
+                    }
                 }}
             />
             <InternalLinkModal

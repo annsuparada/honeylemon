@@ -27,8 +27,6 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
     const [writingTone, setWritingTone] = useState('friendly')
     const [targetAudience, setTargetAudience] = useState('first-time-travelers')
     const [wordCount, setWordCount] = useState('medium')
-    const [includeImages, setIncludeImages] = useState(true)
-    const [generateHeroImage, setGenerateHeroImage] = useState(true)
     const [primaryKeyword, setPrimaryKeyword] = useState('')
     const [secondaryKeywords, setSecondaryKeywords] = useState('')
     const [includeFAQ, setIncludeFAQ] = useState(true)
@@ -157,8 +155,6 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
             writingTone,
             targetAudience,
             wordCount,
-            includeImages,
-            generateHeroImage,
             primaryKeyword: primaryKeyword.trim() || undefined,
             secondaryKeywords: secondaryKeywords.trim() || undefined,
             includeFAQ,
@@ -333,8 +329,6 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                         writingTone,
                         targetAudience,
                         wordCount,
-                        includeImages,
-                        generateHeroImage,
                         primaryKeyword: primaryKeyword.trim() || undefined,
                         secondaryKeywords: secondaryKeywords.trim() || undefined,
                         includeFAQ,
@@ -679,33 +673,6 @@ export default function GenerationForm({ onSubmit }: GenerationFormProps) {
                                 <span className="text-sm font-medium text-gray-900">{option.label}</span>
                             </label>
                         ))}
-                    </div>
-                </div>
-
-                {/* Images */}
-                <div className="mb-6 border-t pt-6">
-                    <label className="block text-lg font-semibold text-gray-700 mb-3">
-                        Images
-                    </label>
-                    <div className="space-y-2">
-                        <label className="flex items-center">
-                            <input
-                                type="checkbox"
-                                checked={includeImages}
-                                onChange={(e) => setIncludeImages(e.target.checked)}
-                                className="checkbox checkbox-primary mr-2"
-                            />
-                            <span className="text-gray-700">Include images every 400 words</span>
-                        </label>
-                        <label className="flex items-center">
-                            <input
-                                type="checkbox"
-                                checked={generateHeroImage}
-                                onChange={(e) => setGenerateHeroImage(e.target.checked)}
-                                className="checkbox checkbox-primary mr-2"
-                            />
-                            <span className="text-gray-700">Generate hero image</span>
-                        </label>
                     </div>
                 </div>
 

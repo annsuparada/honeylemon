@@ -5,8 +5,9 @@
 
 export interface UnsplashImage {
     id: string;
-    url: string;
-    thumbUrl: string;
+    url: string; // High quality image (regular size, ~1080px)
+    thumbUrl: string; // Thumbnail for grid display
+    smallUrl: string; // Small size for better grid quality (~400px)
     photographer: string;
     photographerUrl: string;
     description?: string;
@@ -57,8 +58,9 @@ export async function searchImages(query: string, count: number = 1): Promise<Un
 
         return data.results.map((photo: any) => ({
             id: photo.id,
-            url: photo.urls.regular, // High quality image
-            thumbUrl: photo.urls.thumb,
+            url: photo.urls.regular, // High quality image (~1080px)
+            thumbUrl: photo.urls.thumb, // Thumbnail (~200px)
+            smallUrl: photo.urls.small || photo.urls.regular, // Small size (~400px) for grid, fallback to regular
             photographer: photo.user.name,
             photographerUrl: `${photo.user.links.html}?utm_source=travomad&utm_medium=referral`,
             description: photo.description || photo.alt_description,
@@ -108,6 +110,7 @@ export async function getRandomImage(query: string): Promise<UnsplashImage | nul
             id: photo.id,
             url: photo.urls.regular,
             thumbUrl: photo.urls.thumb,
+            smallUrl: photo.urls.small || photo.urls.regular,
             photographer: photo.user.name,
             photographerUrl: `${photo.user.links.html}?utm_source=travomad&utm_medium=referral`,
             description: photo.description || photo.alt_description,
