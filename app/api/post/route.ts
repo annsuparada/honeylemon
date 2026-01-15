@@ -52,7 +52,7 @@ export async function GET(req: Request) {
         const rawPosts = await prisma.post.findMany({
             where: filter,
             include: {
-                author: { select: { username: true, profilePicture: true, name: true, lastName: true } },
+                author: { select: { id: true, username: true, profilePicture: true, name: true, lastName: true } },
                 category: { select: { name: true, slug: true } },
                 tags: {
                     include: {

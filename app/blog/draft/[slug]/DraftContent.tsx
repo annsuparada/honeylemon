@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import sanitizeHtml from 'sanitize-html';
 import '@/app/styles/article.css'
-import dynamic from "next/dynamic";
 import HeroSection from '@/app/components/HeroSection';
 import Breadcrumb from '@/app/components/Breadcrumb';
 import { formatAuthorName } from '@/app/lip/structured-data-helpers';
@@ -11,10 +10,9 @@ import { extractHeadings, addIdsToHeadings } from '@/app/lip/toc-helpers';
 import TableOfContents from '@/app/components/TableOfContents';
 import Link from 'next/link';
 import ProtectedPage from '@/app/components/ProtectedPage';
+import ShareButton from '@/app/components/ShareButton';
+import FAQSection from '@/app/components/FAQSection';
 import { BlogPost } from '@/app/types';
-
-const ShareButton = dynamic(() => import("@/app/components/ShareButton"), { ssr: false });
-const FAQSection = dynamic(() => import("@/app/components/FAQSection"), { ssr: false });
 
 interface DraftContentProps {
     post: BlogPost;
@@ -88,7 +86,7 @@ export default function DraftContent({ post }: DraftContentProps) {
                             {/* Featured Image */}
                             <div className="aspect-w-16 aspect-h-9 mb-6 rounded-sm shadow-lg overflow-hidden">
                                 <Image
-                                    src={post.image ? post.image : 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
+                                    src={post.heroImage || post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
                                     alt={post.title}
                                     fill
                                     style={{ objectFit: "cover" }}

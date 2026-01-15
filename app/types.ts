@@ -30,11 +30,15 @@ export interface BlogPost {
     title: string;
     slug: string;
     content: string;
+    excerpt?: string;
     description?: string;
     image?: string;
+    heroImage?: string;
     status: PostStatus;
+    type: PageType;
     createdAt: string;
     updatedAt: string;
+    publishedAt?: string;
     category: {
         name: string;
         slug: string;
@@ -47,12 +51,12 @@ export interface BlogPost {
         username: string;
         profilePicture?: string;
     };
+    authorId: string;
     tags: Array<{
         id: string;
         name: string;
         slug: string;
     }>;
-    type: PageType;
     faqs?: Array<{
         id: string;
         question: string;
@@ -65,13 +69,18 @@ export interface BlogPost {
         url: string;
         order: number;
     }>;
+    // SEO Fields
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
+    // Special Flags
     featured?: boolean;
     pillarPage?: boolean;
     trending?: boolean;
+    // Analytics & Metadata
     views?: number;
     readTime?: number;
-    metaTitle?: string;
-    metaDescription?: string;
+    wordCount?: number;
 }
 
 

@@ -208,42 +208,16 @@ export default function ImageUploader({
         }
     };
 
-    const handleSelectUnsplashImage = async (image: UnsplashImage) => {
+    const handleSelectUnsplashImage = (image: UnsplashImage) => {
+        // Use Unsplash URL directly without uploading to Cloudinary
         setSelectedUnsplashImage(image);
-        setLoading(true);
-        setMessage(null);
+        setImageUrl(image.url);
+        setAltText(image.alt || '');
+        setMessage({ type: 'success', text: 'Image selected!' });
+        onImageUploaded?.(image.url);
 
-        try {
-            // Upload Unsplash image to Cloudinary
-            const response = await fetch('/api/images/upload-url', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    imageUrl: image.url,
-                    fileName: `unsplash-${image.id}-${Date.now()}`,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (data.success && data.imageUrl) {
-                setImageUrl(data.imageUrl);
-                setAltText(image.alt);
-                setMessage({ type: 'success', text: 'Image uploaded successfully!' });
-                onImageUploaded?.(data.imageUrl);
-            } else {
-                setMessage({ type: 'error', text: data.error || 'Failed to upload image from Unsplash' });
-            }
-        } catch (error) {
-            setMessage({
-                type: 'error',
-                text: error instanceof Error ? error.message : 'Failed to upload image from Unsplash',
-            });
-        } finally {
-            setLoading(false);
-        }
+        // Clear message after 2 seconds
+        setTimeout(() => setMessage(null), 2000);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -441,8 +415,8 @@ export default function ImageUploader({
                                 <div
                                     key={image.id}
                                     className={`relative w-full cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${selectedUnsplashImage?.id === image.id
-                                            ? 'border-primary ring-2 ring-primary'
-                                            : 'border-gray-200 hover:border-primary'
+                                        ? 'border-primary ring-2 ring-primary'
+                                        : 'border-gray-200 hover:border-primary'
                                         }`}
                                     style={{ aspectRatio: '1 / 1' }}
                                     onClick={() => handleSelectUnsplashImage(image)}

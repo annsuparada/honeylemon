@@ -201,8 +201,8 @@ export const handleSavePost = async ({
     const postData = {
         title,
         content,
-        image,
-        heroImage,
+        image: image && image.trim() ? image : undefined,
+        heroImage: heroImage && heroImage.trim() ? heroImage : undefined,
         description,
         excerpt,
         status: status || (isPublish ? 'PUBLISHED' : 'DRAFT'),

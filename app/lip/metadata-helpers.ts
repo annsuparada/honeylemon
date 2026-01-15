@@ -113,18 +113,18 @@ export async function generatePostMetadata(
         openGraph: {
             ...getBaseOpenGraph(seoTitle, seoDescription, fullUrl),
             type: "article",
-            publishedTime: post.createdAt,
+            publishedTime: post.publishedAt || post.createdAt,
             modifiedTime: post.updatedAt,
             authors: [authorName],
             section: post.category.name,
             tags: [post.category.name, ...tagNames],
-            images: getOpenGraphImages(post.image, seoTitle),
+            images: getOpenGraphImages(post.heroImage || post.image, seoTitle),
         },
 
         twitter: getTwitterMetadata(
             seoTitle,
             seoDescription,
-            post.image
+            post.heroImage || post.image
         ),
 
         alternates: getCanonicalUrl(url),

@@ -148,7 +148,7 @@ export function generateArticleStructuredData(post: BlogPost) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
   const authorName = formatAuthorName(post.author);
   const authorUrl = `${baseUrl}/author/${post.author.username || post.author.id}`;
-  const baseImage = post.image || DEFAULT_IMAGE_URL;
+  const baseImage = post.heroImage || post.image || DEFAULT_IMAGE_URL;
   const articleImages = generateImageVariants(baseImage);
   const authorImage = post.author.profilePicture || DEFAULT_LOGO_URL;
 
@@ -163,7 +163,7 @@ export function generateArticleStructuredData(post: BlogPost) {
       "width": img.width,
       "height": img.height
     })),
-    "datePublished": formatDateISO(post.createdAt),
+    "datePublished": formatDateISO(post.publishedAt || post.createdAt),
     "dateModified": formatDateISO(post.updatedAt),
     "author": {
       "@type": "Person",

@@ -119,7 +119,8 @@ export default function ImageUploadModal({ isOpen, onClose, onInsert }: ImageUpl
 
     const handleSelectUnsplashImage = (image: UnsplashImage) => {
         setSelectedUnsplashImage(image);
-        setAltText(image.alt);
+        setAltText(image.alt || "");
+        setImageUrl(image.url);
         setPreview(image.url);
     };
 
@@ -188,32 +189,15 @@ export default function ImageUploadModal({ isOpen, onClose, onInsert }: ImageUpl
 
                 cloudinaryUrl = data.imageUrl;
             } else {
-                // Unsplash
+                // Unsplash - use Unsplash URL directly, no Cloudinary upload
                 if (!selectedUnsplashImage) {
                     setError("Please select an image");
                     setUploading(false);
                     return;
                 }
 
-                // Upload Unsplash image to Cloudinary
-                const response = await fetch("/api/images/upload-url", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        imageUrl: selectedUnsplashImage.url,
-                        fileName: `unsplash-${selectedUnsplashImage.id}-${Date.now()}`,
-                    }),
-                });
-
-                const data = await response.json();
-
-                if (!data.success) {
-                    throw new Error(data.error || "Failed to upload image from Unsplash");
-                }
-
-                cloudinaryUrl = data.imageUrl;
+                // Use Unsplash URL directly without uploading to Cloudinary
+                cloudinaryUrl = selectedUnsplashImage.url;
                 finalAltText = altText.trim() || selectedUnsplashImage.alt;
                 finalPhotographer = selectedUnsplashImage.photographer;
                 finalPhotographerUrl = selectedUnsplashImage.photographerUrl;
@@ -462,10 +446,33 @@ export default function ImageUploadModal({ isOpen, onClose, onInsert }: ImageUpl
                                 </div>
                             )}
 
+                            {/* Preview for selected Unsplash image */}
+                            {selectedUnsplashImage && preview && (
+                                <div className="relative w-full h-48 mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                                    <Image
+                                        src={preview}
+                                        alt={selectedUnsplashImage.alt}
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                            )}
+
                             {/* Credit Display for Unsplash */}
                             {selectedUnsplashImage && (
-                                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                    <div className="mb-3">
+                                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-3">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Image URL (Read-only)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input input-bordered input-sm w-full bg-white"
+                                            value={selectedUnsplashImage.url}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Photo Credit (Read-only)
                                         </label>
