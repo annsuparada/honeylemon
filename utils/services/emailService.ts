@@ -1,11 +1,12 @@
 import nodemailer from 'nodemailer'
+import { emailConfig } from '@/lib/config'
 
 // Create reusable transporter object using Gmail SMTP
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.GMAIL_USER, // travomad.official@gmail.com
-        pass: process.env.GMAIL_APP_PASSWORD, // App-specific password
+        user: emailConfig.gmailUser,
+        pass: emailConfig.gmailAppPassword,
     },
 })
 
@@ -18,7 +19,7 @@ export interface EmailOptions {
 export async function sendEmail({ to, subject, html }: EmailOptions): Promise<boolean> {
     try {
         const mailOptions = {
-            from: `"Travomad" <${process.env.GMAIL_USER}>`,
+            from: `"Travomad" <${emailConfig.gmailUser}>`,
             to,
             subject,
             html,

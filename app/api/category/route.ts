@@ -3,27 +3,26 @@ import { z } from "zod";
 import { categorySchema } from "@/schemas/categorySchema";
 import { verifyToken } from "@/utils/helpers/auth";
 import { getAllCategories, createCategory, updateCategory, deleteCategory } from "@/lib/services/categoryService";
+import { handleError, successResponse, UnauthorizedError } from "@/lib/middleware/errorHandler";
 
 // GET: Retrieve all categories (Public Access)
 export async function GET() {
     try {
         const categories = await getAllCategories();
-
-        return NextResponse.json({ success: true, categories }, { status: 200 });
+        return successResponse({ categories }, 200);
     } catch (error) {
-        console.error("Error fetching categories:", error);
-        return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
+        return handleError(error);
     }
 }
 
 // POST: Create a new category (Protected)
 export async function POST(req: Request) {
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
+        const token = req.headers.get("authorization")?.split(" ")[1];
+        const decoded = verifyToken(token || "");
 
         if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+            throw new UnauthorizedError();
         }
 
         const body = await req.json();
@@ -34,31 +33,20 @@ export async function POST(req: Request) {
         // Create category using service
         const newCategory = await createCategory(validatedData);
 
-        return NextResponse.json({ success: true, category: newCategory }, { status: 201 });
+        return successResponse({ category: newCategory }, 201);
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: error.errors }, { status: 400 });
-        }
-
-        if (error instanceof Error) {
-            if (error.message === "Category already exists") {
-                return NextResponse.json({ error: error.message }, { status: 400 });
-            }
-        }
-
-        console.error("Error creating category:", error);
-        return NextResponse.json({ error: "Failed to create category" }, { status: 500 });
+        return handleError(error);
     }
 }
 
 // PATCH: Update a category (by ID) (Protected)
 export async function PATCH(req: Request) {
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
+        const token = req.headers.get("authorization")?.split(" ")[1];
+        const decoded = verifyToken(token || "");
 
         if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+            throw new UnauthorizedError();
         }
 
         const body = await req.json();
@@ -78,31 +66,20 @@ export async function PATCH(req: Request) {
             slug: validatedData.slug,
         });
 
-        return NextResponse.json({ success: true, category: updatedCategory }, { status: 200 });
+        return successResponse({ category: updatedCategory }, 200);
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: error.errors }, { status: 400 });
-        }
-
-        if (error instanceof Error) {
-            if (error.message === "Category not found") {
-                return NextResponse.json({ error: error.message }, { status: 404 });
-            }
-        }
-
-        console.error("Error updating category:", error);
-        return NextResponse.json({ error: "Failed to update category" }, { status: 500 });
+        return handleError(error);
     }
 }
 
 // DELETE: Remove a category by ID
 export async function DELETE(req: Request) {
     try {
-        const token = req.headers.get("authorization")?.split(" ")[1]
-        const decoded = verifyToken(token!)
+        const token = req.headers.get("authorization")?.split(" ")[1];
+        const decoded = verifyToken(token || "");
 
         if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+            throw new UnauthorizedError();
         }
 
         const body = await req.json();
@@ -117,19 +94,8 @@ export async function DELETE(req: Request) {
         // Delete category using service
         await deleteCategory(validatedData.id);
 
-        return NextResponse.json({ success: true, message: "Category deleted successfully" }, { status: 200 });
+        return successResponse({ message: "Category deleted successfully" }, 200);
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: error.errors }, { status: 400 });
-        }
-
-        if (error instanceof Error) {
-            if (error.message === "Category not found") {
-                return NextResponse.json({ error: error.message }, { status: 404 });
-            }
-        }
-
-        console.error("Error deleting category:", error);
-        return NextResponse.json({ error: "Failed to delete category" }, { status: 500 });
+        return handleError(error);
     }
 }

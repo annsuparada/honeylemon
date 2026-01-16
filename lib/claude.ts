@@ -1,10 +1,11 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { AIArticleResponse, GenerationFormData, buildPrompt } from '@/utils/helpers/promptBuilder';
 import prisma from '@/prisma/client';
+import { apiConfig } from '@/lib/config';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY || '',
+    apiKey: apiConfig.anthropic.apiKey,
 });
 
 /**
@@ -15,9 +16,6 @@ export async function generateArticle(
     pillarContent?: string,
     pillarTitle?: string
 ): Promise<AIArticleResponse> {
-    if (!process.env.ANTHROPIC_API_KEY) {
-        throw new Error('ANTHROPIC_API_KEY is not configured');
-    }
 
     // Build the prompt using promptBuilder
     const prompt = buildPrompt(formData, pillarContent, pillarTitle);
@@ -49,7 +47,7 @@ export async function generateArticle(
         try {
             // Try to extract JSON from the response (Claude may wrap it in markdown code blocks)
             let jsonText = responseText.trim();
-            
+
             // Remove markdown code blocks if present
             if (jsonText.startsWith('```json')) {
                 jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
@@ -173,9 +171,6 @@ function validateArticleResponse(data: any): asserts data is AIArticleResponse {
  * Generate cluster topic suggestions for a pillar page
  */
 export async function suggestClusterTopics(pillarId: string): Promise<string[]> {
-    if (!process.env.ANTHROPIC_API_KEY) {
-        throw new Error('ANTHROPIC_API_KEY is not configured');
-    }
 
     // Fetch pillar page
     const pillar = await prisma.post.findFirst({
@@ -237,7 +232,7 @@ Requirements:
         }
 
         let jsonText = contentBlock.text.trim();
-        
+
         // Remove markdown code blocks if present
         if (jsonText.startsWith('```json')) {
             jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');

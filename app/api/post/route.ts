@@ -4,6 +4,7 @@ import { z } from "zod";
 import { postSchema, updatePostSchema } from "@/schemas/postSchema";
 import { verifyToken } from "@/utils/helpers/auth";
 import { buildPostFilter, getPosts, createPost, updatePost, deletePost } from "@/lib/services/postService";
+import { handleError, successResponse, UnauthorizedError } from "@/lib/middleware/errorHandler";
 
 // GET: Retrieve all posts, by slug, by category, by status (Public Access)
 export async function GET(req: Request) {
@@ -38,33 +39,33 @@ export async function GET(req: Request) {
 
         // If filter is null, category doesn't exist, return empty array
         if (filter === null) {
-            return NextResponse.json({ success: true, posts: [] }, { status: 200 });
+            return successResponse({ posts: [] }, 200);
         }
 
         const limit = limitParam ? parseInt(limitParam) : undefined;
         const posts = await getPosts(filter, limit);
 
-        return NextResponse.json({ success: true, posts }, { status: 200 });
+        return successResponse({ posts }, 200);
     } catch (error) {
-        console.error("Error fetching posts:", error);
-        return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
+        return handleError(error);
     }
 }
 
 // POST: Create a new post (Protected)
 export async function POST(req: Request) {
-    const token = req.headers.get("authorization")?.split(" ")[1];
-
-    if (!token) {
-        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
-    }
-
-    const decoded = verifyToken(token);
-
-    if (!decoded || !decoded.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
     try {
+        const token = req.headers.get("authorization")?.split(" ")[1];
+
+        if (!token) {
+            throw new UnauthorizedError("No token provided");
+        }
+
+        const decoded = verifyToken(token);
+
+        if (!decoded || !decoded.id) {
+            throw new UnauthorizedError();
+        }
+
         const body = await req.json();
 
         // Validate request body using Zod
@@ -73,37 +74,27 @@ export async function POST(req: Request) {
         // Create post using service
         const newPost = await createPost(validatedData, decoded.id);
 
-        return NextResponse.json({ success: true, post: newPost }, { status: 201 });
+        return successResponse({ post: newPost }, 201);
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: error.errors }, { status: 400 });
-        }
-
-        if (error instanceof Error) {
-            if (error.message === "Slug already exists") {
-                return NextResponse.json({ error: error.message }, { status: 400 });
-            }
-        }
-
-        console.error("Error creating post:", error);
-        return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
+        return handleError(error);
     }
 }
 
 // PATCH: Update a post (by ID) (Protected)
 export async function PATCH(req: Request) {
-    const token = req.headers.get("authorization")?.split(" ")[1];
-
-    if (!token) {
-        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
-    }
-
-    const decoded = verifyToken(token);
-
-    if (!decoded || !decoded.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
     try {
+        const token = req.headers.get("authorization")?.split(" ")[1];
+
+        if (!token) {
+            throw new UnauthorizedError("No token provided");
+        }
+
+        const decoded = verifyToken(token);
+
+        if (!decoded || !decoded.id) {
+            throw new UnauthorizedError();
+        }
+
         const body = await req.json();
 
         // Validate input
@@ -112,38 +103,27 @@ export async function PATCH(req: Request) {
         // Update post using service
         const updatedPost = await updatePost(validatedData);
 
-        return NextResponse.json({ success: true, post: updatedPost }, { status: 200 });
+        return successResponse({ post: updatedPost }, 200);
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: error.errors }, { status: 400 });
-        }
-
-        if (error instanceof Error) {
-            if (error.message === "Post not found") {
-                return NextResponse.json({ error: error.message }, { status: 404 });
-            }
-        }
-
-        console.error("Error updating post:", error);
-        return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
+        return handleError(error);
     }
 }
 
 // DELETE: Remove a post by ID (Protected)
 export async function DELETE(req: Request) {
-    const token = req.headers.get("authorization")?.split(" ")[1];
-
-    if (!token) {
-        return NextResponse.json({ error: "Unauthorized - No Token Provided" }, { status: 401 });
-    }
-
-    const decoded = verifyToken(token);
-
-    if (!decoded || !decoded.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     try {
+        const token = req.headers.get("authorization")?.split(" ")[1];
+
+        if (!token) {
+            throw new UnauthorizedError("No token provided");
+        }
+
+        const decoded = verifyToken(token);
+
+        if (!decoded || !decoded.id) {
+            throw new UnauthorizedError();
+        }
+
         const body = await req.json();
 
         // Validate input
@@ -156,19 +136,8 @@ export async function DELETE(req: Request) {
         // Delete post using service
         await deletePost(validatedData.id);
 
-        return NextResponse.json({ success: true, message: "Post deleted successfully" }, { status: 200 });
+        return successResponse({ message: "Post deleted successfully" }, 200);
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: error.errors }, { status: 400 });
-        }
-
-        if (error instanceof Error) {
-            if (error.message === "Post not found") {
-                return NextResponse.json({ error: error.message }, { status: 404 });
-            }
-        }
-
-        console.error("Error deleting post:", error);
-        return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
+        return handleError(error);
     }
 }

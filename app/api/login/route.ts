@@ -2,12 +2,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "@/prisma/client";
-
-const SECRET_KEY = process.env.SECRET_KEY;
-
-if (!SECRET_KEY) {
-    throw new Error("SECRET_KEY is missing! Check your environment variables.");
-}
+import { jwtConfig } from "@/lib/config";
+import { handleError, successResponse } from "@/lib/middleware/errorHandler";
 
 export async function POST(req: Request) {
     try {
@@ -31,12 +27,12 @@ export async function POST(req: Request) {
         // 🔹 Generate JWT token (with expiration)
         const token = jwt.sign(
             { id: user.id, email: user.email, role: user.role },
-            SECRET_KEY as string,
+            jwtConfig.secret,
             { expiresIn: "7d" }
         );
 
-        return NextResponse.json({ message: "Login successful", token, user }, { status: 200 });
+        return successResponse({ message: "Login successful", token, user }, 200);
     } catch (error) {
-        return NextResponse.json({ message: "Server error" }, { status: 500 });
+        return handleError(error);
     }
 }

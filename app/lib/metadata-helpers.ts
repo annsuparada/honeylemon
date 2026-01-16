@@ -58,9 +58,11 @@ export function getOpenGraphImages(imageUrl?: string | null, alt: string = 'Trav
 /**
  * Canonical URL helper
  */
+import { nextjsConfig } from '@/lib/config';
+
 export function getCanonicalUrl(path: string) {
     return {
-        canonical: `${process.env.NEXT_PUBLIC_API_URL}${path}`,
+        canonical: `${nextjsConfig.apiUrl}${path}`,
     };
 }
 
@@ -95,7 +97,7 @@ export async function generatePostMetadata(
     const tagNames = post.tags.map(tag => tag.name);
     const keywords = [post.category.name, ...tagNames, "travel"].join(', ');
     const url = `${routePrefix}/${post.slug}`;
-    const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${url}`;
+    const fullUrl = `${nextjsConfig.apiUrl}${url}`;
 
     // Use metaTitle and metaDescription if available, otherwise fallback to title and description
     const seoTitle = post.metaTitle || post.title;

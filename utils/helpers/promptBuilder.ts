@@ -350,9 +350,9 @@ CONTENT QUALITY REQUIREMENTS:
 }
 
 function logPromptDebug(formData: GenerationFormData, prompt: string, pillarTitle?: string) {
+    const { featureConfig } = require('@/lib/config');
     const topic = formData.topic || formData.pillarTopic || 'N/A';
-    const previewLenRaw =
-        process.env.PROMPT_DEBUG_PREVIEW || process.env.NEXT_PUBLIC_PROMPT_DEBUG_PREVIEW;
+    const previewLenRaw = featureConfig.promptDebugPreview;
     const previewLen = Math.max(200, Math.min(5000, Number(previewLenRaw || 1200) || 1200));
 
     console.log('[promptBuilder] contentType:', formData.contentType);
@@ -361,9 +361,7 @@ function logPromptDebug(formData: GenerationFormData, prompt: string, pillarTitl
     console.log('[promptBuilder] promptChars:', prompt.length);
     console.log('[promptBuilder] promptPreviewStart:\n' + prompt.slice(0, previewLen));
 
-    const full =
-        process.env.PROMPT_DEBUG_FULL === 'true' ||
-        process.env.NEXT_PUBLIC_PROMPT_DEBUG_FULL === 'true';
+    const full = featureConfig.promptDebugFull === 'true';
     if (full) {
         console.log('[promptBuilder] promptFull:\n' + prompt);
     }

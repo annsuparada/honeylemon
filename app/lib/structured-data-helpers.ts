@@ -1,6 +1,7 @@
 // Structured data helpers for SEO (JSON-LD schema markup)
 
 import { BlogPost } from '@/app/types';
+import { nextjsConfig } from '@/lib/config';
 
 const DEFAULT_LOGO_URL = 'https://res.cloudinary.com/dejr86qx8/image/upload/v1749171379/Travomad/Logo_Redesign_3_usuub1.png';
 const DEFAULT_IMAGE_URL = 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp';
@@ -89,7 +90,7 @@ export function generateBreadcrumbListStructuredData(
   countryName?: string,
   countrySlug?: string
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
+  const baseUrl = nextjsConfig.apiUrl;
 
   // Determine breadcrumb label based on route prefix
   const breadcrumbLabel = routePrefix === '/destinations' ? 'Destinations' :
@@ -145,7 +146,7 @@ export function generateBreadcrumbListStructuredData(
  * Generate Article structured data
  */
 export function generateArticleStructuredData(post: BlogPost) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_BASE_URL;
+  const baseUrl = nextjsConfig.apiUrl;
   const authorName = formatAuthorName(post.author);
   const authorUrl = `${baseUrl}/author/${post.author.username || post.author.id}`;
   const baseImage = post.heroImage || post.image || DEFAULT_IMAGE_URL;

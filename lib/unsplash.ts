@@ -20,22 +20,19 @@ export interface ImageSuggestion {
     altText: string;
 }
 
+import { apiConfig } from '@/lib/config';
+
 /**
  * Search for images on Unsplash
  */
 export async function searchImages(query: string, count: number = 1): Promise<UnsplashImage[]> {
-    const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-
-    if (!accessKey) {
-        throw new Error('UNSPLASH_ACCESS_KEY is not configured');
-    }
 
     try {
         const response = await fetch(
             `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=${count}&orientation=landscape`,
             {
                 headers: {
-                    'Authorization': `Client-ID ${accessKey}`,
+                    'Authorization': `Client-ID ${apiConfig.unsplash.accessKey}`,
                 },
             }
         );
@@ -78,18 +75,12 @@ export async function searchImages(query: string, count: number = 1): Promise<Un
  * Get a random image from Unsplash based on query
  */
 export async function getRandomImage(query: string): Promise<UnsplashImage | null> {
-    const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-
-    if (!accessKey) {
-        throw new Error('UNSPLASH_ACCESS_KEY is not configured');
-    }
-
     try {
         const response = await fetch(
             `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&orientation=landscape`,
             {
                 headers: {
-                    'Authorization': `Client-ID ${accessKey}`,
+                    'Authorization': `Client-ID ${apiConfig.unsplash.accessKey}`,
                 },
             }
         );

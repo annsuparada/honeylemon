@@ -117,24 +117,45 @@ This document tracks all refactoring tasks, improvements, and theme color update
     ```
 
 #### 7. Error Handling
-- [ ] **Create centralized error handling**
+- [x] **Create centralized error handling**
   - Create `lib/middleware/errorHandler.ts`
   - Standardize error responses across API routes
   - Create error utility functions
+  - ✅ Created error handler with custom error classes (AppError, ValidationError, UnauthorizedError, etc.)
+  - ✅ Implemented handleError() function for standardized error responses
+  - ✅ Added successResponse() and errorResponse() helper functions
+  - ✅ Updated API routes (category, post, login) to use centralized error handling
 
 #### 8. Configuration Management
-- [ ] **Create centralized config**
+- [x] **Create centralized config**
   - Create `lib/config.ts` or `config/` folder
   - Move environment variable access to config
   - Add validation for required env vars
+  - ✅ Created `lib/config.ts` with type-safe configuration
+  - ✅ Added validation for all required environment variables
+  - ✅ Updated key files to use centralized config:
+    - `utils/helpers/auth.ts` - JWT secret
+    - `app/api/login/route.ts` - JWT secret
+    - `app/lib/cloudinary.ts` - Cloudinary config
+    - `lib/claude.ts` - Anthropic API key
+    - `lib/unsplash.ts` - Unsplash API key
+    - `utils/services/emailService.ts` - Email config
+    - `app/api/newsletter/route.ts` - JWT secret and API URL
+    - `app/lib/metadata-helpers.ts` - API URL
+    - `app/lib/structured-data-helpers.ts` - API URL
+    - `utils/helpers/promptBuilder.ts` - Feature flags
 
 ### Low Priority
 
 #### 9. Testing Structure
-- [ ] **Move tests to root level**
+- [x] **Move tests to root level**
   - Current: `app/tests/`
   - Target: `__tests__/` or `tests/` at root
   - Update Jest configuration
+  - ✅ Moved all tests from `app/tests/` to `__tests__/` at root level
+  - ✅ Updated relative imports in test files (../../api → ../app/api)
+  - ✅ Jest configuration works with new location (testMatch pattern finds tests)
+  - ✅ Verified tests can run from new location
 
 #### 10. Documentation
 - [ ] **Update README with new structure**
@@ -315,9 +336,9 @@ This document tracks all refactoring tasks, improvements, and theme color update
 
 ### Refactoring
 - **Total Tasks**: 10
-- **Completed**: 4
+- **Completed**: 7
 - **In Progress**: 0
-- **Pending**: 7
+- **Pending**: 3
 
 ### Theme Colors
 - **Total Tasks**: 4 main categories
