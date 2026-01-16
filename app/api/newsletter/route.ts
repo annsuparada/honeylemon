@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { z } from "zod";
-import { sendEmail } from "@/utils/emailService";
+import { sendEmail } from "@/utils/services/emailService";
 import crypto from "crypto";
 
 // Force dynamic rendering for this route

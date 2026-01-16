@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import ProtectedPage from '@/app/components/ProtectedPage'
 import { Author } from '@/app/types'
-import { changePassword, fetchUser, updateUser } from '@/utils/userAction'
+import { changePassword, fetchUser, updateUser } from '@/utils/actions/userAction'
 import UserProfileForm from './components/UserProfileForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
 

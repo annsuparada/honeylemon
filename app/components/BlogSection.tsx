@@ -8,7 +8,7 @@ import { BlogPost } from '../types'
 import SectionHeader from './SectionHeader'
 import FormattedDate from './FormattedDate'
 import ReadTime from './ReadTime'
-import { getBlogRoute } from '@/utils/routeHelpers'
+import { getBlogRoute } from '@/utils/helpers/routeHelpers'
 
 interface BlogSectionProps {
   posts: BlogPost[]

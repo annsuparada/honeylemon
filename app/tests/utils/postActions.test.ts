@@ -8,7 +8,7 @@ import {
     createPost,
     updatePost,
     deletePost,
-} from '@/utils/postActions';
+} from '@/utils/actions/postActions';
 
 import fetchMock from 'jest-fetch-mock';
 import { PostStatus, PageType } from '@prisma/client';

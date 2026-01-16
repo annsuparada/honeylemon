@@ -1,7 +1,7 @@
 // utils/postSaveHandler.ts
 
 import { Dispatch, SetStateAction } from "react";
-import { getPostRoute } from "../routeHelpers";
+import { getPostRoute } from "@/utils/helpers/routeHelpers";
 import { PageType } from "@prisma/client";
 
 /**

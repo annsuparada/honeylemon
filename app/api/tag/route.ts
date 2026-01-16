@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { z } from "zod";
-import { verifyToken } from "@/utils/auth";
+import { verifyToken } from "@/utils/helpers/auth";
 
 const tagSchema = z.object({
     name: z.string().min(1, "Tag name must be at least 1 character long"),

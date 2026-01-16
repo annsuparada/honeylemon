@@ -18,7 +18,7 @@ jest.mock('@/prisma/client', () => ({
 const mockPrisma = prisma as any
 
 // Mock email service
-jest.mock('@/utils/emailService', () => ({
+jest.mock('@/utils/services/emailService', () => ({
     sendEmail: jest.fn(),
 }))
 

@@ -4,7 +4,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { BlogPost } from "@/app/types";
 import FormattedDate from "@/app/components/FormattedDate";
 import { FaEdit, FaRegEye } from "react-icons/fa";
-import { getBlogRoute, getPostRoute } from "@/utils/routeHelpers";
+import { getBlogRoute, getPostRoute } from "@/utils/helpers/routeHelpers";
 import { PageType } from "@prisma/client";
 
 interface DashboardBlogListProps {

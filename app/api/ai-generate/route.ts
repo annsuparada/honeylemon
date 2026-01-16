@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/utils/auth";
-import { GenerationFormData } from "@/utils/promptBuilder";
+import { verifyToken } from "@/utils/helpers/auth";
+import { GenerationFormData } from "@/utils/helpers/promptBuilder";
 import { generateArticle } from "@/lib/claude";
 import prisma from "@/prisma/client";
 

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { loginUser } from '@/utils/loginAction';
+import { loginUser } from '@/utils/actions/loginAction';
 import fetchMock from 'jest-fetch-mock';
 
 beforeEach(() => {

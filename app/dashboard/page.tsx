@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { fetchPosts } from "@/utils/postActions";
+import { fetchPosts } from "@/utils/actions/postActions";
 import { BlogPost } from "@/app/types";
 import { PostStatus, PageType } from "@prisma/client";
 import ProtectedPage from "@/app/components/ProtectedPage";

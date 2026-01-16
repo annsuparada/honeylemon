@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { PageType, PostStatus } from "@prisma/client";
 import { z } from "zod";
 import { postSchema, updatePostSchema } from "@/schemas/postSchema";
-import { verifyToken } from "@/utils/auth";
+import { verifyToken } from "@/utils/helpers/auth";
 import { buildPostFilter, getPosts, createPost, updatePost, deletePost } from "@/lib/services/postService";
 
 // GET: Retrieve all posts, by slug, by category, by status (Public Access)

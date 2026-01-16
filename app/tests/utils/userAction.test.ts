@@ -8,7 +8,7 @@ import {
     updateUser,
     deleteUser,
     changePassword,
-} from '@/utils/userAction';
+} from '@/utils/actions/userAction';
 
 import fetchMock from 'jest-fetch-mock';
 

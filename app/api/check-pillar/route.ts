@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkPillarExists } from '@/utils/pillarPageHelpers';
+import { checkPillarExists } from '@/utils/helpers/pillarPageHelpers';
 
 // Mark this route as dynamic since it uses searchParams
 export const dynamic = 'force-dynamic';

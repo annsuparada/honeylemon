@@ -5,12 +5,12 @@ import { BlogPost } from '@/app/types'
 import { PageType } from '@prisma/client'
 
 // Mock entire postActions module
-jest.mock('@/utils/postActions', () => ({
+jest.mock('@/utils/actions/postActions', () => ({
     fetchPosts: jest.fn(),
     deletePost: jest.fn(),
     updatePost: jest.fn(),
 }))
-import * as postActions from '@/utils/postActions'
+import * as postActions from '@/utils/actions/postActions'
 
 // Mock child components
 jest.mock('@/app/components/ProtectedPage', () => ({ children }: any) => <div>{children}</div>)

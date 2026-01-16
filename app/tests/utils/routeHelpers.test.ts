@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { getPostRoute, getRoutePrefix, PAGE_TYPE_ROUTES } from '@/utils/routeHelpers';
+import { getPostRoute, getRoutePrefix, PAGE_TYPE_ROUTES } from '@/utils/helpers/routeHelpers';
 import { PageType } from '@prisma/client';
 
 describe('routeHelpers', () => {

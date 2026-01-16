@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { categorySchema } from "@/schemas/categorySchema";
-import { verifyToken } from "@/utils/auth";
+import { verifyToken } from "@/utils/helpers/auth";
 import { getAllCategories, createCategory, updateCategory, deleteCategory } from "@/lib/services/categoryService";
 
 // GET: Retrieve all categories (Public Access)

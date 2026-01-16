@@ -5,10 +5,10 @@
 import { PATCH } from '@/app/api/user/password/route';
 import prisma from '@/prisma/client';
 import bcrypt from 'bcrypt';
-import { verifyToken } from '@/utils/auth';
+import { verifyToken } from '@/utils/helpers/auth';
 
 jest.mock('@/prisma/client');
-jest.mock('@/utils/auth');
+jest.mock('@/utils/helpers/auth');
 jest.mock('bcrypt');
 jest.mock('@/prisma/client', () => ({
     __esModule: true,
@@ -19,7 +19,7 @@ jest.mock('@/prisma/client', () => ({
         },
     },
 }));
-jest.mock('@/utils/auth', () => ({
+jest.mock('@/utils/helpers/auth', () => ({
     verifyToken: jest.fn(),
 }));
 

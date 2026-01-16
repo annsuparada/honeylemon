@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { add } from 'date-fns'
 import prisma from '@/prisma/client'
-import { sendEmail, createPasswordResetEmail } from '@/utils/emailService'
+import { sendEmail, createPasswordResetEmail } from '@/utils/services/emailService'
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 

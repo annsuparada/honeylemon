@@ -2,17 +2,17 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import WritePage from '@/app/write/page'
 import '@testing-library/jest-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createPost, updatePost, fetchPostBySlug } from '@/utils/postActions'
-import { fetchAllCategories, createCategory } from '@/utils/categoryAction'
+import { createPost, updatePost, fetchPostBySlug } from '@/utils/actions/postActions'
+import { fetchAllCategories, createCategory } from '@/utils/actions/categoryAction'
 import handleSave from '@/app/write/page'
 
-jest.mock('@/utils/postActions', () => ({
+jest.mock('@/utils/actions/postActions', () => ({
     createPost: jest.fn(),
     updatePost: jest.fn(),
     fetchPostBySlug: jest.fn(),
 }))
 
-jest.mock('@/utils/categoryAction', () => ({
+jest.mock('@/utils/actions/categoryAction', () => ({
     fetchAllCategories: jest.fn().mockResolvedValue([
         { id: 'cat1', name: 'Tech', slug: 'tech' },
         { id: 'cat2', name: 'Travel', slug: 'travel' },
@@ -32,7 +32,7 @@ jest.mock('@tiptap/react', () => ({
     EditorProvider: ({ children }: any) => <div>{children}</div>,
 }))
 
-jest.mock('@/utils/pillarPageHelpers', () => ({
+jest.mock('@/utils/helpers/pillarPageHelpers', () => ({
     checkPillarExists: jest.fn(),
 }))
 

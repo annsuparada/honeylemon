@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { AIArticleResponse, GenerationFormData, buildPrompt } from '@/utils/promptBuilder';
+import { AIArticleResponse, GenerationFormData, buildPrompt } from '@/utils/helpers/promptBuilder';
 import prisma from '@/prisma/client';
 
 // Initialize Anthropic client

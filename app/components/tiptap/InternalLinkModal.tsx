@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { BlogPost } from "@/app/types";
-import { getPostRoute } from "@/utils/routeHelpers";
+import { getPostRoute } from "@/utils/helpers/routeHelpers";
 import { PageType } from "@prisma/client";
 
 interface InternalLinkModalProps {

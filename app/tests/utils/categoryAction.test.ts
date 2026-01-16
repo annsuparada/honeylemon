@@ -8,7 +8,7 @@ import {
     createCategory,
     updateCategory,
     deleteCategory
-} from '@/utils/categoryAction';
+} from '@/utils/actions/categoryAction';
 
 import { categorySchema } from '@/schemas/categorySchema';
 import fetchMock from 'jest-fetch-mock';

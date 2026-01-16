@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prisma from "@/prisma/client";
-import { verifyToken } from "@/utils/auth";
+import { verifyToken } from "@/utils/helpers/auth";
 
 // Update Password (Authenticated)
 export async function PATCH(req: Request) {

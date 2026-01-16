@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { POST } from '@/app/api/campaign/preview/route'
 
 // Mock email service
-jest.mock('@/utils/emailService', () => ({
+jest.mock('@/utils/services/emailService', () => ({
     sendEmail: jest.fn(),
 }))
 
@@ -28,7 +28,7 @@ describe('/api/campaign/preview', () => {
 
     describe('POST - Send preview email', () => {
         it('should send preview email successfully', async () => {
-            const { sendEmail } = require('@/utils/emailService')
+            const { sendEmail } = require('@/utils/services/emailService')
             sendEmail.mockResolvedValue(true)
 
             const requestBody = {
@@ -59,7 +59,7 @@ describe('/api/campaign/preview', () => {
         })
 
         it('should handle email sending failure', async () => {
-            const { sendEmail } = require('@/utils/emailService')
+            const { sendEmail } = require('@/utils/services/emailService')
             sendEmail.mockResolvedValue(false)
 
             const requestBody = {

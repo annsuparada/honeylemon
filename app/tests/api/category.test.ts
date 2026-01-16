@@ -15,7 +15,7 @@ jest.mock('@/prisma/client', () => ({
     },
 }));
 
-jest.mock('@/utils/auth', () => ({
+jest.mock('@/utils/helpers/auth', () => ({
     verifyToken: jest.fn(() => ({ id: 'user123' })),
 }));
 

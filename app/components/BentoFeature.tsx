@@ -1,7 +1,7 @@
 import SectionHeader from "./SectionHeader";
 import Link from "next/link";
 import { BlogPost } from "../types";
-import { getPostRoute } from "@/utils/routeHelpers";
+import { getPostRoute } from "@/utils/helpers/routeHelpers";
 import { PageType } from "@prisma/client";
 
 export type FeatureItem = {

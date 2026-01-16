@@ -7,10 +7,10 @@ import '@testing-library/jest-dom';
 import InternalLinkModal from '@/app/components/tiptap/InternalLinkModal';
 import { BlogPost } from '@/app/types';
 import { PageType, PostStatus } from '@prisma/client';
-import { getPostRoute } from '@/utils/routeHelpers';
+import { getPostRoute } from '@/utils/helpers/routeHelpers';
 
 // Mock getPostRoute
-jest.mock('@/utils/routeHelpers', () => ({
+jest.mock('@/utils/helpers/routeHelpers', () => ({
     getPostRoute: jest.fn((type, slug, tagSlug) => {
         if (type === PageType.DESTINATION && tagSlug) {
             return `/destinations/${tagSlug}`;

@@ -15,7 +15,7 @@ jest.mock('@/prisma/client', () => ({
 const mockPrisma = prisma as any
 
 // Mock email service
-jest.mock('@/utils/emailService', () => ({
+jest.mock('@/utils/services/emailService', () => ({
     sendEmail: jest.fn(),
 }))
 
@@ -47,7 +47,7 @@ describe('/api/campaign', () => {
         ]
 
         it('should send campaign to active subscribers successfully', async () => {
-            const { sendEmail } = require('@/utils/emailService')
+            const { sendEmail } = require('@/utils/services/emailService')
             sendEmail.mockResolvedValue(true)
 
             mockPrisma.newsletter.findMany.mockResolvedValue(
@@ -80,7 +80,7 @@ describe('/api/campaign', () => {
         })
 
         it('should send campaign to all subscribers successfully', async () => {
-            const { sendEmail } = require('@/utils/emailService')
+            const { sendEmail } = require('@/utils/services/emailService')
             sendEmail.mockResolvedValue(true)
 
             mockPrisma.newsletter.findMany.mockResolvedValue(mockSubscribers)
@@ -111,7 +111,7 @@ describe('/api/campaign', () => {
         })
 
         it('should handle email sending failures', async () => {
-            const { sendEmail } = require('@/utils/emailService')
+            const { sendEmail } = require('@/utils/services/emailService')
             sendEmail.mockResolvedValueOnce(true) // First email succeeds
             sendEmail.mockResolvedValueOnce(false) // Second email fails
 

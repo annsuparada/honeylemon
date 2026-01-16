@@ -7,7 +7,7 @@ import HeroSection from "./components/HeroSection";
 import NewsLetterSection from "./components/NewsLetterSection";
 import { destinations } from "./data/copy";
 import { BlogPost } from "./types";
-import { fetchPosts } from "@/utils/postActions";
+import { fetchPosts } from "@/utils/actions/postActions";
 
 const POST_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/post` || 'http://localhost:3000/api/post';
 

@@ -45,7 +45,7 @@ This document tracks all refactoring tasks, improvements, and theme color update
   - Keep API routes as thin controllers
 
 #### 4. Utils Folder Reorganization
-- [ ] **Reorganize `utils/` folder structure**
+- [x] **Reorganize `utils/` folder structure**
   - Current: Mixed concerns (actions, services, helpers)
   - Target structure:
     ```
@@ -58,16 +58,22 @@ This document tracks all refactoring tasks, improvements, and theme color update
     ├── actions/        # Server actions
     │   ├── postActions.ts
     │   ├── userAction.ts
-    │   ├── categotyAction.ts → categoryAction.ts
-    │   └── tagAction.ts
+    │   ├── categoryAction.ts
+    │   ├── tagAction.ts
+    │   └── loginAction.ts
     ├── handlers/       # Request handlers
     │   └── savePostHandler.ts
     └── helpers/        # Pure utility functions
         ├── routeHelpers.ts
         ├── validation.ts
         ├── pillarPageHelpers.ts
-        └── promptBuilder.ts
+        ├── promptBuilder.ts
+        ├── auth.ts
+        └── aiToPostMapper.ts
     ```
+  - ✅ All files moved to appropriate folders
+  - ✅ All imports updated across codebase
+  - ✅ All test files updated
 
 ### Medium Priority
 
@@ -309,7 +315,7 @@ This document tracks all refactoring tasks, improvements, and theme color update
 
 ### Refactoring
 - **Total Tasks**: 10
-- **Completed**: 3
+- **Completed**: 4
 - **In Progress**: 0
 - **Pending**: 7
 

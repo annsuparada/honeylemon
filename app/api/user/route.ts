@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { deleteUserSchema, editUserSchema, userSchema } from "@/schemas/userSchema";
 import { ZodError } from 'zod'
-import { verifyToken } from "@/utils/auth";
+import { verifyToken } from "@/utils/helpers/auth";
 import { getAllUsers, createUser, updateUser, deleteUser } from "@/lib/services/userService";
 
 // get all users (Protected)

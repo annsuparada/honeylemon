@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/utils/auth";
+import { verifyToken } from "@/utils/helpers/auth";
 import { suggestClusterTopics } from "@/lib/claude";
 
 export const dynamic = 'force-dynamic';

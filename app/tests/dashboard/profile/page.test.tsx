@@ -1,9 +1,9 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProfilePage from '@/app/dashboard/profile/page';
-import * as userAction from '@/utils/userAction';
+import * as userAction from '@/utils/actions/userAction';
 import '@testing-library/jest-dom';
 
-jest.mock('@/utils/userAction', () => ({
+jest.mock('@/utils/actions/userAction', () => ({
     fetchUser: jest.fn(),
     updateUser: jest.fn(),
     changePassword: jest.fn(),
