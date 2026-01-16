@@ -11,6 +11,7 @@ import AlertMessage from '@/app/components/AlertMessage'
 import InternalLinkModal from '@/app/components/tiptap/InternalLinkModal'
 import { getPostRoute } from '@/utils/routeHelpers'
 import { PageType } from '@prisma/client'
+import '@/app/styles/article.css'
 
 interface ArticleReviewProps {
     article: AIArticleResponse
@@ -163,10 +164,11 @@ export default function ArticleReview({
                         </div>
 
                         {/* Article Content */}
-                        <div
-                            className="prose max-w-none border rounded-lg p-6 max-h-[600px] overflow-y-auto"
-                            dangerouslySetInnerHTML={{ __html: article.content }}
-                        />
+                        <div className="border rounded-lg p-6 max-h-[600px] overflow-y-auto">
+                            <div className="post-content">
+                                <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
