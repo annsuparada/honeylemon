@@ -25,7 +25,7 @@ const TrendingPosts: React.FC<TrendingPostsProps> = ({
   }
 
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="bg-base-100 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <SectionHeader title={title} subtitle={subTitle} />
         <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,7 +50,7 @@ const TrendingPosts: React.FC<TrendingPostsProps> = ({
                       priority
                     />
                     <div className="absolute top-2 right-2">
-                      <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                      <span className="inline-flex items-center rounded-md bg-error/10 px-2 py-1 text-xs font-medium text-error ring-1 ring-inset ring-error/20">
                         🔥 Trending
                       </span>
                     </div>
@@ -58,30 +58,30 @@ const TrendingPosts: React.FC<TrendingPostsProps> = ({
 
                   <div className="p-4 flex flex-col flex-grow">
                     <div className="flex items-center gap-x-3 text-xs mb-2">
-                      <time dateTime={post.createdAt} className="text-gray-500">
+                      <time dateTime={post.createdAt} className="text-base-content/60">
                         <FormattedDate dateString={post.createdAt} />
                       </time>
                       {post.category?.name && (
-                        <span className="relative z-10 rounded-full bg-gray-50 px-2 py-1 font-medium text-gray-600">
+                        <span className="relative z-10 rounded-full bg-base-200 px-2 py-1 font-medium text-base-content/80">
                           {post.category.name}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-600 mb-2 line-clamp-2">
+                    <h3 className="text-lg font-semibold text-base-content group-hover:text-base-content/80 mb-2 line-clamp-2">
                       {post.title}
                     </h3>
 
                     {description && (
-                      <p className="text-sm text-gray-600 line-clamp-3 mb-3 flex-grow">
+                      <p className="text-sm text-base-content/80 line-clamp-3 mb-3 flex-grow">
                         {description.length > 150 ? description.slice(0, 150) + '...' : description}
                       </p>
                     )}
 
-                    <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
-                      <ReadTime readTime={post.readTime} className="text-xs text-gray-500" />
+                    <div className="flex items-center justify-between mt-auto pt-2 border-t border-base-200">
+                      <ReadTime readTime={post.readTime} className="text-xs text-base-content/60" />
                       {post.views !== undefined && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-base-content/60">
                           👁️ {post.views.toLocaleString()} views
                         </span>
                       )}

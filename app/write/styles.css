@@ -21,45 +21,45 @@
         border-collapse: collapse;
         margin: 2rem 0;
         font-size: 1rem;
-        background-color: #fff;
+        background-color: hsl(var(--b1));
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     th,
     td {
-        border: 1px solid #d1d5db;
+        border: 1px solid hsl(var(--bc) / 0.2);
         padding: 0.75rem 1rem;
         text-align: left;
         vertical-align: top;
     }
 
     th {
-        background-color: #f3f4f6;
+        background-color: hsl(var(--b2));
         font-weight: 600;
-        color: #111827;
+        color: hsl(var(--bc));
     }
 
     td {
-        color: #1f2937;
+        color: hsl(var(--bc));
     }
 
     tr:nth-child(even) td {
-        background-color: #f9fafb;
+        background-color: hsl(var(--b2));
     }
 
     tr:hover td {
-        background-color: #f3f4f6;
+        background-color: hsl(var(--b2));
     }
 
     table,
     th:first-child,
     td:first-child {
-        border-left: 1px solid #d1d5db;
+        border-left: 1px solid hsl(var(--bc) / 0.2);
     }
 
     th:last-child,
     td:last-child {
-        border-right: 1px solid #d1d5db;
+        border-right: 1px solid hsl(var(--bc) / 0.2);
     }
 
 
@@ -75,7 +75,7 @@
         font-weight: bold;
         margin-top: 25px;
         margin-bottom: 10px;
-        border-bottom: 2px solid #ddd;
+        border-bottom: 2px solid hsl(var(--bc) / 0.2);
         padding-bottom: 5px;
     }
 
@@ -144,14 +144,14 @@
 
 
     blockquote {
-        border-left: 3px solid gray;
+        border-left: 3px solid hsl(var(--bc) / 0.3);
         margin: 1.5rem 0;
         padding-left: 1rem;
     }
 
     hr {
         border: none;
-        border-top: 1px solid gray;
+        border-top: 1px solid hsl(var(--bc) / 0.3);
         margin: 2rem 0;
     }
 }
@@ -173,12 +173,12 @@ img {
 }
 
 .tiptap-link {
-    color: #1d4ed8;
+    color: hsl(var(--p));
     text-decoration: underline;
 }
 
 .tiptap-link:hover {
-    color: #9333ea;
+    color: hsl(var(--a));
 }
 
 

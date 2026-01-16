@@ -98,11 +98,11 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
           className={`block text-sm py-1 px-2 rounded transition-colors ${heading.level === 2
             ? 'font-medium'
             : heading.level === 3
-              ? 'ml-4 text-gray-600'
-              : 'ml-8 text-gray-500 text-xs'
+              ? 'ml-4 text-base-content/80'
+              : 'ml-8 text-base-content/60 text-xs'
             } ${activeId === heading.id
               ? 'bg-primary text-primary-content'
-              : 'hover:bg-base-200 text-gray-700'
+              : 'hover:bg-base-200 text-base-content/90'
             }`}
         >
           {heading.text}
@@ -117,7 +117,7 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
       {/* FAQs */}
       {faqs && faqs.length > 0 && (
         <>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide py-1 px-2">
+          <div className="text-xs font-semibold text-base-content/60 uppercase tracking-wide py-1 px-2">
             FAQs
           </div>
           {faqs.map((faq) => (
@@ -128,9 +128,9 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
                 handleClick(e, faq.id)
                 setIsMobileOpen(false) // Close mobile menu after click
               }}
-              className={`block text-sm py-1 px-2 ml-4 rounded transition-colors text-gray-600 ${activeId === faq.id
+              className={`block text-sm py-1 px-2 ml-4 rounded transition-colors text-base-content/80 ${activeId === faq.id
                 ? 'bg-primary text-primary-content'
-                : 'hover:bg-base-200 text-gray-700'
+                : 'hover:bg-base-200 text-base-content/90'
                 }`}
             >
               {faq.question}
@@ -146,7 +146,7 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
       {/* Desktop Sidebar Version */}
       <div className="sticky top-24 hidden lg:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto">
         <div className="bg-base-100 border border-base-300 rounded-sm p-4 shadow-xl">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
+          <h3 className="text-sm font-semibold text-base-content/90 uppercase tracking-wide mb-4">
             Table of Contents
           </h3>
           {tocContent}
@@ -188,7 +188,7 @@ export default function TableOfContents({ headings, faqs = [] }: TableOfContents
             {/* Drawer */}
             <div className="fixed bottom-0 left-0 right-0 bg-base-100 border-t border-base-300 rounded-t-lg shadow-2xl z-50 max-h-[70vh] overflow-hidden flex flex-col">
               <div className="flex items-center justify-between p-4 border-b border-base-300">
-                <h3 className="text-lg font-semibold text-gray-700">
+                <h3 className="text-lg font-semibold text-base-content/90">
                   Table of Contents
                 </h3>
                 <button

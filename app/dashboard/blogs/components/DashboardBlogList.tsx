@@ -37,7 +37,7 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                         />
                     </div>
 
-                    <div className="md:w-2/3 w-full p-6 relative bg-white">
+                    <div className="md:w-2/3 w-full p-6 relative bg-base-100">
                         <div className="absolute top-4 right-4">
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} role="button">
@@ -48,13 +48,13 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                                         <a onClick={() => handleArchive(post)}>Archive</a>
                                     </li>
                                     <li>
-                                        <a className="text-red-500" onClick={() => handleDelete(post.id)}>Delete</a>
+                                        <a className="text-error" onClick={() => handleDelete(post.id)}>Delete</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
 
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-base-content/60">
                             <FormattedDate dateString={post.createdAt} /> · {post.category?.name || "Uncategorized"} ·{" "}
                             <span className={`badge rounded ${post.status === "DRAFT" ? "badge-warning" : post.status === "PUBLISHED" ? "badge-info" : "badge-error"}`}>
                                 {post.status}
@@ -68,7 +68,7 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                                     </span>
                                 )}
                                 {post.pillarPage && (
-                                    <span className="badge rounded text-xs" style={{ backgroundColor: '#9333ea', color: 'white' }}>
+                                    <span className="badge badge-accent rounded text-xs">
                                         📚 Pillar
                                     </span>
                                 )}
@@ -79,7 +79,7 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                                 )}
                             </div>
                         )}
-                        <div className="flex flex-wrap gap-3 text-sm text-gray-500 mt-2">
+                        <div className="flex flex-wrap gap-3 text-sm text-base-content/60 mt-2">
                             {post.views !== undefined && (
                                 <span>👁️ {post.views.toLocaleString()} views</span>
                             )}
@@ -88,7 +88,7 @@ export default function DashboardBlogList({ posts, loading, handleArchive, handl
                             )}
                         </div>
                         <h3 className="text-2xl font-bold mt-2">{post.title}</h3>
-                        <p className="mt-2 mb-10 text-gray-700">
+                        <p className="mt-2 mb-10 text-base-content/90">
                             {post.description?.slice(0, 200)}
                             {post.description && post.description.length > 200 ? "..." : ""}
 

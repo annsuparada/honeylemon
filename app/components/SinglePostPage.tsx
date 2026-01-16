@@ -41,7 +41,7 @@ export default function SinglePostPage({
 }: SinglePostPageProps) {
     if (!post) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-base-300 text-base-content">
                 <VscError size={48} />
                 <h1 className="text-2xl font-semibold mt-6">Post Not Found</h1>
             </div>
@@ -191,7 +191,7 @@ export default function SinglePostPage({
                         </div>
 
                         {/* Blog Content */}
-                        <article className="prose lg:prose-xl max-w-none text-gray-800 leading-relaxed">
+                        <article className="prose lg:prose-xl max-w-none text-base-content leading-relaxed">
                             <div className='post-content'>
                                 <div dangerouslySetInnerHTML={{ __html: contentWithIds }} />
                             </div>
@@ -209,7 +209,7 @@ export default function SinglePostPage({
                         {post.tags && post.tags.length > 0 && (
                             <div className="">
                                 <div className="mb-4">
-                                    <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                                    <h3 className="text-sm font-semibold text-base-content/80 uppercase tracking-wide">
                                         Tags
                                     </h3>
                                 </div>

@@ -71,7 +71,7 @@ export default function BentoFeatures({ posts, sectionTitle, sectionSubTitle }: 
     const displayPosts = posts.slice(0, 5);
 
     return (
-        <div className="bg-white py-24 sm:py-32">
+        <div className="bg-base-100 py-24 sm:py-32">
             <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
                 <SectionHeader title={sectionTitle} subtitle={sectionSubTitle} />
                 <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-16 lg:grid-cols-6 lg:grid-rows-2">

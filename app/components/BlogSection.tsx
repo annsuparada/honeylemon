@@ -30,7 +30,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
   showAuthor = false,
 }) => {
   return (
-    <div className="bg-white pt-24 sm:pt-32 pb-10">
+    <div className="bg-base-100 pt-24 sm:pt-32 pb-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className={`mx-auto ${threeColumns ? "" : "max-w-2xl lg:max-w-4xl"}`}>
           <SectionHeader title={title} subtitle={subTitle} />
@@ -85,12 +85,12 @@ const BlogSection: React.FC<BlogSectionProps> = ({
 
                       <div className="p-2">
                         <div className="flex items-center gap-x-4 text-xs">
-                          <time dateTime={post.createdAt} className="text-gray-500">
+                          <time dateTime={post.createdAt} className="text-base-content/60">
                             <FormattedDate dateString={post.createdAt} />
                           </time>
                           {post.category?.name && (
                             <span
-                              className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600"
+                              className="relative z-10 rounded-full bg-base-200 px-3 py-1.5 font-medium text-base-content/80"
                             >
                               {post.category.name}
                             </span>
@@ -99,23 +99,23 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                         {/* Trending badge */}
                         {post.trending && (
                           <div className="mt-2">
-                            <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                            <span className="inline-flex items-center rounded-md bg-error/10 px-2 py-1 text-xs font-medium text-error ring-1 ring-inset ring-error/20">
                               🔥 Trending
                             </span>
                           </div>
                         )}
                         {/* Read time */}
                         <div className="mt-2">
-                          <ReadTime readTime={post.readTime} className="text-xs text-gray-500" />
+                          <ReadTime readTime={post.readTime} className="text-xs text-base-content/60" />
                         </div>
                         <div className="group relative max-w-xl">
-                          <h3 className="my-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
+                          <h3 className="my-3 text-lg/6 font-semibold text-base-content group-hover:text-base-content/80">
                             <span className="absolute inset-0" />
                             {post.title}
                           </h3>
                           {showDescription && (
                             <p
-                              className="text-sm/6 text-gray-600 pb-3"
+                              className="text-sm/6 text-base-content/80 pb-3"
                               dangerouslySetInnerHTML={{
                                 __html:
                                   sanitizedDescription.length > 200
@@ -126,7 +126,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                           )}
                         </div>
                         {showAuthor && (
-                          <div className="flex border-t border-gray-900/5 py-1">
+                          <div className="flex border-t border-base-content/5 py-1">
                             <div className="relative flex items-center gap-x-4">
                               {post.author?.profilePicture && post.author?.name && (
                                 <Image
@@ -134,12 +134,12 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                                   src={post.author.profilePicture}
                                   width={40}
                                   height={40}
-                                  className="rounded-full bg-gray-50"
+                                  className="rounded-full bg-base-200"
                                 />
                               )}
 
                               <div className="text-sm/6">
-                                <p className="font-semibold text-gray-900">
+                                <p className="font-semibold text-base-content">
                                   <span className="absolute inset-0" />
                                   {post.author.name} {post.author.lastName}
                                 </p>

@@ -153,11 +153,11 @@ export default function ArticleReview({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content Preview */}
                 <div className="lg:col-span-2">
-                    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <div className="bg-base-100 rounded-lg shadow-sm p-6 mb-6">
                         <h2 className="text-2xl font-bold mb-4">Article Preview</h2>
 
                         {/* Stats */}
-                        <div className="flex gap-4 mb-4 text-sm text-gray-600">
+                        <div className="flex gap-4 mb-4 text-sm text-base-content/80">
                             <span>{wordCount} words</span>
                             <span>•</span>
                             <span>{readTime} min read</span>
@@ -174,12 +174,12 @@ export default function ArticleReview({
 
                 {/* Sidebar - Metadata */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white rounded-lg shadow-sm p-6 space-y-6 sticky top-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Article Details</h3>
+                    <div className="bg-base-100 rounded-lg shadow-sm p-6 space-y-6 sticky top-4">
+                        <h3 className="text-lg font-semibold text-base-content mb-4">Article Details</h3>
 
                         {/* Title */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                            <label className="block text-sm font-medium text-base-content/90 mb-2">Title</label>
                             {editingTitle ? (
                                 <div className="flex gap-2">
                                     <input
@@ -196,7 +196,7 @@ export default function ArticleReview({
                                 </div>
                             ) : (
                                 <p
-                                    className="text-gray-900 cursor-pointer hover:text-blue-600"
+                                    className="text-base-content cursor-pointer hover:text-primary"
                                     onClick={() => setEditingTitle(true)}
                                 >
                                     {editedTitle}
@@ -206,7 +206,7 @@ export default function ArticleReview({
 
                         {/* Meta Description */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+                            <label className="block text-sm font-medium text-base-content/90 mb-2">Meta Description</label>
                             {editingMetaDesc ? (
                                 <textarea
                                     value={editedMetaDesc}
@@ -218,7 +218,7 @@ export default function ArticleReview({
                                 />
                             ) : (
                                 <p
-                                    className="text-gray-600 text-sm cursor-pointer hover:text-blue-600"
+                                    className="text-base-content/80 text-sm cursor-pointer hover:text-primary"
                                     onClick={() => setEditingMetaDesc(true)}
                                 >
                                     {editedMetaDesc || 'Click to edit'}
@@ -228,13 +228,13 @@ export default function ArticleReview({
 
                         {/* Focus Keyword */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Focus Keyword</label>
-                            <p className="text-gray-900">{article.focusKeyword || 'N/A'}</p>
+                            <label className="block text-sm font-medium text-base-content/90 mb-2">Focus Keyword</label>
+                            <p className="text-base-content">{article.focusKeyword || 'N/A'}</p>
                         </div>
 
                         {/* Tags */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                            <label className="block text-sm font-medium text-base-content/90 mb-2">Tags</label>
                             <div className="flex flex-wrap gap-2">
                                 {article.tags && article.tags.length > 0 ? (
                                     article.tags.map((tag, index) => (
@@ -243,14 +243,14 @@ export default function ArticleReview({
                                         </span>
                                     ))
                                 ) : (
-                                    <span className="text-gray-400 text-sm">No tags</span>
+                                    <span className="text-base-content/40 text-sm">No tags</span>
                                 )}
                             </div>
                         </div>
 
                         {/* Category */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                            <label className="block text-sm font-medium text-base-content/90 mb-2">Category *</label>
                             <select
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -279,10 +279,10 @@ export default function ArticleReview({
                         {/* Suggested Cluster Topics (for pillar pages) */}
                         {formData.contentType === 'pillar' && article.suggestedClusterTopics && article.suggestedClusterTopics.length > 0 && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Suggested Cluster Topics</label>
+                                <label className="block text-sm font-medium text-base-content/90 mb-2">Suggested Cluster Topics</label>
                                 <div className="space-y-2 max-h-48 overflow-y-auto">
                                     {article.suggestedClusterTopics.map((topic, index) => (
-                                        <div key={index} className="text-sm text-gray-600 p-2 bg-gray-50 rounded">
+                                        <div key={index} className="text-sm text-base-content/80 p-2 bg-base-200 rounded">
                                             {topic}
                                         </div>
                                     ))}

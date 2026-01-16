@@ -36,7 +36,7 @@ type CardSectionProps = {
 
 export default function CardSection({ cardData, title, subtitle }: CardSectionProps) {
     return (
-        <section className="bg-white py-24 sm:py-32">
+        <section className="bg-base-100 py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <SectionHeader title={title} subtitle={subtitle} />
                 <div className="mx-auto mt-16 grid max-w-2xl auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
