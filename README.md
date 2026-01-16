@@ -133,39 +133,111 @@ Travomad is a full-featured travel blog platform designed for content creators a
 
 ```
 travomad/
-├── app/
-│   ├── api/              # API routes
+├── __tests__/            # Test files (at root level)
+│   ├── api/              # API route tests
+│   ├── components/       # Component tests
+│   ├── dashboard/        # Dashboard tests
+│   ├── libs/             # Library function tests
+│   └── utils/            # Utility function tests
+├── app/                  # Next.js App Router
+│   ├── api/              # API routes (thin controllers)
+│   │   ├── ai-generate/  # AI content generation
 │   │   ├── campaign/     # Email campaign endpoints
 │   │   ├── category/     # Category management
 │   │   ├── images/       # Image upload endpoints (Cloudinary)
+│   │   ├── login/        # Authentication endpoints
+│   │   ├── newsletter/   # Newsletter subscription
 │   │   ├── post/         # Blog post CRUD operations
-│   │   ├── user/         # User authentication & management
-│   │   └── newsletter/   # Newsletter subscription
+│   │   └── user/         # User management
 │   ├── blog/             # Blog pages
-│   │   └── [slug]/       # Individual blog post pages
+│   │   ├── [slug]/       # Individual blog post pages
+│   │   └── draft/        # Draft post preview
 │   ├── components/       # Reusable React components
 │   │   ├── layout/       # Layout components
 │   │   └── tiptap/       # TipTap editor components
 │   ├── dashboard/        # Admin dashboard
+│   │   ├── ai-generate/  # AI content generation UI
 │   │   ├── blogs/        # Blog management
 │   │   ├── email/        # Email campaign management
-│   │   └── profile/        # User profile settings
-│   ├── lip/              # Library/utility functions
-│   │   ├── cloudinary.ts          # Cloudinary configuration
-│   │   ├── metadata-helpers.ts
-│   │   ├── structured-data-helpers.ts
-│   │   ├── postService.ts
-│   │   ├── readTime-helpers.ts    # Read time calculation
-│   │   ├── toc-helpers.ts
-│   │   └── uploadToCloudinary.ts  # Image upload utilities
-│   ├── tests/            # Test files
+│   │   ├── profile/      # User profile settings
+│   │   ├── scheduled/    # Scheduled posts
+│   │   └── seo/          # SEO management
+│   ├── destinations/     # Destination pages
+│   ├── itineraries/      # Itinerary pages
+│   ├── lib/              # Library/utility functions (app-specific)
+│   │   ├── cloudinary.ts              # Cloudinary configuration
+│   │   ├── metadata-helpers.ts        # SEO metadata generation
+│   │   ├── structured-data-helpers.ts # Structured data (JSON-LD)
+│   │   ├── postService.ts             # Post data access layer
+│   │   ├── readTime-helpers.ts        # Read time calculation
+│   │   ├── toc-helpers.ts             # Table of contents generation
+│   │   └── uploadToCloudinary.ts      # Image upload utilities
+│   ├── types/            # TypeScript type definitions (domain-specific)
+│   │   ├── api.ts        # API response types
+│   │   ├── category.ts   # Category types
+│   │   ├── post.ts       # Post types
+│   │   ├── user.ts       # User types
+│   │   └── index.ts      # Re-exports
 │   └── write/            # Content creation interface
-├── prisma/
-│   └── schema.prisma     # Database schema
+├── lib/                  # Shared library code (root level)
+│   ├── services/         # Business logic services
+│   │   ├── postService.ts      # Post business logic
+│   │   ├── userService.ts      # User business logic
+│   │   └── categoryService.ts  # Category business logic
+│   ├── middleware/       # Middleware functions
+│   │   └── errorHandler.ts     # Centralized error handling
+│   ├── config.ts         # Centralized configuration management
+│   ├── claude.ts         # Anthropic AI client
+│   └── unsplash.ts       # Unsplash API client
+├── prisma/               # Database
+│   ├── schema.prisma     # Prisma schema definition
+│   └── client.ts         # Prisma client instance
 ├── schemas/              # Zod validation schemas
-├── utils/                # Utility functions
+│   ├── categorySchema.ts
+│   ├── postSchema.ts
+│   └── userSchema.ts
+├── utils/                # Utility functions (organized by concern)
+│   ├── actions/          # Server actions
+│   │   ├── postActions.ts
+│   │   ├── userAction.ts
+│   │   ├── categoryAction.ts
+│   │   ├── tagAction.ts
+│   │   └── loginAction.ts
+│   ├── handlers/         # Request handlers
+│   │   └── savePostHandler.ts
+│   ├── helpers/          # Pure utility functions
+│   │   ├── routeHelpers.ts
+│   │   ├── validation.ts
+│   │   ├── pillarPageHelpers.ts
+│   │   ├── promptBuilder.ts
+│   │   ├── auth.ts
+│   │   └── aiToPostMapper.ts
+│   └── services/         # Additional business services
+│       ├── emailService.ts
+│       └── contentAssembler.ts
 └── public/               # Static assets
 ```
+
+### Key Architectural Principles
+
+1. **Separation of Concerns**: 
+   - API routes are thin controllers that handle HTTP requests/responses
+   - Business logic lives in service layer (`lib/services/`)
+   - Data access logic is in `app/lib/postService.ts` and service files
+
+2. **Type Safety**:
+   - Domain-specific types in `app/types/`
+   - Zod schemas for validation in `schemas/`
+
+3. **Error Handling**:
+   - Centralized error handling via `lib/middleware/errorHandler.ts`
+   - Standardized error responses across all API routes
+
+4. **Configuration**:
+   - Centralized config management in `lib/config.ts`
+   - Type-safe environment variable access
+
+For detailed architecture documentation, see [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ## 💻 Development
 
