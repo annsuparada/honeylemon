@@ -494,6 +494,7 @@ export async function getFeaturedPostByCountry(countrySlug: string): Promise<Blo
             slug: post.category.slug,
         },
         categoryId: post.category.id,
+        authorId: post.author.id,
         author: {
             id: post.author.id,
             name: post.author.name ?? '',

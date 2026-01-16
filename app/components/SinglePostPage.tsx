@@ -181,7 +181,7 @@ export default function SinglePostPage({
                         {/* Featured Image */}
                         <div className="aspect-w-16 aspect-h-9 mb-6 rounded-sm shadow-lg overflow-hidden">
                             <Image
-                                src={post.image ? post.image : 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
+                                src={post.heroImage || post.image || 'https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp'}
                                 alt={post.title}
                                 fill
                                 style={{ objectFit: "cover" }}

@@ -173,7 +173,7 @@ describe('ImageUploadModal', () => {
 
                 await waitFor(() => {
                     expect(fetch).toHaveBeenCalledWith('/api/images/upload-file', expect.any(Object));
-                    expect(mockOnInsert).toHaveBeenCalledWith('https://cloudinary.com/image.jpg', '');
+                    expect(mockOnInsert).toHaveBeenCalledWith('https://cloudinary.com/image.jpg', '', false, undefined, undefined);
                     expect(mockOnClose).toHaveBeenCalled();
                 });
             }
@@ -269,7 +269,7 @@ describe('ImageUploadModal', () => {
             // Wait for fetch to be called and then for onInsert
             await waitFor(() => {
                 expect(global.fetch).toHaveBeenCalled();
-                expect(mockOnInsert).toHaveBeenCalledWith('https://cloudinary.com/image.jpg', 'Test alt text');
+                expect(mockOnInsert).toHaveBeenCalledWith('https://cloudinary.com/image.jpg', 'Test alt text', false, undefined, undefined);
                 expect(mockOnClose).toHaveBeenCalled();
             }, { timeout: 3000 });
         });
@@ -328,7 +328,7 @@ describe('ImageUploadModal', () => {
 
             await waitFor(() => {
                 expect(fetch).toHaveBeenCalled();
-                expect(mockOnInsert).toHaveBeenCalledWith('https://cloudinary.com/image.jpg', 'My alt text');
+                expect(mockOnInsert).toHaveBeenCalledWith('https://cloudinary.com/image.jpg', 'My alt text', false, undefined, undefined);
             }, { timeout: 3000 });
         });
     });
