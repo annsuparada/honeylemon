@@ -107,6 +107,43 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Article Image Figure and Photo Credits */
+.post-content figure.article-image {
+    margin: 2rem 0;
+    display: block;
+}
+
+.post-content figure.article-image img {
+    margin: 0 auto;
+}
+
+.post-content figure.article-image figcaption {
+    font-size: 0.65rem !important;
+    color: #9ca3af !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0 !important;
+    text-align: center;
+    line-height: 1.4;
+    font-weight: normal !important;
+    display: block;
+}
+
+.post-content figure.article-image figcaption a {
+    color: #9ca3af !important;
+    text-decoration: underline;
+    font-size: inherit !important;
+}
+
+.post-content figure.article-image figcaption a:hover {
+    color: #6b7280 !important;
+}
+
+/* Ensure paragraphs don't interfere with figure captions */
+.post-content p+figure.article-image,
+.post-content figure.article-image+p {
+    margin-top: 1.5rem;
+}
+
 /* Tables */
 .post-content table {
     width: 100%;

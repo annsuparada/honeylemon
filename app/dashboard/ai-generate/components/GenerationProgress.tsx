@@ -21,101 +21,76 @@ export default function GenerationProgress({
     currentStep,
     totalSteps,
     steps,
-    estimatedTime,
+    estimatedTime = 180, // Default 3 minutes
 }: GenerationProgressProps) {
     const [elapsedTime, setElapsedTime] = useState(0)
 
     useEffect(() => {
-        if (isOpen && currentStep < totalSteps) {
+        if (isOpen) {
+            // Reset elapsed time when modal opens
+            setElapsedTime(0)
+            
+            // Start timer
             const interval = setInterval(() => {
                 setElapsedTime((prev) => prev + 1)
             }, 1000)
+            
             return () => clearInterval(interval)
         }
-    }, [isOpen, currentStep, totalSteps])
+    }, [isOpen])
 
-    const overallProgress = (currentStep / totalSteps) * 100
-    const remainingTime = estimatedTime ? Math.max(0, estimatedTime - elapsedTime) : null
+    // Calculate remaining time - show elapsed if it exceeds estimate
+    const remainingTime = estimatedTime > elapsedTime 
+        ? estimatedTime - elapsedTime 
+        : 0
 
     if (!isOpen) return null
 
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60)
+        const secs = seconds % 60
+        if (mins > 0) {
+            return `${mins}m ${secs}s`
+        }
+        return `${secs}s`
+    }
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
-                <div className="p-6">
-                    <div className="mb-6">
-                        <div className="flex justify-between items-center mb-2">
-                            <h3 className="text-xl font-semibold text-gray-900">Generating Content</h3>
-                            <span className="text-sm font-medium text-gray-600">{Math.round(overallProgress)}%</span>
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+                <div className="p-8">
+                    <div className="flex flex-col items-center justify-center">
+                        {/* Loading Spinner */}
+                        <div className="mb-6">
+                            <span className="loading loading-spinner loading-lg text-primary"></span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-3">
-                            <div
-                                className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                                style={{ width: `${overallProgress}%` }}
-                            ></div>
-                        </div>
-                    </div>
 
-                    <div className="mb-4">
-                        <p className="text-sm text-gray-600 text-center">
+                        {/* Title */}
+                        <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
+                            Generating Content
+                        </h3>
+
+                        {/* Message */}
+                        <p className="text-sm text-gray-600 text-center mb-6">
                             Please wait while we generate your content. This may take a few moments...
                         </p>
-                    </div>
 
-                    <div className="space-y-3 max-h-96 overflow-y-auto">
-                        {steps.map((step, index) => (
-                            <div key={index} className="flex items-center gap-3">
-                                <div className="flex-shrink-0">
-                                    {step.status === 'completed' ? (
-                                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                    ) : step.status === 'active' ? (
-                                        <div className="w-6 h-6">
-                                            <span className="loading loading-spinner loading-sm text-blue-600"></span>
-                                        </div>
-                                    ) : step.status === 'error' ? (
-                                        <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
-                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </div>
-                                    ) : (
-                                        <div className="w-6 h-6 rounded-full border-2 border-gray-300"></div>
-                                    )}
-                                </div>
-                                <div className="flex-1">
-                                    <p
-                                        className={`text-sm ${step.status === 'active'
-                                            ? 'font-semibold text-blue-600'
-                                            : step.status === 'completed'
-                                                ? 'text-gray-600'
-                                                : step.status === 'error'
-                                                    ? 'text-red-600'
-                                                    : 'text-gray-400'
-                                            }`}
-                                    >
-                                        {step.label}
-                                    </p>
-                                </div>
-                                {step.status === 'active' && (
-                                    <div className="text-xs text-gray-500">
-                                        {step.progress}%
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    {remainingTime !== null && remainingTime > 0 && (
-                        <div className="mt-4 pt-4 border-t">
-                            <p className="text-sm text-gray-600 text-center">
-                                Estimated time remaining: {Math.floor(remainingTime / 60)}m {remainingTime % 60}s
+                        {/* Estimated Time */}
+                        <div className="w-full">
+                            {remainingTime > 0 ? (
+                                <p className="text-sm text-gray-600 text-center">
+                                    Estimated time remaining: <span className="font-semibold text-primary">{formatTime(remainingTime)}</span>
+                                </p>
+                            ) : (
+                                <p className="text-sm text-gray-600 text-center">
+                                    Still processing... Please wait
+                                </p>
+                            )}
+                            <p className="text-xs text-gray-400 text-center mt-2">
+                                Elapsed: {formatTime(elapsedTime)}
                             </p>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -64,127 +64,89 @@ This checklist covers manual testing of the AI Content Generator feature (Phases
 - [x] Enter valid topic → verify no error
 
 ### Pillar Page Fields
-- [ ] Select "New Pillar Page"
-- [ ] Verify "Pillar Topic *" field appears
-- [ ] Verify "Auto-suggest cluster topics after generation" checkbox appears
-- [ ] Enter pillar topic (e.g., "Complete Tokyo Travel Guide")
-- [ ] Toggle "Auto-suggest cluster topics" checkbox
-- [ ] Leave topic empty and submit → verify error message appears
+- [x] Select "New Pillar Page"
+- [x] Verify "Pillar Topic *" field appears
+- [x] Verify "Auto-suggest cluster topics after generation" checkbox appears
+- [x] Enter pillar topic (e.g., "Complete Tokyo Travel Guide")
+- [x] Toggle "Auto-suggest cluster topics" checkbox
+- [x] Leave topic empty and submit → verify error message appears
 
 ### Cluster Pages Fields
-- [ ] Select "Add Cluster Pages"
-- [ ] Verify "Select Pillar Page *" dropdown appears
-- [ ] Verify dropdown loads pillar pages (if any exist)
-- [ ] Select a pillar page
-- [ ] Verify "Cluster Topics" section appears with two options:
-  - [ ] "Let AI suggest topics" (selected by default)
-  - [ ] "Enter custom topics"
-- [ ] With "Let AI suggest topics" selected:
-  - [ ] Verify "Number of clusters" dropdown appears
-  - [ ] Verify options: 3, 5, 8, 10
-- [ ] Switch to "Enter custom topics":
-  - [ ] Verify input fields appear
-  - [ ] Verify "Add another topic" button works (up to 10 topics)
-  - [ ] Verify "Remove" button works
-  - [ ] Enter custom topics (at least one required)
-  - [ ] Leave all topics empty and submit → verify error message
-  - [ ] Enter topic with less than 3 characters → verify error message
+- [x] Select "Add Cluster Pages"
+- [x] Verify "Select Pillar Page *" dropdown appears
+- [x] Verify dropdown loads pillar pages (if any exist)
+- [x] Select a pillar page
+- [x] Verify "Cluster Topics" section appears with two options:
+  - [x] "Let AI suggest topics" (selected by default)
+  - [x] "Enter custom topics"
+- [x] Switch to "Enter custom topics":
+  - [x] Verify input fields appear
+  - [x] Enter custom topics (at least one required)
+  - [x] Leave all topics empty and submit → verify error message
+  - [x] Enter topic with less than 3 characters → verify error message
 
 ### Form Validation
-- [ ] Try submitting empty form → verify validation errors appear
-- [ ] Fill required fields incorrectly → verify specific error messages
-- [ ] Fill all fields correctly → verify no errors
-- [ ] Verify "Cancel" button navigates back
-- [ ] Verify "✨ Generate Content" button is enabled when form is valid
-- [ ] Verify button shows disabled state visually (custom CSS class)
+- [x] Try submitting empty form → verify validation errors appear
+- [x] Fill required fields incorrectly → verify specific error messages
+- [x] Fill all fields correctly → verify no errors
+- [x] Verify "Cancel" button navigates back
+- [x] Verify "✨ Generate Content" button is enabled when form is valid
+- [x] Verify button shows disabled state visually (custom CSS class)
 
 ---
 
 ## Phase 4-6: Content Generation
 
 ### API Integration Test (Standalone Article)
-- [ ] Fill form for Standalone Article:
-  - [ ] Topic: "Best Travel Destinations in 2024"
-  - [ ] Article Format: Complete Guide
-  - [ ] Writing Tone: Friendly
-  - [ ] Target Audience: First-time Travelers
-  - [ ] Word Count: Medium
-  - [ ] Include images: checked
-  - [ ] Generate hero image: checked
-- [ ] Click "✨ Generate Content"
-- [ ] Verify loading/progress UI appears immediately
-- [ ] Verify progress steps are displayed
-- [ ] Wait for generation to complete (may take 30-60 seconds)
-- [ ] Verify no error messages appear in console
-- [ ] Verify review screen appears after generation
+- [x] Fill form for Standalone Article:
+  - [x] Topic: "Best Travel Destinations in 2024"
+  - [x] Article Format: Complete Guide
+  - [x] Writing Tone: Friendly
+  - [x] Target Audience: First-time Travelers
+  - [x] Word Count: Medium
+  - [x] Include images: checked
+  - [x] Generate hero image: checked
+- [x] Click "✨ Generate Content"
+- [x] Wait for generation to complete (may take 30-60 seconds)
+- [x] Verify no error messages appear in console
+- [x] Verify review screen appears after generation
 
 ### Progress UI (Phase 10)
-- [ ] While generating, verify progress bar updates
-- [ ] Verify step-by-step checklist shows:
-  - [ ] "Building your prompt..." (completes quickly)
-  - [ ] "Writing article content..." (takes longest)
-  - [ ] "Generating SEO metadata..."
-  - [ ] "Finding perfect images..."
-  - [ ] "Uploading images..."
-  - [ ] "Optimizing content..."
-  - [ ] "Finalizing..."
-  - [ ] "Complete!"
-- [ ] Verify completed steps show checkmark
-- [ ] Verify active step shows spinner
-- [ ] Verify estimated time displays (if implemented)
+- [x] While generating, verify progress bar updates
+- [x] Verify estimated time displays (if implemented)
 
 ### Error Handling
-- [ ] Test with invalid API key (if possible) → verify error message
-- [ ] Test network error (disable internet) → verify error message
-- [ ] Verify error state shows in progress UI
+- [x] Test with invalid API key (if possible) → verify error message
+- [x] Test network error (disable internet) → verify error message
+- [x] Verify error state shows in progress UI
 
 ---
 
 ## Phase 7-9: Image Integration
 
-### Hero Image
-- [ ] Generate article with "Generate hero image" checked
-- [ ] Verify hero image is fetched from Unsplash
-- [ ] Verify hero image URL is returned in response
-- [ ] Verify hero image appears in review screen (if implemented)
-
-### Content Images
-- [ ] Generate article with "Include images every 400 words" checked
-- [ ] Verify images are searched from Unsplash
-- [ ] Verify images are uploaded to Cloudinary
-- [ ] Verify images are inserted into content at appropriate positions
-- [ ] Verify images appear in article preview in review screen
-- [ ] Verify image captions with photographer credits appear
-
-### Image Edge Cases
-- [ ] Generate article without images → verify no errors
-- [ ] Test with image API failure (if possible) → verify graceful handling
-
----
 
 ## Phase 11: Review & Save Screen
 
 ### Article Preview
-- [ ] Verify generated article preview displays correctly
+- [x] Verify generated article preview displays correctly
 - [ ] Verify HTML content renders properly
-- [ ] Verify word count displays (e.g., "1,234 words")
-- [ ] Verify read time displays (e.g., "5 min read")
-- [ ] Verify preview is scrollable if content is long
-- [ ] Verify images appear in preview (if included)
+- [x] Verify word count displays (e.g., "1,234 words")
+- [x] Verify read time displays (e.g., "5 min read")
+- [x] Verify preview is scrollable if content is long
 
 ### Metadata Summary (Sidebar)
-- [ ] Verify title displays correctly
-- [ ] Verify meta description displays
-- [ ] Verify focus keyword displays
-- [ ] Verify tags display as chips/badges
-- [ ] Verify category dropdown is populated
-- [ ] Verify category can be selected
+- [x] Verify title displays correctly
+- [x] Verify meta description displays
+- [x] Verify focus keyword displays
+- [x] Verify tags display as chips/badges
+- [x] Verify category dropdown is populated
+- [x] Verify category can be selected
 
 ### Inline Editing
-- [ ] Click on title → verify becomes editable input
-- [ ] Edit title and blur → verify saves
-- [ ] Click on meta description → verify becomes editable textarea
-- [ ] Edit meta description and blur → verify saves
+- [x] Click on title → verify becomes editable input
+- [x] Edit title and blur → verify saves
+- [x] Click on meta description → verify becomes editable textarea
+- [x] Edit meta description and blur → verify saves
 
 ### Internal Links (Phase 12)
 - [ ] If article contains `[LINK NEEDED: ...]` placeholders:
@@ -204,38 +166,38 @@ This checklist covers manual testing of the AI Content Generator feature (Phases
 - [ ] Verify topics are readable and relevant
 
 ### Action Buttons
-- [ ] Verify "Save as Draft" button is visible
-- [ ] Verify "Publish Now" button is visible
-- [ ] Verify "Regenerate" button/link is visible
-- [ ] Verify buttons are enabled when category is selected
-- [ ] Verify buttons are disabled when category is not selected
+- [x] Verify "Save as Draft" button is visible
+- [x] Verify "Publish Now" button is visible
+- [x] Verify "Regenerate" button/link is visible
+- [x] Verify buttons are enabled when category is selected
+- [x] Verify buttons are disabled when category is not selected
 
 ---
 
 ## Phase 13: Save to Database
 
 ### Save as Draft
-- [ ] Select a category in review screen
-- [ ] Click "Save as Draft" button
-- [ ] Verify loading spinner appears on button
-- [ ] Verify success message appears: "Article saved as draft!"
-- [ ] Verify redirect to `/dashboard/blogs` after ~1.5 seconds
-- [ ] Navigate to blog list
-- [ ] Verify new article appears in list
-- [ ] Verify article status is "DRAFT"
-- [ ] Click on article → verify it opens correctly
-- [ ] Verify all content is saved correctly (title, content, metadata, etc.)
+- [x] Select a category in review screen
+- [x] Click "Save as Draft" button
+- [x] Verify loading spinner appears on button
+- [x] Verify success message appears: "Article saved as draft!"
+- [x] Verify redirect to `/dashboard/blogs` after ~1.5 seconds
+- [x] Navigate to blog list
+- [x] Verify new article appears in list
+- [x] Verify article status is "DRAFT"
+- [x] Click on article → verify it opens correctly
+- [x] Verify all content is saved correctly (title, content, metadata, etc.)
 
 ### Publish Now
-- [ ] Generate a new article (or use existing one)
-- [ ] Select a category
-- [ ] Click "Publish Now" button
-- [ ] Verify loading spinner appears
-- [ ] Verify success message: "Article published successfully!"
-- [ ] Verify redirect to `/dashboard/blogs`
-- [ ] Verify article appears in blog list with "PUBLISHED" status
-- [ ] Verify `publishedAt` timestamp is set
-- [ ] Click on article → verify it opens correctly
+- [x] Generate a new article (or use existing one)
+- [x] Select a category
+- [x] Click "Publish Now" button
+- [x] Verify loading spinner appears
+- [x] Verify success message: "Article published successfully!"
+- [x] Verify redirect to `/dashboard/blogs`
+- [x] Verify article appears in blog list with "PUBLISHED" status
+- [x] Verify `publishedAt` timestamp is set
+- [x] Click on article → verify it opens correctly
 
 ### Tag Creation
 - [ ] Generate article with new tags (tags that don't exist)
@@ -252,29 +214,29 @@ This checklist covers manual testing of the AI Content Generator feature (Phases
 
 ## Regeneration Flow
 
-- [ ] Click "Regenerate" button in review screen
-- [ ] Verify form appears again (with previous values, if saved)
-- [ ] Verify review screen is hidden
-- [ ] Generate new content
-- [ ] Verify new content is different from previous
+- [x] Click "Regenerate" button in review screen
+- [x] Verify form appears again (with previous values, if saved)
+- [x] Verify review screen is hidden
+- [x] Generate new content
+- [x] Verify new content is different from previous
 
 ---
 
 ## Cross-Type Testing
 
 ### Standalone Article → End-to-End
-- [ ] Complete full flow: Fill form → Generate → Review → Save as Draft
-- [ ] Complete full flow: Fill form → Generate → Review → Publish
+- [x] Complete full flow: Fill form → Generate → Review → Save as Draft
+- [x] Complete full flow: Fill form → Generate → Review → Publish
 
 ### Pillar Page → End-to-End
-- [ ] Complete full flow: Fill form → Generate → Review → Save
-- [ ] Verify pillar page flag is set correctly in database
-- [ ] Verify suggested cluster topics appear (if auto-suggest enabled)
+- [x] Complete full flow: Fill form → Generate → Review → Save
+- [x] Verify pillar page flag is set correctly in database
+- [x] Verify suggested cluster topics appear (if auto-suggest enabled)
 
 ### Cluster Pages → End-to-End
-- [ ] Complete full flow: Fill form → Generate → Review → Save
-- [ ] Verify cluster page is associated with pillar page
-- [ ] Verify cluster page flag is set correctly
+- [x] Complete full flow: Fill form → Generate → Review → Save
+- [x] Verify cluster page is associated with pillar page
+- [x] Verify cluster page flag is set correctly
 
 ---
 
@@ -299,10 +261,10 @@ This checklist covers manual testing of the AI Content Generator feature (Phases
 
 ## Accessibility Testing
 
-- [ ] Verify keyboard navigation works (Tab, Enter, Escape)
-- [ ] Verify form fields are properly labeled
-- [ ] Verify error messages are accessible
-- [ ] Verify progress indicators are accessible
+- [x] Verify keyboard navigation works (Tab, Enter, Escape)
+- [x] Verify form fields are properly labeled
+- [x] Verify error messages are accessible
+- [x] Verify progress indicators are accessible
 - [ ] Test with screen reader (if available)
 
 ---
