@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import ConditionalLayout from './components/layout/ConditionalLayout.tsx'
+import ConditionalLayout from './components/layout/ConditionalLayout'
 require('dotenv').config()
 
 const inter = Inter({ subsets: ['latin'] })

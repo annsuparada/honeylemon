@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { extractHeadings, addIdsToHeadings } from '@/app/lip/toc-helpers';
+import { extractHeadings, addIdsToHeadings } from '@/app/lib/toc-helpers';
 
 describe('toc-helpers', () => {
   describe('extractHeadings', () => {

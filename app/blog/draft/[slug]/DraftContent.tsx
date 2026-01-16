@@ -5,8 +5,8 @@ import sanitizeHtml from 'sanitize-html';
 import '@/app/styles/article.css'
 import HeroSection from '@/app/components/HeroSection';
 import Breadcrumb from '@/app/components/Breadcrumb';
-import { formatAuthorName } from '@/app/lip/structured-data-helpers';
-import { extractHeadings, addIdsToHeadings } from '@/app/lip/toc-helpers';
+import { formatAuthorName } from '@/app/lib/structured-data-helpers';
+import { extractHeadings, addIdsToHeadings } from '@/app/lib/toc-helpers';
 import TableOfContents from '@/app/components/TableOfContents';
 import Link from 'next/link';
 import ProtectedPage from '@/app/components/ProtectedPage';

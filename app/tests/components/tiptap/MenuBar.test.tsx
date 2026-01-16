@@ -6,7 +6,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import MenuBar from '@/app/components/tiptap/MenuBar';
 import { EditorProvider } from '@tiptap/react';
-import { extensions } from '@/app/lip/tiptapExtensions';
+import { extensions } from '@/app/lib/tiptapExtensions';
 
 // Polyfill DOM methods for ProseMirror in jsdom
 // jsdom doesn't fully implement these methods that ProseMirror needs

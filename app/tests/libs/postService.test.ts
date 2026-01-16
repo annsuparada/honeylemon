@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { getPublishedPosts, getPostBySlug, getDestinationPostByTagSlug } from '@/app/lip/postService';
+import { getPublishedPosts, getPostBySlug, getDestinationPostByTagSlug } from '@/app/lib/postService';
 import prisma from '@/prisma/client';
 import { PostStatus, PageType } from '@prisma/client';
 

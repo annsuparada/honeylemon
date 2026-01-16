@@ -6,7 +6,7 @@ import Pagination from "@/app/components/PaginationSSR"
 import TrendingPosts from "@/app/components/TrendingPosts"
 import { BlogPost } from "@/app/types"
 import { Metadata } from "next"
-import { getPublishedPosts, getTrendingPosts } from "../lip/postService"
+import { getPublishedPosts, getTrendingPosts } from "../lib/postService"
 import { getBlogRoute } from "@/utils/routeHelpers"
 
 export const generateMetadata = async (): Promise<Metadata> => {

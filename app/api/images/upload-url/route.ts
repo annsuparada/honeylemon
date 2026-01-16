@@ -1,6 +1,6 @@
 // app/api/images/upload-url/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadImageFromUrl } from '@/app/lip/uploadToCloudinary';
+import { uploadImageFromUrl } from '@/app/lib/uploadToCloudinary';
 
 /**
  * POST /api/images/upload-url

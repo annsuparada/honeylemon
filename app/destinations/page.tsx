@@ -4,7 +4,7 @@ import CardSection from "@/app/components/CardSection"
 import CTA from "@/app/components/CTA"
 import { destinations, regions } from "@/app/data/copy"
 import { Metadata } from "next"
-import { getPublishedPosts } from "../lip/postService"
+import { getPublishedPosts } from "../lib/postService"
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {

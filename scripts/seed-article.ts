@@ -1,5 +1,5 @@
 import { PrismaClient, PageType, PostStatus } from '@prisma/client';
-import { calculateReadTime, calculateWordCount } from '../app/lip/readTime-helpers';
+import { calculateReadTime, calculateWordCount } from '../app/lib/readTime-helpers';
 import * as fs from 'fs';
 import * as path from 'path';
 

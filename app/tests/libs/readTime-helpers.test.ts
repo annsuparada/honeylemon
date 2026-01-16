@@ -1,4 +1,4 @@
-import { calculateReadTime, calculateWordCount } from '@/app/lip/readTime-helpers';
+import { calculateReadTime, calculateWordCount } from '@/app/lib/readTime-helpers';
 
 describe('readTime-helpers', () => {
     describe('calculateWordCount', () => {

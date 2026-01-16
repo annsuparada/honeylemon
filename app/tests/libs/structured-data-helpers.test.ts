@@ -10,7 +10,7 @@ import {
   generateBreadcrumbListStructuredData,
   generateArticleStructuredData,
   generateItemListStructuredData,
-} from '@/app/lip/structured-data-helpers';
+} from '@/app/lib/structured-data-helpers';
 import { BlogPost } from '@/app/types';
 
 const originalEnv = process.env.NEXT_PUBLIC_API_URL;

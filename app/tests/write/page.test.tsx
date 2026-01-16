@@ -3,7 +3,7 @@ import WritePage from '@/app/write/page'
 import '@testing-library/jest-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createPost, updatePost, fetchPostBySlug } from '@/utils/postActions'
-import { fetchAllCategories, createCategory } from '@/utils/categotyAction'
+import { fetchAllCategories, createCategory } from '@/utils/categoryAction'
 import handleSave from '@/app/write/page'
 
 jest.mock('@/utils/postActions', () => ({
@@ -12,7 +12,7 @@ jest.mock('@/utils/postActions', () => ({
     fetchPostBySlug: jest.fn(),
 }))
 
-jest.mock('@/utils/categotyAction', () => ({
+jest.mock('@/utils/categoryAction', () => ({
     fetchAllCategories: jest.fn().mockResolvedValue([
         { id: 'cat1', name: 'Tech', slug: 'tech' },
         { id: 'cat2', name: 'Travel', slug: 'travel' },

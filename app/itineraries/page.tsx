@@ -2,7 +2,7 @@ import dynamic from "next/dynamic"
 import CTA from "../components/CTA"
 import HeroSection from "../components/HeroSection"
 import { Metadata } from "next"
-import { getPublishedPosts } from "../lip/postService"
+import { getPublishedPosts } from "../lib/postService"
 import { PageType } from "@prisma/client"
 
 export const generateMetadata = async (): Promise<Metadata> => {

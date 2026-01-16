@@ -1,9 +1,9 @@
 export const revalidate = 0; // Always fetch fresh data for drafts
 
 import { Metadata } from 'next';
-import { getPostBySlug } from '@/app/lip/postService';
+import { getPostBySlug } from '@/app/lib/postService';
 import { BlogPost } from '@/app/types';
-import { formatAuthorName } from '@/app/lip/structured-data-helpers';
+import { formatAuthorName } from '@/app/lib/structured-data-helpers';
 import DraftContent from './DraftContent';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

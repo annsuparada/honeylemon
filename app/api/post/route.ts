@@ -4,7 +4,7 @@ import prisma from "@/prisma/client";
 import { z } from "zod";
 import { postSchema, updatePostSchema } from "@/schemas/postSchema";
 import { verifyToken } from "@/utils/auth";
-import { calculateReadTime, calculateWordCount } from "@/app/lip/readTime-helpers";
+import { calculateReadTime, calculateWordCount } from "@/app/lib/readTime-helpers";
 
 // GET: Retrieve all posts, by slug, by category, by status (Public Access)
 export async function GET(req: Request) {

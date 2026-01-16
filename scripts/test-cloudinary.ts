@@ -10,8 +10,8 @@
  */
 
 import 'dotenv/config';
-import { uploadImage, uploadImageFromUrl } from '../app/lip/uploadToCloudinary';
-import cloudinary from '../app/lip/cloudinary';
+import { uploadImage, uploadImageFromUrl } from '../app/lib/uploadToCloudinary';
+import cloudinary from '../app/lib/cloudinary';
 
 async function testCloudinaryConfig() {
     console.log('🔍 Testing Cloudinary Configuration...\n');

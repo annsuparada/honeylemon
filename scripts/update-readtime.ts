@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { calculateReadTime, calculateWordCount } from '../app/lip/readTime-helpers';
+import { calculateReadTime, calculateWordCount } from '../app/lib/readTime-helpers';
 
 const prisma = new PrismaClient();
 

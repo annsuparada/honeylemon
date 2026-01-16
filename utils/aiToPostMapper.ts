@@ -5,7 +5,7 @@
 
 import { AIArticleResponse } from '@/utils/promptBuilder';
 import { GenerationFormData } from '@/utils/promptBuilder';
-import { calculateReadTime, calculateWordCount } from '@/app/lip/readTime-helpers';
+import { calculateReadTime, calculateWordCount } from '@/app/lib/readTime-helpers';
 import { PageType, PostStatus } from '@prisma/client';
 import slugify from 'slugify';
 import { createTag } from './tagAction';

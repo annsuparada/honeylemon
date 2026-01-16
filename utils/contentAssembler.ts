@@ -4,7 +4,7 @@
  */
 
 import { UnsplashImage } from '@/lib/unsplash';
-import { uploadImageFromUrl } from '@/app/lip/uploadToCloudinary';
+import { uploadImageFromUrl } from '@/app/lib/uploadToCloudinary';
 
 export interface ImagePlacement {
     image: UnsplashImage;

@@ -3,8 +3,8 @@ export const revalidate = 60;
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import SinglePostPage from '@/app/components/SinglePostPage';
-import { getDestinationPostByTagSlug, getPublishedPosts } from '@/app/lip/postService';
-import { generatePostMetadata } from '@/app/lip/metadata-helpers';
+import { getDestinationPostByTagSlug, getPublishedPosts } from '@/app/lib/postService';
+import { generatePostMetadata } from '@/app/lib/metadata-helpers';
 import { PageType } from '@prisma/client';
 
 // Generate static params for all destination pillar posts

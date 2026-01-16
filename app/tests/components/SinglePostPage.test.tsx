@@ -74,7 +74,7 @@ jest.mock('sanitize-html', () => {
     };
 });
 
-jest.mock('@/app/lip/toc-helpers', () => ({
+jest.mock('@/app/lib/toc-helpers', () => ({
     extractHeadings: jest.fn(() => []),
     addIdsToHeadings: jest.fn((html: string) => html),
 }));
@@ -93,7 +93,7 @@ jest.mock('@/app/components/ViewCounter', () => ({
     },
 }));
 
-jest.mock('@/app/lip/structured-data-helpers', () => ({
+jest.mock('@/app/lib/structured-data-helpers', () => ({
     generateArticleStructuredData: jest.fn(() => ({ '@context': 'https://schema.org' })),
     generateFAQStructuredData: jest.fn(() => null),
     generateBreadcrumbListStructuredData: jest.fn(() => ({ '@context': 'https://schema.org' })),

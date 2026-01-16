@@ -9,7 +9,7 @@ import {
   getCanonicalUrl,
   getBaseOpenGraph,
   generatePostMetadata,
-} from '@/app/lip/metadata-helpers';
+} from '@/app/lib/metadata-helpers';
 import { BlogPost } from '@/app/types';
 
 describe('metadata-helpers', () => {

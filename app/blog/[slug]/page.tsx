@@ -1,8 +1,8 @@
 export const revalidate = 60;
 
 import { Metadata } from 'next';
-import { getPostBySlug, getPublishedPosts } from '@/app/lip/postService';
-import { generatePostMetadata } from '@/app/lip/metadata-helpers';
+import { getPostBySlug, getPublishedPosts } from '@/app/lib/postService';
+import { generatePostMetadata } from '@/app/lib/metadata-helpers';
 import SinglePostPage from '@/app/components/SinglePostPage';
 
 // Generate static pages for better performance & SEO
