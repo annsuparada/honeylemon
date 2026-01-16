@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
-import prisma from "@/prisma/client";
 import { z } from "zod";
 import { categorySchema } from "@/schemas/categorySchema";
 import { verifyToken } from "@/utils/auth";
-
+import { getAllCategories, createCategory, updateCategory, deleteCategory } from "@/lib/services/categoryService";
 
 // GET: Retrieve all categories (Public Access)
 export async function GET() {
     try {
-        const categories = await prisma.category.findMany({
-            orderBy: { createdAt: "desc" },
-        });
+        const categories = await getAllCategories();
 
         return NextResponse.json({ success: true, categories }, { status: 200 });
     } catch (error) {
@@ -34,31 +31,19 @@ export async function POST(req: Request) {
         // Validate request body using Zod
         const validatedData = categorySchema.parse(body);
 
-        // Check if category already exists
-        const existingCategory = await prisma.category.findUnique({
-            where: { name: validatedData.name },
-        });
-        if (existingCategory) {
-            return NextResponse.json({ error: "Category already exists" }, { status: 400 });
-        }
-
-        // Generate slug if not provided
-        const slug = validatedData.slug || validatedData.name.toLowerCase().replace(/\s+/g, "-");
-
-        // Create category
-        const newCategory = await prisma.category.create({
-            data: {
-                name: validatedData.name,
-                slug,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-        });
+        // Create category using service
+        const newCategory = await createCategory(validatedData);
 
         return NextResponse.json({ success: true, category: newCategory }, { status: 201 });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return NextResponse.json({ error: error.errors }, { status: 400 });
+        }
+
+        if (error instanceof Error) {
+            if (error.message === "Category already exists") {
+                return NextResponse.json({ error: error.message }, { status: 400 });
+            }
         }
 
         console.error("Error creating category:", error);
@@ -87,26 +72,22 @@ export async function PATCH(req: Request) {
 
         const validatedData = schema.parse(body);
 
-        // Check if category exists
-        const category = await prisma.category.findUnique({ where: { id: validatedData.id } });
-        if (!category) {
-            return NextResponse.json({ error: "Category not found" }, { status: 404 });
-        }
-
-        // Update category
-        const updatedCategory = await prisma.category.update({
-            where: { id: validatedData.id },
-            data: {
-                name: validatedData.name ?? category.name,
-                slug: validatedData.slug ?? category.slug,
-                updatedAt: new Date(),
-            },
+        // Update category using service
+        const updatedCategory = await updateCategory(validatedData.id, {
+            name: validatedData.name,
+            slug: validatedData.slug,
         });
 
         return NextResponse.json({ success: true, category: updatedCategory }, { status: 200 });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return NextResponse.json({ error: error.errors }, { status: 400 });
+        }
+
+        if (error instanceof Error) {
+            if (error.message === "Category not found") {
+                return NextResponse.json({ error: error.message }, { status: 404 });
+            }
         }
 
         console.error("Error updating category:", error);
@@ -133,19 +114,19 @@ export async function DELETE(req: Request) {
 
         const validatedData = schema.parse(body);
 
-        // Check if category exists
-        const category = await prisma.category.findUnique({ where: { id: validatedData.id } });
-        if (!category) {
-            return NextResponse.json({ error: "Category not found" }, { status: 404 });
-        }
-
-        // Delete category
-        await prisma.category.delete({ where: { id: validatedData.id } });
+        // Delete category using service
+        await deleteCategory(validatedData.id);
 
         return NextResponse.json({ success: true, message: "Category deleted successfully" }, { status: 200 });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return NextResponse.json({ error: error.errors }, { status: 400 });
+        }
+
+        if (error instanceof Error) {
+            if (error.message === "Category not found") {
+                return NextResponse.json({ error: error.message }, { status: 404 });
+            }
         }
 
         console.error("Error deleting category:", error);

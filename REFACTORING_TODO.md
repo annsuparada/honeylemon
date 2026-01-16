@@ -36,7 +36,7 @@ This document tracks all refactoring tasks, improvements, and theme color update
   - Refactor all post service functions to use shared mapper
 
 #### 3. Business Logic Extraction
-- [ ] **Extract business logic from API routes**
+- [x] **Extract business logic from API routes**
   - Current: Business logic mixed in API route handlers
   - Create service layer:
     - `lib/services/postService.ts` - Post business logic
@@ -309,9 +309,9 @@ This document tracks all refactoring tasks, improvements, and theme color update
 
 ### Refactoring
 - **Total Tasks**: 10
-- **Completed**: 2
+- **Completed**: 3
 - **In Progress**: 0
-- **Pending**: 8
+- **Pending**: 7
 
 ### Theme Colors
 - **Total Tasks**: 4 main categories
