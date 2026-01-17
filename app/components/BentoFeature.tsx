@@ -37,18 +37,18 @@ const BentoFeatureCard = ({ post, className = "", roundedClass = "" }: BentoFeat
     return (
         <Link href={getPostHref()} className={`relative block ${className}`}>
             <div className={`absolute inset-px rounded-lg bg-base-100 shadow ${roundedClass}`} />
-            <div className={`relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] ${roundedClass} transition-transform hover:scale-[1.02]`}>
+            <div className={`relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] border border-base-content/20 ${roundedClass} transition-transform hover:scale-[1.02]`}>
                 <img
                     alt={post.title}
                     src={imageUrl}
                     className="h-80 object-cover object-center"
                 />
                 <div className="p-10 pt-4">
-                    <h3 className="text-sm/4 font-semibold text-primary">
+                    <h3 className="text-sm/4 font-semibold text-base-content">
                         {post.title}
                     </h3>
-                    <p className="mt-2 text-lg font-medium tracking-tight text-secondary">{categoryName}</p>
-                    <p className="mt-2 max-w-lg text-sm/6 text-neutral-content line-clamp-3">{description}</p>
+                    <p className="mt-2 text-lg font-medium tracking-tight text-base-content/90">{categoryName}</p>
+                    <p className="mt-2 max-w-lg text-sm/6 text-base-content/80 line-clamp-3">{description}</p>
                 </div>
             </div>
             <div className={`pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5 ${roundedClass}`} />

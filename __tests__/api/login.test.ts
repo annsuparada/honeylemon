@@ -26,7 +26,7 @@ describe('Login API', () => {
 
     beforeAll(async () => {
         // Import the handler AFTER setting env
-        POST = (await import('../../api/login/route')).POST;
+        POST = (await import('../../app/api/login/route')).POST;
     });
     const mockUser = {
         id: 'user123',
@@ -88,7 +88,7 @@ describe('Login API', () => {
     });
 
     it('POST: should handle server error', async () => {
-        (prisma.user.findFirst as jest.Mock).mockRejectedValue('Server error');
+        (prisma.user.findFirst as jest.Mock).mockRejectedValue(new Error('Server error'));
 
         const req = new Request('http://localhost/api/auth/login', {
             method: 'POST',
@@ -100,6 +100,6 @@ describe('Login API', () => {
         const json = await res.json();
 
         expect(res.status).toBe(500);
-        expect(json.message).toBe('Server error');
+        expect(json.error).toBe('Internal server error');
     });
 });

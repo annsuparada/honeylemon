@@ -63,7 +63,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
 
                   return (<Link href={getBlogRoute(post.slug)} key={post.slug}>
                     <article
-                      className={`relative isolate rounded-md shadow-lg h-full flex flex-col justify-between ${threeColumns ? 'gap-2' : 'gap-4 lg:flex-row'}`}
+                      className={`relative isolate rounded-md shadow-lg h-full flex flex-col justify-between border border-base-content/20 ${threeColumns ? 'gap-2' : 'gap-4 lg:flex-row'}`}
                     >
                       <div
                         className={`relative overflow-hidden ${threeColumns ? 'h-52 w-full' : 'h-48 w-full lg:h-auto lg:w-64 lg:shrink-0'
@@ -90,7 +90,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                           </time>
                           {post.category?.name && (
                             <span
-                              className="relative z-10 rounded-full bg-base-200 px-3 py-1.5 font-medium text-base-content/80"
+                              className="relative z-10 rounded-full bg-base-200 px-3 py-1.5 font-medium text-base-content/90"
                             >
                               {post.category.name}
                             </span>

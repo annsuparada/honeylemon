@@ -100,15 +100,15 @@ const Sidebar: FC = () => {
                                                                 onClick={() => setSidebarOpen(false)}
                                                                 className={classNames(
                                                                     isActive
-                                                                        ? 'bg-blue-500 text-white'
-                                                                        : 'text-white hover:bg-blue-500 hover:text-white',
-                                                                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                                                                        ? 'bg-base-100 text-primary'
+                                                                        : 'text-white hover:bg-base-100 hover:text-primary',
+                                                                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold transition-colors',
                                                                 )}
                                                             >
                                                                 <item.icon
                                                                     aria-hidden="true"
                                                                     className={classNames(
-                                                                        isActive ? 'text-white' : 'text-white group-hover:text-white',
+                                                                        isActive ? 'text-primary' : 'text-white group-hover:text-primary',
                                                                         'size-6 shrink-0',
                                                                     )}
                                                                 />
@@ -123,11 +123,11 @@ const Sidebar: FC = () => {
                                         <li className="mt-auto">
                                             <a
                                                 href="/"
-                                                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-white hover:bg-blue-500 hover:text-white"
+                                                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-white hover:bg-base-100 hover:text-primary transition-colors"
                                             >
                                                 <ArrowRightEndOnRectangleIcon
                                                     aria-hidden="true"
-                                                    className="size-6 shrink-0 text-white group-hover:text-white"
+                                                    className="size-6 shrink-0 text-white group-hover:text-primary"
                                                 />
                                                 Exit Dashboard
                                             </a>
@@ -168,15 +168,15 @@ const Sidebar: FC = () => {
                                                         href={item.href}
                                                         className={classNames(
                                                             isActive
-                                                                ? 'bg-blue-500 text-white'
-                                                                : 'text-white hover:bg-blue-500 hover:text-white',
-                                                            'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                                                                ? 'bg-base-100 text-primary'
+                                                                : 'text-white hover:bg-base-100 hover:text-primary',
+                                                            'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold transition-colors',
                                                         )}
                                                     >
                                                         <item.icon
                                                             aria-hidden="true"
                                                             className={classNames(
-                                                                isActive ? 'text-white' : 'text-white group-hover:text-white',
+                                                                isActive ? 'text-primary' : 'text-white group-hover:text-primary',
                                                                 'size-6 shrink-0',
                                                             )}
                                                         />
@@ -191,11 +191,11 @@ const Sidebar: FC = () => {
                                 <li className="mt-auto">
                                     <a
                                         href="/"
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-white hover:bg-blue-500 hover:text-white"
+                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-white hover:bg-base-100 hover:text-primary transition-colors"
                                     >
                                         <ArrowRightEndOnRectangleIcon
                                             aria-hidden="true"
-                                            className="size-6 shrink-0 text-white group-hover:text-white"
+                                            className="size-6 shrink-0 text-white group-hover:text-primary"
                                         />
                                         Exit Dashboard
                                     </a>
@@ -206,8 +206,8 @@ const Sidebar: FC = () => {
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
-                        <button type="button" onClick={() => setSidebarOpen(true)} className="-m-2.5 p-2.5 text-gray-700 lg:hidden">
+                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-base-100 px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+                        <button type="button" onClick={() => setSidebarOpen(true)} className="-m-2.5 p-2.5 text-base-content lg:hidden">
                             <span className="sr-only">Open sidebar</span>
                             <Bars3Icon aria-hidden="true" className="size-6" />
                         </button>

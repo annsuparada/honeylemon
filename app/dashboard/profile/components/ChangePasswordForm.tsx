@@ -22,8 +22,8 @@ export default function ChangePasswordForm({
     saving,
 }: Props) {
     return (
-        <form onSubmit={onSubmit} className="space-y-6 mt-10 border-t pt-6">
-            <h2 className="text-xl font-semibold text-gray-700">Change Password</h2>
+        <form onSubmit={onSubmit} className="space-y-6 mt-10 border-t border-base-300 pt-6">
+            <h2 className="text-xl font-semibold text-base-content">Change Password</h2>
 
             {alert && <Alert message={alert} onClose={onClearAlert || (() => { })} />}
 

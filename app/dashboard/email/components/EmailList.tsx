@@ -112,51 +112,51 @@ export default function EmailList({ subscriptions }: EmailListProps) {
         <div className="space-y-6">
             {/* Statistics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <div className="bg-base-100 p-6 rounded-lg shadow-sm border">
                     <div className="flex items-center">
-                        <div className="p-2 bg-blue-100 rounded-lg">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="p-2 bg-primary/20 rounded-lg">
+                            <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Total Subscribers</p>
-                            <p className="text-2xl font-bold text-gray-900">{totalSubscribers}</p>
+                            <p className="text-sm font-medium text-base-content/80">Total Subscribers</p>
+                            <p className="text-2xl font-bold text-base-content">{totalSubscribers}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <div className="bg-base-100 p-6 rounded-lg shadow-sm border">
                     <div className="flex items-center">
-                        <div className="p-2 bg-green-100 rounded-lg">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="p-2 bg-success/20 rounded-lg">
+                            <svg className="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Active Subscribers</p>
-                            <p className="text-2xl font-bold text-gray-900">{activeSubscribers}</p>
+                            <p className="text-sm font-medium text-base-content/80">Active Subscribers</p>
+                            <p className="text-2xl font-bold text-base-content">{activeSubscribers}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <div className="bg-base-100 p-6 rounded-lg shadow-sm border">
                     <div className="flex items-center">
-                        <div className="p-2 bg-red-100 rounded-lg">
-                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="p-2 bg-error/20 rounded-lg">
+                            <svg className="w-6 h-6 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Inactive Subscribers</p>
-                            <p className="text-2xl font-bold text-gray-900">{inactiveSubscribers}</p>
+                            <p className="text-sm font-medium text-base-content/80">Inactive Subscribers</p>
+                            <p className="text-2xl font-bold text-base-content">{inactiveSubscribers}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Search and Controls */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <div className="bg-base-100 p-6 rounded-lg shadow-sm border">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="flex flex-col sm:flex-row gap-4 flex-1">
                         {/* Search Input */}
@@ -164,14 +164,14 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                             <label htmlFor="search" className="sr-only">Search subscribers</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
                                 <input
                                     type="text"
                                     id="search"
-                                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    className="block w-full pl-10 pr-3 py-2 border border-base-300 rounded-md leading-5 bg-base-100 placeholder-base-content/60 focus:outline-none focus:placeholder-base-content/40 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
                                     placeholder="Search by email address..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -181,31 +181,31 @@ export default function EmailList({ subscriptions }: EmailListProps) {
 
                         {/* Status Filter */}
                         <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-700">Status:</span>
+                            <span className="text-sm font-medium text-base-content/90">Status:</span>
                             <div className="flex rounded-md shadow-sm">
                                 <button
                                     onClick={() => setStatusFilter('all')}
-                                    className={`px-3 py-2 text-sm font-medium border border-gray-300 rounded-l-md ${statusFilter === 'all'
-                                        ? 'bg-blue-50 text-blue-700 border-blue-500'
-                                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                                    className={`px-3 py-2 text-sm font-medium border border-base-300 rounded-l-md ${statusFilter === 'all'
+                                        ? 'bg-primary/20 text-primary border-primary'
+                                        : 'bg-base-100 text-base-content/90 hover:bg-base-200'
                                         }`}
                                 >
                                     All
                                 </button>
                                 <button
                                     onClick={() => setStatusFilter('active')}
-                                    className={`px-3 py-2 text-sm font-medium border-t border-b border-gray-300 ${statusFilter === 'active'
-                                        ? 'bg-green-50 text-green-700 border-green-500'
-                                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                                    className={`px-3 py-2 text-sm font-medium border-t border-b border-base-300 ${statusFilter === 'active'
+                                        ? 'bg-success/20 text-success border-success'
+                                        : 'bg-base-100 text-base-content/90 hover:bg-base-200'
                                         }`}
                                 >
                                     Active
                                 </button>
                                 <button
                                     onClick={() => setStatusFilter('inactive')}
-                                    className={`px-3 py-2 text-sm font-medium border border-gray-300 rounded-r-md ${statusFilter === 'inactive'
-                                        ? 'bg-red-50 text-red-700 border-red-500'
-                                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                                    className={`px-3 py-2 text-sm font-medium border border-base-300 rounded-r-md ${statusFilter === 'inactive'
+                                        ? 'bg-error/20 text-error border-error'
+                                        : 'bg-base-100 text-base-content/90 hover:bg-base-200'
                                         }`}
                                 >
                                     Inactive
@@ -214,56 +214,56 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                         </div>
                     </div>
 
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-base-content/60">
                         Showing {startIndex + 1}-{Math.min(endIndex, filteredSubscriptions.length)} of {filteredSubscriptions.length} subscribers
                     </div>
                 </div>
             </div>
 
             {/* Email List */}
-            <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
+            <div className="bg-base-100 shadow-sm rounded-lg border overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-base-300">
+                        <thead className="bg-base-200">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-base-content/60 uppercase tracking-wider">
                                     Email Address
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-base-content/60 uppercase tracking-wider">
                                     Status
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-base-content/60 uppercase tracking-wider">
                                     Subscribed
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-base-content/60 uppercase tracking-wider">
                                     Last Updated
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-base-content/60 uppercase tracking-wider">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-base-100 divide-y divide-base-300">
                             {currentSubscriptions.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                                    <td colSpan={5} className="px-6 py-12 text-center text-base-content/60">
                                         {searchTerm ? 'No subscribers found matching your search.' : 'No subscribers found.'}
                                     </td>
                                 </tr>
                             ) : (
                                 currentSubscriptions.map((subscription) => (
-                                    <tr key={subscription.id} className="hover:bg-gray-50">
+                                    <tr key={subscription.id} className="hover:bg-base-200">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0 h-8 w-8">
-                                                    <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                                                        <svg className="h-4 w-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <div className="h-8 w-8 rounded-full bg-base-200 flex items-center justify-center">
+                                                        <svg className="h-4 w-4 text-base-content/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                                                         </svg>
                                                     </div>
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">
+                                                    <div className="text-sm font-medium text-base-content">
                                                         {subscription.email}
                                                     </div>
                                                 </div>
@@ -271,16 +271,16 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${subscription.isActive
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
+                                                ? 'bg-success/20 text-success'
+                                                : 'bg-error/20 text-error'
                                                 }`}>
                                                 {subscription.isActive ? 'Active' : 'Inactive'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-base-content/60">
                                             <FormattedDate dateString={subscription.createdAt} />
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-base-content/60">
                                             <FormattedDate dateString={subscription.updatedAt} />
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -288,7 +288,7 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                                                 <button
                                                     onClick={() => handleUnsubscribe(subscription.email, subscription.id)}
                                                     disabled={loadingStates[subscription.id]}
-                                                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-error hover:bg-error-focus focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-error disabled:opacity-50 disabled:cursor-not-allowed"
                                                 >
                                                     {loadingStates[subscription.id] ? (
                                                         <>
@@ -303,7 +303,7 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                                                     )}
                                                 </button>
                                             ) : (
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-base-200 text-base-content/80">
                                                     Unsubscribed
                                                 </span>
                                             )}
@@ -317,26 +317,26 @@ export default function EmailList({ subscriptions }: EmailListProps) {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                    <div className="bg-base-100 px-4 py-3 flex items-center justify-between border-t border-base-300 sm:px-6">
                         <div className="flex-1 flex justify-between sm:hidden">
                             <button
                                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                                 disabled={currentPage === 1}
-                                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="relative inline-flex items-center px-4 py-2 border border-base-300 text-sm font-medium rounded-md text-base-content/90 bg-base-100 hover:bg-base-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Previous
                             </button>
                             <button
                                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                 disabled={currentPage === totalPages}
-                                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="ml-3 relative inline-flex items-center px-4 py-2 border border-base-300 text-sm font-medium rounded-md text-base-content/90 bg-base-100 hover:bg-base-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Next
                             </button>
                         </div>
                         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
-                                <p className="text-sm text-gray-700">
+                                <p className="text-sm text-base-content/90">
                                     Showing page <span className="font-medium">{currentPage}</span> of{' '}
                                     <span className="font-medium">{totalPages}</span>
                                 </p>
@@ -346,7 +346,7 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                                     <button
                                         onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                                         disabled={currentPage === 1}
-                                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-base-300 bg-base-100 text-sm font-medium text-base-content/60 hover:bg-base-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <span className="sr-only">Previous</span>
                                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -360,8 +360,8 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
                                             className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${page === currentPage
-                                                ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                                                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                                                ? 'z-10 bg-primary/20 border-primary text-primary'
+                                                : 'bg-base-100 border-base-300 text-base-content/60 hover:bg-base-200'
                                                 }`}
                                         >
                                             {page}
@@ -371,7 +371,7 @@ export default function EmailList({ subscriptions }: EmailListProps) {
                                     <button
                                         onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                         disabled={currentPage === totalPages}
-                                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-base-300 bg-base-100 text-sm font-medium text-base-content/60 hover:bg-base-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <span className="sr-only">Next</span>
                                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">

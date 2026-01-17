@@ -16,6 +16,7 @@ type Props = {
     onCreateTag?: (name: string) => Promise<Tag | null>
     maxTags?: number
     disabled?: boolean
+    labelLight?: boolean // Optional: make label light colored
 }
 
 const TagsInput = ({
@@ -26,6 +27,7 @@ const TagsInput = ({
     onCreateTag,
     maxTags,
     disabled = false,
+    labelLight = false,
 }: Props) => {
     const [creating, setCreating] = useState(false)
     const [newTagName, setNewTagName] = useState('')
@@ -112,11 +114,11 @@ const TagsInput = ({
 
     return (
         <div className="mb-6">
-            <label className="block text-lg font-semibold text-gray-700 mb-2">{label}</label>
+            <label className={`block text-lg font-bold mb-2 ${labelLight ? 'text-base-content' : 'text-gray-900'}`}>{label}</label>
             {/* Selected Tags Display */}
             {selectedTags.length > 0 && (
                 <div className="mb-4">
-                    <p className="text-sm text-gray-600 mb-2">Selected tags (click to remove):</p>
+                    <p className="text-sm text-base-content/80 mb-2">Selected tags (click to remove):</p>
                     <div className="flex flex-wrap gap-2">
                         {selectedTags.map(tag => (
                             <span
@@ -136,7 +138,7 @@ const TagsInput = ({
             <div className="relative">
                 <input
                     type="text"
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full bg-white border-base-content"
                     placeholder={maxTags && selectedTagIds.length >= maxTags
                         ? `Maximum ${maxTags} tag${maxTags === 1 ? '' : 's'} allowed`
                         : "Type to search or add tags..."}
@@ -149,13 +151,13 @@ const TagsInput = ({
 
                 {/* Dropdown with available tags */}
                 {searchTerm && availableTags.length > 0 && !disabled && (!maxTags || selectedTagIds.length < maxTags) && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-base-content rounded-lg shadow-lg max-h-48 overflow-y-auto">
                         {availableTags.map((tag, index) => (
                             <div
                                 key={tag.id}
                                 className={`px-4 py-2 cursor-pointer ${index === highlightedIndex
                                     ? 'bg-primary text-primary-content'
-                                    : 'hover:bg-gray-100'
+                                    : 'hover:bg-base-200'
                                     }`}
                                 onClick={() => handleAddTag(tag.id)}
                                 onMouseEnter={() => setHighlightedIndex(index)}
@@ -185,7 +187,7 @@ const TagsInput = ({
                         <div className="flex gap-2">
                             <input
                                 type="text"
-                                className="input input-bordered flex-1"
+                                className="input input-bordered flex-1 bg-white border-base-content"
                                 value={newTagName}
                                 onChange={(e) => setNewTagName(e.target.value)}
                                 placeholder="New tag name"

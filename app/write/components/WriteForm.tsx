@@ -3,6 +3,7 @@ import Image from 'next/image'
 import SelectInput from '@/app/components/SelectInput'
 import TagsInput from '@/app/components/TagsInput'
 import ImageUploader from '@/app/components/ImageUploader'
+import FormInput from '@/app/components/FormInput'
 import { Category } from '@/app/types'
 import { PageType } from '@prisma/client'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
@@ -141,44 +142,37 @@ const WriteForm: React.FC<WriteFormProps> = ({
         <>
             <div className="max-w-screen-lg mx-auto bg-white shadow-md rounded-lg p-6">
                 {/* Title */}
-                <div className="mb-4">
-                    <label htmlFor="title-input" className="block text-lg font-semibold text-gray-700 mb-2">Title</label>
-                    <input
-                        id="title-input"
-                        type="text"
-                        className="input input-bordered w-full"
-                        placeholder="Enter title here..."
-                        value={title}
-                        onChange={(e) => onChange.title(e.target.value)}
-                    />
-                </div>
+                <FormInput
+                    id="title-input"
+                    label="Title"
+                    type="text"
+                    placeholder="Enter title here..."
+                    value={title}
+                    onChange={onChange.title}
+                />
 
                 {/* Description */}
-                <div className="mb-4">
-                    <label htmlFor="description-textarea" className="block text-lg font-semibold text-gray-700 mb-2">Description</label>
-                    <textarea
-                        id="description-textarea"
-                        className="textarea textarea-bordered w-full"
-                        placeholder="Write a short description... (300 characters max)"
-                        value={description}
-                        onChange={(e) => onChange.description(e.target.value)}
-                        rows={4}
-                    />
-                </div>
+                <FormInput
+                    id="description-textarea"
+                    label="Description"
+                    type="textarea"
+                    placeholder="Write a short description... (300 characters max)"
+                    value={description}
+                    onChange={onChange.description}
+                    rows={4}
+                />
 
                 {/* Excerpt */}
-                <div className="mb-4">
-                    <label htmlFor="excerpt-textarea" className="block text-lg font-semibold text-gray-700 mb-2">Excerpt</label>
-                    <textarea
-                        id="excerpt-textarea"
-                        className="textarea textarea-bordered w-full"
-                        placeholder="Write a brief excerpt (auto-generated if left empty)..."
-                        value={excerpt}
-                        onChange={(e) => onChange.excerpt(e.target.value)}
-                        rows={3}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Short summary for previews and listings</p>
-                </div>
+                <FormInput
+                    id="excerpt-textarea"
+                    label="Excerpt"
+                    type="textarea"
+                    placeholder="Write a brief excerpt (auto-generated if left empty)..."
+                    value={excerpt}
+                    onChange={onChange.excerpt}
+                    rows={3}
+                />
+                <p className="text-xs text-base-content/60 mt-[-1rem] mb-4">Short summary for previews and listings</p>
 
                 {/* Category */}
                 <SelectInput
@@ -227,11 +221,11 @@ const WriteForm: React.FC<WriteFormProps> = ({
                             </p>
                             {pageType === 'DESTINATION' && (
                                 <>
-                                    <p className="text-xs text-gray-600 mt-1">
-                                        Changing the tag will change the route to <code className="bg-gray-100 px-1 rounded">/destinations/[tag-slug]</code>
+                                    <p className="text-xs text-base-content/80 mt-1">
+                                        Changing the tag will change the route to <code className="bg-base-200 px-1 rounded">/destinations/[tag-slug]</code>
                                     </p>
                                     {selectedTagIds.length > 0 && (
-                                        <p className="text-xs text-gray-500 mt-1 italic">
+                                        <p className="text-xs text-base-content/60 mt-1 italic">
                                             Current tag: {tags.find(t => t.id === selectedTagIds[0])?.name || 'N/A'}
                                         </p>
                                     )}
@@ -270,56 +264,46 @@ const WriteForm: React.FC<WriteFormProps> = ({
                     <Disclosure>
                         {({ open }) => (
                             <>
-                                <DisclosureButton className="flex w-full items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200">
-                                    <span className="text-lg font-semibold text-gray-700">SEO Fields</span>
+                                <DisclosureButton className="flex w-full items-center justify-between p-4 bg-base-200 hover:bg-base-300 rounded-lg border border-base-300">
+                                    <span className="text-lg font-semibold text-base-content">SEO Fields</span>
                                     {open ? (
-                                        <MinusSmallIcon className="size-5 text-gray-600" />
+                                        <MinusSmallIcon className="size-5 text-base-content/80" />
                                     ) : (
-                                        <PlusSmallIcon className="size-5 text-gray-600" />
+                                        <PlusSmallIcon className="size-5 text-base-content/80" />
                                     )}
                                 </DisclosureButton>
                                 <DisclosurePanel className="mt-4 space-y-4">
                                     <div>
-                                        <label htmlFor="meta-title" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Meta Title
-                                        </label>
-                                        <input
+                                        <FormInput
                                             id="meta-title"
+                                            label="Meta Title"
                                             type="text"
-                                            className="input input-bordered w-full"
                                             placeholder="Custom SEO title (defaults to post title if empty)"
                                             value={metaTitle}
-                                            onChange={(e) => onChange.metaTitle(e.target.value)}
+                                            onChange={onChange.metaTitle}
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">Recommended: 50-60 characters</p>
+                                        <p className="text-xs text-base-content/60 mt-[-1rem] mb-4">Recommended: 50-60 characters</p>
                                     </div>
                                     <div>
-                                        <label htmlFor="meta-description" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Meta Description
-                                        </label>
-                                        <textarea
+                                        <FormInput
                                             id="meta-description"
-                                            className="textarea textarea-bordered w-full"
+                                            label="Meta Description"
+                                            type="textarea"
                                             placeholder="Custom meta description for search engines"
                                             value={metaDescription}
-                                            onChange={(e) => onChange.metaDescription(e.target.value)}
+                                            onChange={onChange.metaDescription}
                                             rows={3}
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">Recommended: 150-160 characters</p>
+                                        <p className="text-xs text-base-content/60 mt-[-1rem] mb-4">Recommended: 150-160 characters</p>
                                     </div>
-                                    <div>
-                                        <label htmlFor="focus-keyword" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Focus Keyword
-                                        </label>
-                                        <input
-                                            id="focus-keyword"
-                                            type="text"
-                                            className="input input-bordered w-full"
-                                            placeholder="Primary SEO keyword (e.g., 'mexico travel guide')"
-                                            value={focusKeyword}
-                                            onChange={(e) => onChange.focusKeyword(e.target.value)}
-                                        />
-                                    </div>
+                                    <FormInput
+                                        id="focus-keyword"
+                                        label="Focus Keyword"
+                                        type="text"
+                                        placeholder="Primary SEO keyword (e.g., 'mexico travel guide')"
+                                        value={focusKeyword}
+                                        onChange={onChange.focusKeyword}
+                                    />
                                 </DisclosurePanel>
                             </>
                         )}
@@ -328,7 +312,7 @@ const WriteForm: React.FC<WriteFormProps> = ({
 
                 {/* Special Flags */}
                 <div className="mt-6">
-                    <label className="block text-lg font-semibold text-gray-700 mb-3">Special Flags</label>
+                    <label className="block text-lg font-semibold text-base-content mb-3">Special Flags</label>
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -368,23 +352,19 @@ const WriteForm: React.FC<WriteFormProps> = ({
                 </div>
 
                 {/* Publish Date */}
-                <div className="mt-4">
-                    <label htmlFor="published-at" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Publish Date
-                    </label>
-                    <input
-                        id="published-at"
-                        type="datetime-local"
-                        className="input input-bordered w-full"
-                        value={publishedAt}
-                        onChange={(e) => onChange.publishedAt(e.target.value)}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Schedule publication for a future date (leave empty for immediate publish)</p>
-                </div>
+                <FormInput
+                    id="published-at"
+                    label="Publish Date"
+                    type="text"
+                    placeholder="YYYY-MM-DDTHH:mm (e.g., 2025-01-15T14:30)"
+                    value={publishedAt}
+                    onChange={onChange.publishedAt}
+                />
+                <p className="text-xs text-base-content/60 mt-[-1rem] mb-4">Schedule publication for a future date (leave empty for immediate publish). Format: datetime-local</p>
 
                 {/* FAQs Section */}
                 <div className="mt-6">
-                    <label className="block text-lg font-semibold text-gray-700 mb-4">FAQs</label>
+                    <label className="block text-lg font-semibold text-base-content mb-4">FAQs</label>
                     {faqs.map((faq, index) => {
                         const displayQuestion = faq.question || `FAQ #${index + 1}`;
 
@@ -392,15 +372,15 @@ const WriteForm: React.FC<WriteFormProps> = ({
                             <Disclosure key={index} as="div" className="mb-4">
                                 {({ open }) => (
                                     <>
-                                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                                            <DisclosureButton className="flex w-full items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                        <div className="border border-base-300 rounded-lg overflow-hidden">
+                                            <DisclosureButton className="flex w-full items-center justify-between p-4 bg-base-200 hover:bg-base-300 transition-colors">
                                                 <div className="flex items-center gap-3 flex-1">
                                                     {open ? (
-                                                        <MinusSmallIcon className="size-5 text-gray-600" />
+                                                        <MinusSmallIcon className="size-5 text-base-content/80" />
                                                     ) : (
-                                                        <PlusSmallIcon className="size-5 text-gray-600" />
+                                                        <PlusSmallIcon className="size-5 text-base-content/80" />
                                                     )}
-                                                    <span className="text-sm font-medium text-gray-700 text-left">
+                                                    <span className="text-sm font-medium text-base-content text-left">
                                                         {displayQuestion}
                                                     </span>
                                                 </div>
@@ -416,26 +396,23 @@ const WriteForm: React.FC<WriteFormProps> = ({
                                                 </button>
                                             </DisclosureButton>
                                             <DisclosurePanel className="p-4">
-                                                <div className="mb-3">
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
-                                                    <input
-                                                        type="text"
-                                                        className="input input-bordered w-full"
-                                                        placeholder="Enter question..."
-                                                        value={faq.question}
-                                                        onChange={(e) => handleFaqChange(index, 'question', e.target.value)}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Answer</label>
-                                                    <textarea
-                                                        className="textarea textarea-bordered w-full"
-                                                        placeholder="Enter answer..."
-                                                        value={faq.answer}
-                                                        onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
-                                                        rows={3}
-                                                    />
-                                                </div>
+                                                <FormInput
+                                                    id={`faq-question-${index}`}
+                                                    label="Question"
+                                                    type="text"
+                                                    placeholder="Enter question..."
+                                                    value={faq.question}
+                                                    onChange={(value) => handleFaqChange(index, 'question', value)}
+                                                />
+                                                <FormInput
+                                                    id={`faq-answer-${index}`}
+                                                    label="Answer"
+                                                    type="textarea"
+                                                    placeholder="Enter answer..."
+                                                    value={faq.answer}
+                                                    onChange={(value) => handleFaqChange(index, 'answer', value)}
+                                                    rows={3}
+                                                />
                                             </DisclosurePanel>
                                         </div>
                                     </>
@@ -453,14 +430,14 @@ const WriteForm: React.FC<WriteFormProps> = ({
                         </button>
                     </div>
                     {faqs.length === 0 && (
-                        <p className="text-sm text-gray-500 italic mt-2">No FAQs added yet. Click "Add FAQ" to create one.</p>
+                        <p className="text-sm text-base-content/60 italic mt-2">No FAQs added yet. Click "Add FAQ" to create one.</p>
                     )}
                 </div>
 
                 {/* ItemList Items Section */}
                 <div className="mt-6">
-                    <label className="block text-lg font-semibold text-gray-700 mb-4">Item List (for SEO Schema)</label>
-                    <p className="text-sm text-gray-500 mb-4">Add items to generate ItemList structured data. Useful for list posts (e.g., "Top 12 Resorts").</p>
+                    <label className="block text-lg font-semibold text-base-content mb-4">Item List (for SEO Schema)</label>
+                    <p className="text-sm text-base-content/60 mb-4">Add items to generate ItemList structured data. Useful for list posts (e.g., "Top 12 Resorts").</p>
                     {(itemListItems || []).map((item, index) => {
                         const displayName = item.name || `Item #${index + 1}`;
 
@@ -468,15 +445,15 @@ const WriteForm: React.FC<WriteFormProps> = ({
                             <Disclosure key={index} as="div" className="mb-4">
                                 {({ open }) => (
                                     <>
-                                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                                            <DisclosureButton className="flex w-full items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                        <div className="border border-base-300 rounded-lg overflow-hidden">
+                                            <DisclosureButton className="flex w-full items-center justify-between p-4 bg-base-200 hover:bg-base-300 transition-colors">
                                                 <div className="flex items-center gap-3 flex-1">
                                                     {open ? (
-                                                        <MinusSmallIcon className="size-5 text-gray-600" />
+                                                        <MinusSmallIcon className="size-5 text-base-content/80" />
                                                     ) : (
-                                                        <PlusSmallIcon className="size-5 text-gray-600" />
+                                                        <PlusSmallIcon className="size-5 text-base-content/80" />
                                                     )}
-                                                    <span className="text-sm font-medium text-gray-700 text-left">
+                                                    <span className="text-sm font-medium text-base-content text-left">
                                                         {displayName}
                                                     </span>
                                                 </div>
@@ -492,26 +469,22 @@ const WriteForm: React.FC<WriteFormProps> = ({
                                                 </button>
                                             </DisclosureButton>
                                             <DisclosurePanel className="p-4">
-                                                <div className="mb-3">
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                                    <input
-                                                        type="text"
-                                                        className="input input-bordered w-full"
-                                                        placeholder="Enter item name (e.g., Grand Velas Riviera Maya)..."
-                                                        value={item.name}
-                                                        onChange={(e) => handleItemListItemChange(index, 'name', e.target.value)}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">URL</label>
-                                                    <input
-                                                        type="url"
-                                                        className="input input-bordered w-full"
-                                                        placeholder="Enter URL (e.g., https://trip.tp.st/k3xThnY1)..."
-                                                        value={item.url}
-                                                        onChange={(e) => handleItemListItemChange(index, 'url', e.target.value)}
-                                                    />
-                                                </div>
+                                                <FormInput
+                                                    id={`item-name-${index}`}
+                                                    label="Name"
+                                                    type="text"
+                                                    placeholder="Enter item name (e.g., Grand Velas Riviera Maya)..."
+                                                    value={item.name}
+                                                    onChange={(value) => handleItemListItemChange(index, 'name', value)}
+                                                />
+                                                <FormInput
+                                                    id={`item-url-${index}`}
+                                                    label="URL"
+                                                    type="text"
+                                                    placeholder="Enter URL (e.g., https://trip.tp.st/k3xThnY1)..."
+                                                    value={item.url}
+                                                    onChange={(value) => handleItemListItemChange(index, 'url', value)}
+                                                />
                                             </DisclosurePanel>
                                         </div>
                                     </>
@@ -529,14 +502,14 @@ const WriteForm: React.FC<WriteFormProps> = ({
                         </button>
                     </div>
                     {(!itemListItems || itemListItems.length === 0) && (
-                        <p className="text-sm text-gray-500 italic mt-2">No items added yet. Click "Add Item" to create one.</p>
+                        <p className="text-sm text-base-content/60 italic mt-2">No items added yet. Click "Add Item" to create one.</p>
                     )}
                 </div>
             </div>
 
             {/* Cover Image Preview */}
             <div className="mb-4">
-                <label className="block text-lg font-semibold text-gray-700 mb-2 mt-4">Cover Image Preview</label>
+                <label className="block text-lg font-semibold text-base-content mb-2 mt-4">Cover Image Preview</label>
                 <div
                     className="relative w-full overflow-hidden rounded-md border-none"
                     style={{ aspectRatio: "3 / 1" }}

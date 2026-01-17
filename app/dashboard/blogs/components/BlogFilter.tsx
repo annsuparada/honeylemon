@@ -27,13 +27,34 @@ export default function DashboardFilters({
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                <SelectInput label="Status" selectedValue={selectedStatus} options={statusOptions} onChange={onStatusChange} />
-                <SelectInput label="Page Type" selectedValue={selectedPageType} options={typeOptions} onChange={onTypeChange} />
-                <SelectInput label="Sort by" selectedValue={sortOrder} options={sortOptions} onChange={onSortChange} />
+                <SelectInput 
+                    label="Status" 
+                    selectedValue={selectedStatus} 
+                    options={statusOptions} 
+                    onChange={onStatusChange}
+                    compact={true}
+                    labelLight={true}
+                />
+                <SelectInput 
+                    label="Page Type" 
+                    selectedValue={selectedPageType} 
+                    options={typeOptions} 
+                    onChange={onTypeChange}
+                    compact={true}
+                    labelLight={true}
+                />
+                <SelectInput 
+                    label="Sort by" 
+                    selectedValue={sortOrder} 
+                    options={sortOptions} 
+                    onChange={onSortChange}
+                    compact={true}
+                    labelLight={true}
+                />
             </div>
 
-            <div className="border-b pb-4 mb-4">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Special Filters</h3>
+            <div className="border-b border-base-300 pb-4 mb-4">
+                <h3 className="text-sm font-semibold text-base-content mb-3">Special Filters</h3>
                 <div className="flex flex-wrap gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -42,7 +63,7 @@ export default function DashboardFilters({
                             onChange={(e) => onFeaturedChange(e.target.checked)}
                             className="checkbox checkbox-primary"
                         />
-                        <span className="text-sm text-gray-700">Featured Only</span>
+                        <span className="text-sm text-base-content">Featured Only</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -51,7 +72,7 @@ export default function DashboardFilters({
                             onChange={(e) => onPillarPagesChange(e.target.checked)}
                             className="checkbox checkbox-primary"
                         />
-                        <span className="text-sm text-gray-700">Pillar Pages Only</span>
+                        <span className="text-sm text-base-content">Pillar Pages Only</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -60,7 +81,7 @@ export default function DashboardFilters({
                             onChange={(e) => onTrendingChange(e.target.checked)}
                             className="checkbox checkbox-primary"
                         />
-                        <span className="text-sm text-gray-700">Trending Only</span>
+                        <span className="text-sm text-base-content">Trending Only</span>
                     </label>
                 </div>
             </div>

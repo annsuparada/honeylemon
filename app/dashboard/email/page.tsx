@@ -48,13 +48,13 @@ export default function DashboardEmailPage() {
         return (
             <div className="space-y-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Email Dashboard</h1>
-                    <p className="mt-2 text-gray-600">Manage your newsletter subscribers and email campaigns</p>
+                    <h1 className="text-3xl font-bold text-base-content">Email Dashboard</h1>
+                    <p className="mt-2 text-base-content/80">Manage your newsletter subscribers and email campaigns</p>
                 </div>
                 <div className="flex items-center justify-center py-12">
                     <div className="text-center">
                         <div className="loading loading-spinner loading-lg mb-4"></div>
-                        <p className="text-gray-600">Loading email dashboard...</p>
+                        <p className="text-base-content/80">Loading email dashboard...</p>
                     </div>
                 </div>
             </div>
@@ -65,19 +65,19 @@ export default function DashboardEmailPage() {
         return (
             <div className="space-y-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Email Dashboard</h1>
-                    <p className="mt-2 text-gray-600">Manage your newsletter subscribers and email campaigns</p>
+                    <h1 className="text-3xl font-bold text-base-content">Email Dashboard</h1>
+                    <p className="mt-2 text-base-content/80">Manage your newsletter subscribers and email campaigns</p>
                 </div>
-                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                <div className="bg-error/10 border border-error/20 rounded-lg p-6">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-5 w-5 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                             </svg>
                         </div>
                         <div className="ml-3">
-                            <h3 className="text-sm font-medium text-red-800">Error loading email dashboard</h3>
-                            <p className="text-sm text-red-700 mt-1">{error}</p>
+                            <h3 className="text-sm font-medium text-error">Error loading email dashboard</h3>
+                            <p className="text-sm text-error/80 mt-1">{error}</p>
                         </div>
                     </div>
                 </div>
@@ -87,8 +87,8 @@ export default function DashboardEmailPage() {
     return (
         <div className="space-y-8">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Email Dashboard</h1>
-                <p className="mt-2 text-gray-600">Manage your newsletter subscribers and email campaigns</p>
+                <h1 className="text-3xl font-bold text-base-content">Email Dashboard</h1>
+                <p className="mt-2 text-base-content/80">Manage your newsletter subscribers and email campaigns</p>
             </div>
 
             {/* Tabbed Interface */}

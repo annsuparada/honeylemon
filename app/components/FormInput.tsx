@@ -11,6 +11,7 @@ interface Props {
     rows?: number;
     disabled?: boolean;
     error?: string; // Optional manual error override
+    labelLight?: boolean; // Optional: make label light colored
 }
 
 export default function FormInput({
@@ -23,6 +24,7 @@ export default function FormInput({
     rows = 4,
     disabled = false,
     error,
+    labelLight = false,
 }: Props) {
     const [internalError, setInternalError] = useState<string | undefined>();
 
@@ -37,14 +39,14 @@ export default function FormInput({
 
     const finalError = error ?? internalError;
 
-    const baseClass = `block w-full rounded-md py-1.5 px-3 text-base focus:outline-none focus:ring focus:ring-blue-200 disabled:bg-gray-100 disabled:cursor-not-allowed ${finalError
-            ? 'border border-red-500 text-red-900 placeholder:text-red-300 bg-white outline-1 -outline-offset-1 outline-red-300 focus:outline-red-600'
-            : 'border border-gray-300 bg-white'
+    const baseClass = `block w-full rounded-md py-1.5 px-3 text-base focus:outline-none focus:ring focus:ring-primary/20 disabled:bg-gray-100 disabled:cursor-not-allowed ${finalError
+        ? 'border border-error text-error-content placeholder:text-error/60 bg-white outline-1 -outline-offset-1 outline-error/30 focus:outline-error'
+        : 'border border-base-content bg-white text-base-content'
         }`;
 
     return (
         <div className="mb-4">
-            <label htmlFor={id} className="block text-lg font-semibold text-gray-700 mb-2">
+            <label htmlFor={id} className={`block text-lg font-bold mb-2 ${labelLight ? 'text-base-content' : 'text-gray-900'}`}>
                 {label}
             </label>
 
@@ -78,13 +80,13 @@ export default function FormInput({
                 {finalError && (
                     <ExclamationCircleIcon
                         aria-hidden="true"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 size-5 text-red-500 pointer-events-none"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 size-5 text-error pointer-events-none"
                     />
                 )}
             </div>
 
             {finalError && (
-                <p id={`${id}-error`} className="mt-2 text-sm text-red-600">
+                <p id={`${id}-error`} className="mt-2 text-sm text-error">
                     {finalError}
                 </p>
             )}

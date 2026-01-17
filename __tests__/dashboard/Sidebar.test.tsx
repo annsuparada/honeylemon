@@ -66,7 +66,9 @@ describe('Sidebar Component', () => {
 
         const activeLinks = screen.getAllByText('Dashboard')
         activeLinks.forEach(link => {
-            expect(link.closest('a')).toHaveClass('bg-blue-500')
+            // Active state uses bg-base-100 text-primary
+            expect(link.closest('a')).toHaveClass('bg-base-100')
+            expect(link.closest('a')).toHaveClass('text-primary')
         })
     })
 

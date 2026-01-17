@@ -38,13 +38,13 @@ describe('EmailDashboardTabs', () => {
 
         // Check that subscribers tab is active - get the button specifically
         const subscribersTabButton = screen.getByRole('button', { name: /subscribers/i })
-        expect(subscribersTabButton).toHaveClass('border-blue-500')
-        expect(subscribersTabButton).toHaveClass('text-blue-600')
+        expect(subscribersTabButton).toHaveClass('border-primary')
+        expect(subscribersTabButton).toHaveClass('text-primary')
 
         // Check that campaign tab is not active
         const campaignTabButton = screen.getByRole('button', { name: /email campaigns/i })
         expect(campaignTabButton).toHaveClass('border-transparent')
-        expect(campaignTabButton).toHaveClass('text-gray-500')
+        expect(campaignTabButton).toHaveClass('text-base-content/60')
 
         // Check that email list component is rendered
         expect(screen.getByTestId('email-list')).toBeInTheDocument()
@@ -59,13 +59,13 @@ describe('EmailDashboardTabs', () => {
         fireEvent.click(campaignTabButton)
 
         // Check that campaign tab is now active
-        expect(campaignTabButton).toHaveClass('border-blue-500')
-        expect(campaignTabButton).toHaveClass('text-blue-600')
+        expect(campaignTabButton).toHaveClass('border-primary')
+        expect(campaignTabButton).toHaveClass('text-primary')
 
         // Check that subscribers tab is not active
         const subscribersTabButton = screen.getByRole('button', { name: /subscribers/i })
         expect(subscribersTabButton).toHaveClass('border-transparent')
-        expect(subscribersTabButton).toHaveClass('text-gray-500')
+        expect(subscribersTabButton).toHaveClass('text-base-content/60')
 
         // Check that campaign component is rendered
         expect(screen.getByTestId('email-campaign')).toBeInTheDocument()
@@ -84,10 +84,10 @@ describe('EmailDashboardTabs', () => {
         fireEvent.click(subscribersTabButton)
 
         // Check that subscribers tab is active again
-        expect(subscribersTabButton).toHaveClass('border-blue-500')
-        expect(subscribersTabButton).toHaveClass('text-blue-600')
+        expect(subscribersTabButton).toHaveClass('border-primary')
+        expect(subscribersTabButton).toHaveClass('text-primary')
         expect(campaignTabButton).toHaveClass('border-transparent')
-        expect(campaignTabButton).toHaveClass('text-gray-500')
+        expect(campaignTabButton).toHaveClass('text-base-content/60')
 
         // Check that email list component is rendered again
         expect(screen.getByTestId('email-list')).toBeInTheDocument()

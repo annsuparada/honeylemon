@@ -30,7 +30,7 @@ export default function UserProfileForm({ formData, onChange, onSubmit, saving, 
 
             <form onSubmit={onSubmit} className="space-y-6">
                 <div className="col-span-full">
-                    <label htmlFor="photo" className="block text-lg font-semibold text-gray-700 mb-2">
+                    <label htmlFor="photo" className="block text-lg font-semibold text-base-content mb-2">
                         Photo
                     </label>
                     <div className="mt-2 flex items-center gap-x-3">

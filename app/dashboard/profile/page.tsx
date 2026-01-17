@@ -87,7 +87,7 @@ export default function ProfilePage() {
                 {loading ? (
                     <p>Loading...</p>
                 ) : user ? (
-                    <>
+                    <div className="bg-white rounded-lg shadow-sm border p-6 md:p-8">
                         <UserProfileForm
                             formData={formData}
                             onChange={handleChange}
@@ -105,11 +105,10 @@ export default function ProfilePage() {
                             onClearAlert={() => setPasswordAlert(null)}
                             saving={savingPassword}
                         />
-
-                    </>
+                    </div>
 
                 ) : (
-                    <p className="text-red-500">User not found.</p>
+                    <p className="text-error">User not found.</p>
                 )}
             </div>
         </ProtectedPage>

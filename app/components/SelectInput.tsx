@@ -15,6 +15,9 @@ type Props = {
     onCreateNew?: (newValue: string) => Promise<Option | null>
     enableCreate?: boolean
     className?: string
+    labelLight?: boolean // Optional: make label light colored
+    hideLabel?: boolean // Optional: hide the label (useful for compact filters)
+    compact?: boolean // Optional: compact styling for filters
 }
 
 const SelectInput = ({
@@ -25,6 +28,9 @@ const SelectInput = ({
     onCreateNew,
     enableCreate = false,
     className,
+    labelLight = false,
+    hideLabel = false,
+    compact = false,
 }: Props) => {
     const [creating, setCreating] = useState(false)
     const [newValue, setNewValue] = useState('')
@@ -40,14 +46,22 @@ const SelectInput = ({
         }
     }
 
+    const labelClass = compact
+        ? `block text-sm font-semibold mb-1 ${labelLight ? 'text-base-content' : 'text-gray-900'}`
+        : `block text-lg font-bold mb-2 ${labelLight ? 'text-base-content' : 'text-gray-900'}`;
+
+    const containerClass = compact ? "mb-4" : enableCreate ? "grid grid-cols-1 md:grid-cols-2 gap-6 items-end mb-6" : "mb-6";
+
     return (
-        <div className={enableCreate ? "grid grid-cols-1 md:grid-cols-2 gap-6 items-end mb-6" : "mb-6"}>
+        <div className={containerClass}>
             <div className={className}>
-                <label className="block text-lg font-semibold text-gray-700 mb-2">{label}</label>
+                {!hideLabel && (
+                    <label className={labelClass}>{label}</label>
+                )}
                 <select
                     onChange={(e) => onChange(e.target.value)}
                     value={selectedValue}
-                    className="select select-bordered w-full"
+                    className={`select select-bordered w-full bg-white border-base-content ${compact ? 'select-sm' : ''}`}
                 >
                     <option value="">{`Select ${label}`}</option>
                     {options.map(opt => (
@@ -61,7 +75,7 @@ const SelectInput = ({
                     {!creating ? (
                         <button
                             type="button"
-                            className="btn btn-outline bg-gray-100 w-full"
+                            className="btn btn-outline bg-white border-base-content w-full"
                             onClick={() => setCreating(true)}
                         >
                             Create New {label}
@@ -70,7 +84,7 @@ const SelectInput = ({
                         <div className="flex gap-2 mt-2">
                             <input
                                 type="text"
-                                className="input input-bordered"
+                                className="input input-bordered bg-white border-base-content"
                                 value={newValue}
                                 onChange={(e) => setNewValue(e.target.value)}
                                 placeholder={`New ${label} name`}

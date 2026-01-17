@@ -118,9 +118,11 @@ describe('Post API', () => {
         const json = await result.json();
 
         expect(result.status).toBe(400);
-        expect(Array.isArray(json.error)).toBe(true); // Zod error format
-        expect(json.error[0]).toMatchObject({
-            path: ['authorId'],
+        // Zod error format: { error: "Validation failed", validationErrors: [...] }
+        expect(json.error).toBe('Validation failed');
+        expect(Array.isArray(json.validationErrors)).toBe(true);
+        expect(json.validationErrors[0]).toMatchObject({
+            path: 'authorId',
             message: expect.any(String),
         });
     });
@@ -378,6 +380,6 @@ describe('Post API', () => {
         const json = await res.json();
 
         expect(res.status).toBe(401);
-        expect(json.error).toBe('Unauthorized - No Token Provided');
+        expect(json.error).toBe('No token provided');
     });
 });
