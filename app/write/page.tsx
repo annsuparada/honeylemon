@@ -1,6 +1,6 @@
 'use client'
 
-import './styles.css'
+import '@/app/styles/article.css'
 import { EditorProvider } from '@tiptap/react'
 import React, { useEffect, useState } from 'react'
 import { createPost, fetchPostBySlug, updatePost } from '@/utils/actions/postActions'

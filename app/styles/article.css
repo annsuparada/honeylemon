@@ -1,51 +1,99 @@
 /* General Container Styling */
-.post-content {
+.post-content,
+.tiptap,
+.tiptap-editor-content {
     line-height: 1.8;
+}
+
+.post-content {
     max-width: 800px;
     margin: auto;
 }
 
+/* TipTap Editor Container */
+.tiptap-editor-content {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.tiptap-editor-content table {
+    min-width: 600px;
+    /* force horizontal scroll if table is wide */
+}
+
 /* Headings */
-.post-content h1 {
+.post-content h1,
+.tiptap h1,
+.tiptap-editor-content h1 {
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
-.post-content h2 {
+.tiptap:first-child {
+    margin-top: 10px;
+}
+
+.post-content h2,
+.tiptap h2,
+.tiptap-editor-content h2 {
     font-size: 1.6rem;
     font-weight: bold;
     margin-top: 25px;
     margin-bottom: 10px;
     border-bottom: 2px solid hsl(var(--bc) / 0.2);
     padding-bottom: 5px;
+}
+
+.post-content h2 {
     scroll-margin-top: 100px;
     /* Offset for fixed header when scrolling to anchor */
 }
 
-.post-content h3 {
+.post-content h3,
+.tiptap h3,
+.tiptap-editor-content h3 {
     font-size: 1.4rem;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 8px;
+}
+
+.post-content h3 {
     scroll-margin-top: 100px;
     /* Offset for fixed header when scrolling to anchor */
 }
 
 .post-content h4,
 .post-content h5,
-.post-content h6 {
+.post-content h6,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6,
+.tiptap-editor-content h4,
+.tiptap-editor-content h5,
+.tiptap-editor-content h6 {
     font-size: 1.2rem;
     font-weight: bold;
     margin-top: 15px;
     margin-bottom: 5px;
+}
+
+.post-content h4,
+.post-content h5,
+.post-content h6 {
     scroll-margin-top: 100px;
     /* Offset for fixed header when scrolling to anchor */
 }
 
 /* Paragraphs */
-.post-content p {
+.post-content p,
+.tiptap p,
+.tiptap-editor-content p {
     font-size: 1.1rem;
+}
+
+.post-content p {
     margin-bottom: 1.25rem;
 }
 
@@ -56,7 +104,9 @@
 }
 
 /* Blockquotes */
-.post-content blockquote {
+.post-content blockquote,
+.tiptap blockquote,
+.tiptap-editor-content blockquote {
     border-left: 3px solid hsl(var(--bc) / 0.3);
     margin: 1.5rem 0;
     padding-left: 1rem;
@@ -64,14 +114,23 @@
 
 /* Lists */
 .post-content ul,
-.post-content ol {
+.post-content ol,
+.tiptap ul,
+.tiptap ol,
+.tiptap-editor-content ul,
+.tiptap-editor-content ol {
     padding: 0 1rem;
     margin: 1.25rem 1rem 1.25rem 0.4rem;
+}
 
-    li p {
-        margin-top: 0.25em;
-        margin-bottom: 0.25em;
-    }
+.post-content ul li p,
+.post-content ol li p,
+.tiptap ul li p,
+.tiptap ol li p,
+.tiptap-editor-content ul li p,
+.tiptap-editor-content ol li p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
 }
 
 .post-content ul {
@@ -82,23 +141,56 @@
     list-style-type: decimal;
 }
 
-.post-content li {
+.post-content li,
+.tiptap li,
+.tiptap-editor-content li {
     font-size: 1rem;
     margin-bottom: 8px;
 }
 
-/* Links */
-.post-content a {
+/* Links - Using primary color */
+.prose .post-content a,
+.prose .post-content div a,
+.prose .post-content p a,
+.prose .post-content li a,
+.post-content a,
+.post-content div a,
+.post-content p a,
+.post-content li a,
+.tiptap a,
+.tiptap-editor-content a {
+    color: #1D4ED8 !important;
+    text-decoration: underline;
+}
+
+.prose .post-content a:hover,
+.prose .post-content div a:hover,
+.prose .post-content p a:hover,
+.prose .post-content li a:hover,
+.post-content a:hover,
+.post-content div a:hover,
+.post-content p a:hover,
+.post-content li a:hover,
+.tiptap a:hover,
+.tiptap-editor-content a:hover {
+    color: #1D4ED8 !important;
+    opacity: 0.8;
+}
+
+/* TipTap-specific link class */
+.tiptap-link {
     color: hsl(var(--p));
     text-decoration: underline;
 }
 
-.post-content a:hover {
+.tiptap-link:hover {
     color: hsl(var(--a));
 }
 
 /* Images */
-.post-content img {
+.post-content img,
+.tiptap img,
+.tiptap-editor-content img {
     max-width: 100%;
     height: auto;
     border-radius: 5px;
@@ -144,26 +236,100 @@
     margin-top: 1.5rem;
 }
 
-/* Tables */
+/* Tables - Border color matches text color (full opacity) */
+/* Note: .post-content is inside .prose, so .post-content table has sufficient specificity */
+
+/* Also apply to tables without prose wrapper for compatibility */
+/* Editor styles - TipTap editor */
+/* Border color matches text color (full opacity) */
+.tiptap table,
+.tiptap-editor-content table,
 .post-content table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+    border: 1px solid currentColor;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.tiptap table th,
+.tiptap table td,
+.tiptap-editor-content table th,
+.tiptap-editor-content table td,
 .post-content table th,
 .post-content table td {
-    border: 1px solid hsl(var(--bc) / 0.2);
+    border: 1px solid currentColor;
     padding: 10px;
     text-align: left;
 }
 
+.tiptap table thead,
+.tiptap-editor-content table thead,
+.post-content table thead {
+    border-bottom: 2px solid currentColor;
+}
+
+.tiptap table th,
+.tiptap-editor-content table th,
 .post-content table th {
     background: hsl(var(--b2));
     font-weight: bold;
+    border: 1px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    padding: 10px;
+    text-align: left;
 }
 
+.tiptap table td,
+.tiptap-editor-content table td,
+.post-content table td {
+    border: 1px solid currentColor;
+    padding: 10px;
+    text-align: left;
+}
+
+.tiptap table tbody tr:first-child td,
+.tiptap-editor-content table tbody tr:first-child td,
+.post-content table tbody tr:first-child td {
+    border-top: 2px solid currentColor;
+}
+
+.tiptap table tbody tr:last-child td,
+.tiptap-editor-content table tbody tr:last-child td,
+.post-content table tbody tr:last-child td {
+    border-bottom: 1px solid currentColor;
+}
+
+.tiptap table tr:first-child th,
+.tiptap table tr:first-child td,
+.tiptap-editor-content table tr:first-child th,
+.tiptap-editor-content table tr:first-child td,
+.post-content table tr:first-child th,
+.post-content table tr:first-child td {
+    border-top: 1px solid currentColor;
+}
+
+.tiptap table tr:first-child th,
+.tiptap-editor-content table tr:first-child th,
+.post-content table tr:first-child th {
+    border-bottom: 2px solid currentColor;
+}
+
+.tiptap table tr:last-child td,
+.tiptap-editor-content table tr:last-child td,
+.post-content table tr:last-child td {
+    border-bottom: 1px solid currentColor;
+}
+
+.tiptap table tr:nth-child(even),
+.tiptap-editor-content table tr:nth-child(even),
 .post-content table tr:nth-child(even) {
+    background: hsl(var(--b2));
+}
+
+/* Editor-specific hover states */
+.tiptap table tr:hover td,
+.tiptap-editor-content table tr:hover td {
     background: hsl(var(--b2));
 }
 
@@ -196,7 +362,9 @@
     white-space: nowrap;
 }
 
-.post-content pre code {
+.post-content pre code,
+.tiptap pre code,
+.tiptap-editor-content pre code {
     background: none;
     color: inherit;
     font-size: 0.9rem;
@@ -204,4 +372,55 @@
     display: block;
     white-space: pre-wrap;
     /* Allows wrapping for smaller screens */
+}
+
+/* Code blocks for editor */
+.tiptap code,
+.tiptap-editor-content code {
+    background-color: #2d2d2d;
+    border-radius: 6px;
+    color: #ffcc66;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    font-family: 'Fira Code', monospace;
+    white-space: nowrap;
+}
+
+.tiptap pre,
+.tiptap-editor-content pre {
+    background: #1e1e1e;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'JetBrainsMono', monospace;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    overflow-x: auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid #3a3a3a;
+}
+
+/* Horizontal rules */
+.tiptap hr,
+.tiptap-editor-content hr {
+    border: none;
+    border-top: 1px solid hsl(var(--bc) / 0.3);
+    margin: 2rem 0;
+}
+
+/* Remove blue border when the editor is focused */
+.ProseMirror:focus {
+    outline: none !important;
+}
+
+/* Responsive adjustments for editor buttons */
+@media (max-width: 768px) {
+    .button-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .button-group button {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
 }
