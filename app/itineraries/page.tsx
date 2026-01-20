@@ -60,7 +60,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const Itinerary = async () => {
     const blogPosts = await getPublishedPosts(6, undefined, PageType.ITINERARY);
-    console.log('blogPosts', blogPosts);
+
     return (
         <div>
             <HeroSection
