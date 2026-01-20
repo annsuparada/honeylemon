@@ -1,6 +1,6 @@
-import dynamic from "next/dynamic"
 import CTA from "../components/CTA"
 import HeroSection from "../components/HeroSection"
+import BlogSection from "../components/BlogSection"
 import { Metadata } from "next"
 import { getPublishedPosts } from "../lib/postService"
 import { PageType } from "@prisma/client"
@@ -58,11 +58,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
     }
 }
 
-const BlogSection = dynamic(() => import("../components/BlogSection"), { ssr: false });
-
 const Itinerary = async () => {
-    const blogPosts = await getPublishedPosts(6, undefined, PageType.ITINERARY, 'budget-travel');
-
+    const blogPosts = await getPublishedPosts(6, undefined, PageType.ITINERARY);
+    console.log('blogPosts', blogPosts);
     return (
         <div>
             <HeroSection
