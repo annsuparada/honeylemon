@@ -262,31 +262,34 @@ export default function ImageUploader({
             )}
 
             {/* Upload Method Tabs */}
-            <div className="tabs tabs-boxed mb-4">
+            <div className="tabs tabs-boxed mb-4 flex-wrap md:flex-nowrap overflow-x-auto">
                 <button
-                    className={`tab ${uploadMethod === 'file' ? 'tab-active' : ''}`}
+                    className={`tab flex-shrink-0 text-xs md:text-sm ${uploadMethod === 'file' ? 'tab-active' : ''}`}
                     onClick={() => setUploadMethod('file')}
                 >
-                    📁 Upload File
+                    <span className="hidden sm:inline">📁 </span>
+                    <span className="whitespace-nowrap">Upload</span>
                 </button>
                 <button
-                    className={`tab ${uploadMethod === 'url' ? 'tab-active' : ''}`}
+                    className={`tab flex-shrink-0 text-xs md:text-sm ${uploadMethod === 'url' ? 'tab-active' : ''}`}
                     onClick={() => setUploadMethod('url')}
                 >
-                    🌐 From URL
+                    <span className="hidden sm:inline">🌐 </span>
+                    <span className="whitespace-nowrap">From URL</span>
                 </button>
                 <button
-                    className={`tab ${uploadMethod === 'unsplash' ? 'tab-active' : ''}`}
+                    className={`tab flex-shrink-0 text-xs md:text-sm ${uploadMethod === 'unsplash' ? 'tab-active' : ''}`}
                     onClick={() => setUploadMethod('unsplash')}
                 >
-                    🔍 Search Unsplash
+                    <span className="hidden sm:inline">🔍 </span>
+                    <span className="whitespace-nowrap">Unsplash</span>
                 </button>
             </div>
 
             {/* File Upload Section */}
             {uploadMethod === 'file' && (
                 <div
-                    className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 md:p-8 text-center hover:border-primary transition-colors cursor-pointer"
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                     onClick={() => fileInputRef.current?.click()}
@@ -302,12 +305,12 @@ export default function ImageUploader({
                     {loading ? (
                         <div className="flex flex-col items-center gap-2">
                             <span className="loading loading-spinner loading-lg"></span>
-                            <p className="text-gray-600">Uploading...</p>
+                            <p className="text-sm sm:text-base text-gray-600">Uploading...</p>
                         </div>
                     ) : (
                         <div className="flex flex-col items-center gap-2">
                             <svg
-                                className="w-12 h-12 text-gray-400"
+                                className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -319,10 +322,10 @@ export default function ImageUploader({
                                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                                 />
                             </svg>
-                            <p className="text-gray-600">
+                            <p className="text-sm sm:text-base text-gray-600">
                                 Click to upload or drag and drop
                             </p>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-xs sm:text-sm text-gray-500">
                                 PNG, JPG, GIF up to 10MB
                             </p>
                         </div>
@@ -333,11 +336,11 @@ export default function ImageUploader({
             {/* URL Upload Section */}
             {uploadMethod === 'url' && (
                 <div className="space-y-4">
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                         <input
                             type="url"
-                            className="input input-bordered flex-1"
-                            placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                            className="input input-bordered flex-1 text-sm md:text-base"
+                            placeholder="Enter image URL..."
                             value={urlInput}
                             onChange={(e) => setUrlInput(e.target.value)}
                             onKeyPress={(e) => {
@@ -348,7 +351,7 @@ export default function ImageUploader({
                             disabled={loading}
                         />
                         <button
-                            className="btn btn-primary"
+                            className="btn btn-primary text-sm md:text-base whitespace-nowrap"
                             onClick={handleUrlUpload}
                             disabled={loading || !urlInput.trim()}
                         >
@@ -359,7 +362,7 @@ export default function ImageUploader({
                             )}
                         </button>
                     </div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-500">
                         Enter a URL to an image. It will be fetched and uploaded to Cloudinary.
                     </p>
                 </div>
@@ -368,11 +371,11 @@ export default function ImageUploader({
             {/* Unsplash Search Section */}
             {uploadMethod === 'unsplash' && (
                 <div className="space-y-4">
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                         <input
                             type="text"
-                            className="input input-bordered flex-1"
-                            placeholder="Search for images (e.g., tokyo travel, beach sunset)"
+                            className="input input-bordered flex-1 text-sm md:text-base"
+                            placeholder="Search for images..."
                             value={unsplashQuery}
                             onChange={(e) => setUnsplashQuery(e.target.value)}
                             onKeyPress={(e) => {
@@ -383,7 +386,7 @@ export default function ImageUploader({
                             disabled={searchingUnsplash || loading}
                         />
                         <button
-                            className="btn btn-primary"
+                            className="btn btn-primary text-sm md:text-base whitespace-nowrap"
                             onClick={handleUnsplashSearch}
                             disabled={searchingUnsplash || loading || !unsplashQuery.trim()}
                         >
@@ -410,7 +413,7 @@ export default function ImageUploader({
                     )}
 
                     {unsplashImages.length > 0 && (
-                        <div className="grid grid-cols-3 gap-3 max-h-96 overflow-y-auto p-2 border border-gray-200 rounded-lg">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 max-h-96 overflow-y-auto p-2 border border-gray-200 rounded-lg">
                             {unsplashImages.map((image) => (
                                 <div
                                     key={image.id}
@@ -426,7 +429,7 @@ export default function ImageUploader({
                                         alt={image.alt}
                                         fill
                                         className="object-cover"
-                                        sizes="(max-width: 768px) 33vw, 400px"
+                                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 400px"
                                     />
                                 </div>
                             ))}
@@ -438,17 +441,17 @@ export default function ImageUploader({
             {/* Image Preview */}
             {showPreview && imageUrl && (
                 <div className="mt-6">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                         <h3 className="text-sm font-semibold text-gray-700">Preview</h3>
                         <button
-                            className="btn btn-sm btn-ghost"
+                            className="btn btn-sm btn-ghost text-xs sm:text-sm whitespace-nowrap"
                             onClick={copyToClipboard}
                             title="Copy URL to clipboard"
                         >
                             📋 Copy URL
                         </button>
                     </div>
-                    <div className="relative w-full h-64 rounded-lg overflow-hidden border border-gray-200">
+                    <div className="relative w-full h-48 sm:h-64 rounded-lg overflow-hidden border border-gray-200">
                         <Image
                             src={imageUrl}
                             alt={altText || 'Uploaded image preview'}
@@ -468,12 +471,12 @@ export default function ImageUploader({
                     </div>
                     {/* Alt Text Input */}
                     <div className="mt-3">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                             Alt Text (Optional)
                         </label>
                         <input
                             type="text"
-                            className="input input-bordered input-sm w-full"
+                            className="input input-bordered input-sm w-full text-xs sm:text-sm"
                             placeholder="Describe the image for accessibility"
                             value={altText}
                             onChange={(e) => setAltText(e.target.value)}
