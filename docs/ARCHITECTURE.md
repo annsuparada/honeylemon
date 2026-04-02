@@ -167,13 +167,14 @@ export async function POST(req: Request) {
 
 ## 🌐 API Route Pattern
 
-### Standard Structure
+For **shared CMS endpoints** (posts, users, categories, login, uploads), prefer thin `route.ts` files that call factories from `@honeylemon/server/routes/*` — see [`SERVER_PACKAGE.md`](./SERVER_PACKAGE.md).
 
-All API routes follow a consistent pattern:
+### Standard Structure (custom or legacy routes)
 
 ```typescript
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/utils/helpers/auth";
+import { verifyToken } from "@honeylemon/server/auth";
+import { jwtConfig } from "@/lib/config";
 import { serviceFunction } from "@/lib/services/domainService";
 import { handleError, successResponse, UnauthorizedError } from "@/lib/middleware/errorHandler";
 import { domainSchema } from "@/schemas/domainSchema";
@@ -198,7 +199,7 @@ export async function POST(req: Request) {
     try {
         // 1. Authentication (if protected)
         const token = req.headers.get("authorization")?.split(" ")[1];
-        const decoded = verifyToken(token || "");
+        const decoded = verifyToken(token || "", jwtConfig.secret);
         if (!decoded) {
             throw new UnauthorizedError();
         }

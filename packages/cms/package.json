@@ -1,0 +1,14 @@
+{
+  "name": "@honeylemon/cms",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared CMS validation schemas and types (no env secrets)",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@prisma/client": "^5.19.0",
+    "zod": "^3.23.0"
+  }
+}

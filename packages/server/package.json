@@ -1,0 +1,42 @@
+{
+  "name": "@honeylemon/server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared server/API helpers for CMS apps (Next routes, auth, email, Prisma services)",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./http": "./src/http/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./email": "./src/email/index.ts",
+    "./blog": "./src/blog/index.ts",
+    "./blog/read-time": "./src/blog/read-time.ts",
+    "./routes/post": "./src/routes/post.ts",
+    "./routes/category": "./src/routes/category.ts",
+    "./routes/tag": "./src/routes/tag.ts",
+    "./routes/user": "./src/routes/user.ts",
+    "./routes/login": "./src/routes/login.ts",
+    "./routes/user-password": "./src/routes/user-password.ts",
+    "./routes/images": "./src/routes/images.ts",
+    "./routes/bearer-auth": "./src/routes/bearer-auth.ts",
+    "./routes/campaign": "./src/routes/campaign.ts",
+    "./routes/campaign-preview": "./src/routes/campaign-preview.ts",
+    "./routes/newsletter": "./src/routes/newsletter.ts",
+    "./routes/newsletter-verify-token": "./src/routes/newsletter-verify-token.ts",
+    "./routes/post-views": "./src/routes/post-views.ts",
+    "./routes/test-email": "./src/routes/test-email.ts",
+    "./routes/forgot-password": "./src/routes/forgot-password.ts",
+    "./routes/reset-password": "./src/routes/reset-password.ts",
+    "./routes/check-pillar": "./src/routes/check-pillar.ts",
+    "./routes": "./src/routes/index.ts"
+  },
+  "peerDependencies": {
+    "@honeylemon/cms": "*",
+    "@prisma/client": "^5.19.0",
+    "bcrypt": "^5.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "next": "^14.0.0",
+    "nodemailer": "^7.0.0",
+    "zod": "^3.23.0"
+  }
+}
